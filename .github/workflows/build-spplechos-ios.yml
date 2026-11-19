@@ -1,4 +1,4 @@
-name: Build SpplechOS iOS shell
+name: Build SpplechOS iOS shell and tests
 
 on:
   workflow_dispatch:
