@@ -47,6 +47,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m unittest discover tools/tests 2>&1 | tee logs/build-tool-tests.log
+          python3 -m unittest discover -s .github/scripts/tests 2>&1 | tee logs/automation-tests.log
 
       - name: Build and test the shell package
         run: |

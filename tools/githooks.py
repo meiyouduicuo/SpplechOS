@@ -94,8 +94,8 @@ def run(hook, todo):
             print(f'{hook}: engine/ could not be synced, {stop} stopped. Reproduce: {SYNC}\n{emergency}', file=sys.stderr)
             return 1
     for c in todo:
-        if c.name == 'tools' and os.name == 'nt':
-            print(f'{hook}: {c.name} deferred to macOS CI, the suite includes POSIX engine and shell contracts.')
+        if c.name in ('tools', 'triage scripts') and os.name == 'nt':
+            print(f'{hook}: {c.name} deferred to macOS CI, the suite includes POSIX command contracts.')
             continue
         if c.cwd in ('frontend', 'frontend-ios') and not shutil.which('swift'):
             print(f'{hook}: {c.name} skipped, swift is not installed. CI runs it.')

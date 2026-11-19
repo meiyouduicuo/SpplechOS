@@ -239,11 +239,12 @@ class PushedPaths(unittest.TestCase):
 
 class SwiftAvailability(unittest.TestCase):
     def test_windows_defers_the_posix_tool_suite_to_macos_ci(self):
-        output = io.StringIO()
-        with mock.patch.object(H.os, 'name', 'nt'), mock.patch.object(H, 'sh', return_value=0) as run, contextlib.redirect_stdout(output):
-            self.assertEqual(H.run('pre-push', [H.CHECKS[2]]), 0)
-        self.assertEqual([call.args[0] for call in run.call_args_list], [H.SYNC])
-        self.assertIn('deferred to macOS CI', output.getvalue())
+        for check in (H.CHECKS[2], H.CHECKS[3]):
+            output = io.StringIO()
+            with mock.patch.object(H.os, 'name', 'nt'), mock.patch.object(H, 'sh', return_value=0) as run, contextlib.redirect_stdout(output):
+                self.assertEqual(H.run('pre-push', [check]), 0)
+            self.assertEqual([call.args[0] for call in run.call_args_list], [H.SYNC])
+            self.assertIn('deferred to macOS CI', output.getvalue())
 
     def test_windows_defers_both_swift_packages_to_ci(self):
         for check in (H.CHECKS[-2], H.CHECKS[-1]):
