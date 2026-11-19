@@ -403,7 +403,7 @@ class ReleaseCandidate(unittest.TestCase):
     def publish_rc(self, *extra, channel='stable', version='0.8.0', tag='v0.8.0-rc1'):
         out = self.tmp / 'rc'
         args = ['publish', '--engine-zip', str(self.engine), '--app-zip', str(self.app), '--version', version, '--channel', channel,
-                '--tag', tag, '--out', str(out), '--pub', str(self.pubfile), '--built', '2026-10-31T02:00:00Z', *extra]
+                '--tag', tag, '--repo', 'LNPANDY/NX2Apple', '--out', str(out), '--pub', str(self.pubfile), '--built', '2026-10-31T02:00:00Z', *extra]
         self.assertEqual(self.run_main(args)[0], 0)
         return out / 'latest.json'
 

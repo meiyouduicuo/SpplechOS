@@ -90,6 +90,9 @@ class HookEnvironment(unittest.TestCase):
         self.outer = Path(self.tmp.name) / 'outer'
         self.outer.mkdir()
         git(self.outer, 'init', '-q', '-b', 'main')
+        # Do not let detached maintenance mutate the snapshot after the commit.
+        git(self.outer, 'config', 'maintenance.auto', 'false')
+        git(self.outer, 'config', 'gc.auto', '0')
         git(self.outer, 'commit', '-q', '--allow-empty', '-m', 'outer')
         self.before = snapshot(self.outer)
         self.hook_env = {'GIT_DIR': str(self.outer / '.git'), 'GIT_WORK_TREE': str(self.outer), 'GIT_INDEX_FILE': str(self.outer / '.git/index'), 'GIT_PREFIX': ''}
