@@ -1,0 +1,57 @@
+/* Experimental LAN runtime, explicitly enabled with DM_LAN=1. */
+#include "hle.h"
+#include "hle_lan_backend.h"
+#include "spple_lan/lan_runtime.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdatomic.h>
+static int reserve_fd(void *context){(void)context;return dm_net_reserve_fd();}
+static int release_fd(void *context,int fd){(void)context;return dm_net_release_fd(fd);}
+static void notify_fd(void *context){(void)context;dm_net_notify_lan_ready();}
+static int random_bytes(void *context,void *out,size_t size){(void)context;arc4random_buf(out,size);return 0;}
+/* Read-only observation; sites and original opcodes are build-ID gated. */
+static void lan_task_result(uint64_t *regs,int stage) {
+ if(!getenv("DM_LDN_TRACE"))return;
+ if(stage==1){LOG("[DEBUG-LAN-TASK] create-network setup completed");return;}
+ if(!regs[1])return;
+ uint32_t words[4];memcpy(words,(const void *)(uintptr_t)regs[1],sizeof words);
+ /* entry.S records the observation trampoline's saved guest SP in slot 99.
+  * site_obs saved the original guest LR at SP+8, before executing the entry. */
+ uint64_t lr=0;memcpy(&lr,(const void *)(uintptr_t)(regs[99]+8),8);
+ module_t *caller=module_of((const void *)(uintptr_t)lr);
+ if(caller){
+  uint64_t off=lr-(uintptr_t)caller->base;
+  LOG("[DEBUG-LAN-TASK] failure caller %s+0x%llx",caller->name,(unsigned long long)off);
+  /* Only these verified MHR callers retain the job object in x19. */
+  if((off==0x20a24bc || off==0x20983a0) && regs[19]){
+   const char *name=NULL;memcpy(&name,(const void *)(uintptr_t)(regs[19]+0x40),sizeof name);
+   if(name && module_of(name))LOG("[DEBUG-LAN-TASK] job stage: %.96s",name);
+  }
+ }
+
+ LOG("[DEBUG-LAN-TASK] failed task: result=0x%08x variant=%u value=%u detail=%u",words[0],words[1],words[2],words[3]);
+}
+static _Atomic int enabled;
+void dm_spple_lan_start(const char *resource_dir){
+ const char *flag=getenv("DM_LAN");if(!flag || strcmp(flag,"1"))return;
+ gate_obs_set(OBS_SPPLE_LAN_RESULT,lan_task_result);
+ char fallback[4096];const char *path=getenv("DM_CONTROL_NACP");
+ if((!path || !*path) && resource_dir){int n=snprintf(fallback,sizeof fallback,"%s/control.nacp",resource_dir);if(n>0 && (size_t)n<sizeof fallback)path=fallback;}
+ if(!path || !*path){LOG("[RED] LAN: no control.nacp; local communication ID unavailable");return;}
+ FILE *f=fopen(path,"rb");uint8_t raw[8];
+ if(!f){LOG("[RED] LAN: cannot open control.nacp");return;}
+ int ok=!fseek(f,0x30b0,SEEK_SET) && fread(raw,1,sizeof raw,f)==sizeof raw;fclose(f);
+ if(!ok){LOG("[RED] LAN: cannot read local communication ID");return;}
+ uint64_t local=0;for(int i=7;i>=0;--i)local=(local<<8)|raw[i];
+ char *end=NULL;uint64_t title=strtoull(DM_GAME_ID,&end,16);
+ if(!local || local>INT64_MAX || !title || !end || *end){LOG("[RED] LAN: invalid title or local communication ID");return;}
+ spple_runtime_platform platform={NULL,reserve_fd,release_fd,notify_fd,dm_thread_native_wait,dm_lan_event_attach,dm_lan_event_signal,random_bytes};
+ spple_runtime_backends b;
+ if(spple_lan_runtime_init(title,(int64_t)local,&platform,&b) || dm_net_register_lan_ready(b.ready) ||
+    dm_net_register_lan_sockets(b.sockets) || dm_lan_register_backend(b.ldn)){
+  LOG("[RED] LAN: experimental backend could not be initialized");return;
+ }
+ atomic_store(&enabled,1);LOG("LAN: experimental local multiplayer backend enabled");
+}
+void dm_spple_lan_stop(void){if(atomic_exchange(&enabled,0)){spple_lan_runtime_stop();dm_lan_event_reset();}}

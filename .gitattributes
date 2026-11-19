@@ -1,0 +1,2 @@
+# Preserve the leading space on empty unified diff context lines.
+tools/lan-lab/*.patch text eol=lf whitespace=-blank-at-eol
