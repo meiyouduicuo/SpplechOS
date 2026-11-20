@@ -3,6 +3,36 @@ import Testing
 @testable import ShellHost
 
 struct USBGameImportInboxTests {
+    #if os(macOS)
+    @MainActor @Test func filesystemEventImportsOnlyPublishedRequestsAndReportsFailure() async throws {
+        let box = try Sandbox()
+        var config = box.config()
+        config.hotFrameworksRoot = box.root.appendingPathComponent("hot")
+        let model = ShellHostModel(config: config, launcher: RecordingLauncher())
+        let root = USBGameImportInbox.root(documents: box.appData.deletingLastPathComponent())
+        let id = UUID().uuidString.lowercased()
+        let request = USBGameImportInbox.Request(schema: 1, id: id, file: id + ".sppgame")
+        let receipt = root.appendingPathComponent(id + ".status.json")
+        try Data("incomplete package".utf8).write(to: root.appendingPathComponent(request.file))
+        try await Task.sleep(for: .milliseconds(100))
+        #expect(!FileManager.default.fileExists(atPath: receipt.path))
+        try JSONEncoder().encode(request).write(to: root.appendingPathComponent(id + ".request.json"), options: .atomic)
+        var state: USBGameImportInbox.Status?
+        for _ in 0..<100 {
+            if let data = try? Data(contentsOf: receipt),
+               let value = try? JSONDecoder().decode(USBGameImportInbox.Status.self, from: data), value.state == "failed" {
+                state = value
+                break
+            }
+            try await Task.sleep(for: .milliseconds(50))
+        }
+        #expect(state?.state == "failed")
+        #expect(state?.message?.isEmpty == false)
+        #expect(!model.importingPackage)
+        #expect(model.details.count > 0, "A failed incoming package must leave existing games listed")
+    }
+    #endif
+
     @Test func incompleteTransfersAreIgnoredAndCompletionOnlyRemovesOwnedFiles() throws {
         let box = try Sandbox()
         let fm = FileManager.default

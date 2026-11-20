@@ -73,6 +73,16 @@ jobs:
           print('Simulator:', devices[0]['name'])
           PY
 
+      - name: Test USB inbox on an iOS simulator
+        working-directory: frontend-ios
+        run: |
+          set -euo pipefail
+          xcodebuild test -scheme ShellUI-Package \
+            -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
+            -derivedDataPath "$RUNNER_TEMP/shell-package-simulator" \
+            -only-testing:ShellHostTests/USBGameImportInboxTests \
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tee ../logs/shell-usb-simulator-tests.log
+
       - name: Test game package import, save reset and app settings on iOS
         run: |
           set -euo pipefail
@@ -88,6 +98,7 @@ jobs:
             -only-testing:ShellDemoUITests/ShellHostUITests/testGamePackagePickerCanBeCancelledWithoutChangingTheLibrary \
             -only-testing:ShellDemoUITests/ShellDemoUITests/testNativeLauncherBarsFollowTheActiveScreen \
             -only-testing:ShellDemoUITests/ShellDemoUITests/testImmersiveShelfKeepsSelectionAndSettingsAcrossRotation \
+            -only-testing:ShellDemoUITests/ShellDemoUITests/testPortraitScrollKeepsLibraryToolbarActionsAvailable \
             CODE_SIGNING_ALLOWED=NO 2>&1 | tee logs/shell-ios-ui-tests.log
           xcrun xcresulttool export attachments \
             --path "$RUNNER_TEMP/shell-ui-tests.xcresult" \

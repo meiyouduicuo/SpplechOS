@@ -90,7 +90,6 @@ struct ImmersiveConsoleLibrary: View {
         }
         .scrollIndicators(.hidden)
         .ignoresSafeArea(.container, edges: [.leading, .trailing])
-        .accessibilityIdentifier("library.grid")
         .safeAreaInset(edge: .bottom, spacing: 0) {
             GameLaunchActions(game: selected.game, primary: { primary(selected) }, settings: openSettings,
                               expands: !landscape)
@@ -99,7 +98,7 @@ struct ImmersiveConsoleLibrary: View {
                 .background(.black.opacity(0.32))
                 .hiddenIfObscured(obscured)
         }
-        .accessibilityIdentifier("console.library")
+        .accessibilityIdentifier("library.grid")
     }
 
     private func tile(_ detail: GameDetail) -> some View {
