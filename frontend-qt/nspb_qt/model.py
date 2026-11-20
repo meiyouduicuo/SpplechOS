@@ -4798,6 +4798,8 @@ class Model(QObject):
                 shell_lib.save(self.shell_cache_path)
             except OSError as e:
                 return False, self.t('shell.projectFailed', str(e))
+            if getattr(self, '_game_package_mode', False):
+                self.ipa_path = ''  # The driver may announce a legacy IPA path without producing that IPA.
             self._record_library_ios_completion(tid, name=game_name)
             pbc.clean_work_dir(work, remove_extracted_romfs=False, remove_shell_framework=False)
             exported_ids = {g.title_id.upper() for g in se.ShellLibrary.load(self.shell_cache_path).games}

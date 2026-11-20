@@ -1865,6 +1865,9 @@ class MainWindow(QMainWindow):
             self.hot_status.setText('传输未完成，请检查手机连接后重试。')
 
     def _hot_install_finished(self, ok: bool, message: str) -> None:
+        if not ok:
+            from .win.signing_profiles import profile_error_text
+            message = profile_error_text(message, self.m.t)
         self.hot_button.setEnabled(True)
         if getattr(self._hot_worker, 'package_path', None) is not None:
             self.package_button.setEnabled(True)

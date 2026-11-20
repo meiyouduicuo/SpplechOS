@@ -13,6 +13,7 @@ import tempfile
 from pathlib import Path
 
 from .hot_install import HostIdentity, HotInstallError, inspect_framework, ready_payload
+from .signing_profiles import select_signing_profile
 
 
 async def sign_framework_copy(source: Path, destination: Path, title_id: str,
@@ -45,17 +46,14 @@ async def sign_framework_copy(source: Path, destination: Path, title_id: str,
         cert_path, cert = candidates[0]
         async with MisagentService(lockdown) as service:
             profiles = await service.copy_all()
-        matches = [p for p in profiles
-                   if p.plist.get('Entitlements', {}).get('application-identifier') == host.team_id + '.' + host.bundle_id
-                   and cert.public_bytes(serialization.Encoding.DER) in p.plist.get('DeveloperCertificates', [])]
-        if len(matches) != 1:
-            raise HotInstallError('No unique installed signing profile matches this app')
+        profile_match = select_signing_profile(profiles, host, cert.public_bytes(serialization.Encoding.DER),
+                                               device_udid=getattr(lockdown, 'udid', None))
         shutil.copytree(source, destination, symlinks=False)
         binary = destination / manifest.get('framework_executable', f'DmGame{title_id.upper()}')
         before = hashlib.sha256(binary.read_bytes()).digest()
         with tempfile.TemporaryDirectory(prefix='spplechos-profile-') as tmp:
             profile = Path(tmp) / 'profile.mobileprovision'
-            profile.write_bytes(matches[0].buf)
+            profile.write_bytes(profile_match.buf)
             signed = subprocess.run([str(zsign), '-f', '-k', str(key_path), '-c', str(cert_path),
                                      '-m', str(profile), '-b', host.bundle_id, str(binary)],
                                     capture_output=True, timeout=600)
