@@ -17857,6 +17857,70 @@
         }
       }
     },
+    "Tap + to import a game package. Your games will appear here after import finishes.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "点击＋导入游戏包，导入完成后游戏会显示在这里。"
+          }
+        }
+      }
+    },
     "Tap a button to change what it sends.": {
       "localizations": {
         "de": {

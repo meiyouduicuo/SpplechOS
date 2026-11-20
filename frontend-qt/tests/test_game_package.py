@@ -9,8 +9,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from nspb_qt.win.game_package import write_package, MAGIC, _tree
-from nspb_qt.win.hot_install import HotInstallError
+from nspb_qt.win.game_package import write_package, export_game_package, MAGIC
+from nspb_qt.win.hot_install import HotInstallError, HostIdentity
 
 
 class GamePackageTests(unittest.TestCase):
@@ -70,6 +70,34 @@ class GamePackageTests(unittest.TestCase):
             for entry in header['files']:
                 self.assertEqual(hashlib.sha256(source.read(entry['size'])).hexdigest(), entry['sha256'])
             self.assertEqual(source.read(), b'')
+
+    def test_complete_export_includes_framework_shaders_and_dlc_but_never_saves(self):
+        fixture = Path(__file__).resolve().parents[2] / 'frontend-ios/Tests/ShellHostTests/Fixtures/GamePackage/synthetic.sppgame'
+        with tempfile.TemporaryDirectory() as temp, fixture.open('rb') as source:
+            root = Path(temp)
+            source.read(8)
+            header = json.loads(source.read(struct.unpack('<Q', source.read(8))[0]))
+            fw = root / f"DmGame{header['titleID']}.framework"
+            for entry in header['files']:
+                name = entry['path']
+                output = fw / name.removeprefix('framework/') if name.startswith('framework/') else root / name
+                output.parent.mkdir(parents=True, exist_ok=True)
+                output.write_bytes(source.read(entry['size']))
+            (root / 'data/aoc').mkdir()
+            (root / 'data/aoc/1000.img').write_bytes(b'synthetic DLC')
+            (root / 'data/save').mkdir()
+            (root / 'data/save/main.dat').write_bytes(b'private save must stay here')
+            target = export_game_package(fw, root / 'data/romfs.img', root / 'export.sppgame',
+                                         HostIdentity(header['bundleID'], header['teamID'], 'b-3f9a2c', None))
+            with target.open('rb') as package:
+                package.read(8)
+                manifest = json.loads(package.read(struct.unpack('<Q', package.read(8))[0]))
+            names = {e['path'] for e in manifest['files']}
+            self.assertIn('data/aoc/1000.img', names)
+            self.assertIn('framework/banner.jpg', names)
+            self.assertTrue(any(n.startswith('data/msl/') for n in names))
+            self.assertFalse(any('save' in n for n in names))
+            self.assertEqual((root / 'data/save/main.dat').read_bytes(), b'private save must stay here')
 
 
 if __name__ == '__main__':

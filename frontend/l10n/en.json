@@ -1258,6 +1258,7 @@
   "ios.ui.openControllerSettingsNote": "Add NX2Apple under Home Button Override.",
   "ios.ui.opensChoiceList": "Opens the list of choices",
   "ios.ui.overlayNote": "Used by games that have no choice of their own.",
+  "ios.ui.packageEmpty": "Tap + to import a game package. Your games will appear here after import finishes.",
   "ios.ui.padAllGames": "All games",
   "ios.ui.padBottomButton": "Bottom button",
   "ios.ui.padButtonMapping": "Button mapping",

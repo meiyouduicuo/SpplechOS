@@ -1260,6 +1260,7 @@
   "ios.ui.openControllerSettingsNote": "NX2Apple unter „Home-Taste überschreiben“ hinzufügen.",
   "ios.ui.opensChoiceList": "Öffnet die Auswahlliste",
   "ios.ui.overlayNote": "Für Spiele, die keine eigene Wahl haben.",
+  "ios.ui.packageEmpty": "Tap + to import a game package. Your games will appear here after import finishes.",
   "ios.ui.padAllGames": "Alle Spiele",
   "ios.ui.padBottomButton": "Untere Taste",
   "ios.ui.padButtonMapping": "Tastenbelegung",

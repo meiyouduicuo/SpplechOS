@@ -1259,6 +1259,7 @@
   "ios.ui.openControllerSettingsNote": "Lägg till NX2Apple under Åsidosätt hemknapp.",
   "ios.ui.opensChoiceList": "Öppnar listan med val",
   "ios.ui.overlayNote": "Används av spel som inte har ett eget val.",
+  "ios.ui.packageEmpty": "Tap + to import a game package. Your games will appear here after import finishes.",
   "ios.ui.padAllGames": "Alla spel",
   "ios.ui.padBottomButton": "Nedre knappen",
   "ios.ui.padButtonMapping": "Knapptilldelning",

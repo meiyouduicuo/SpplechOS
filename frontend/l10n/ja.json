@@ -1258,6 +1258,7 @@
   "ios.ui.openControllerSettingsNote": "「ホームボタンの優先設定」に NX2Apple を追加します。",
   "ios.ui.opensChoiceList": "選択肢の一覧を開きます",
   "ios.ui.overlayNote": "独自の設定がないゲームで使われます。",
+  "ios.ui.packageEmpty": "Tap + to import a game package. Your games will appear here after import finishes.",
   "ios.ui.padAllGames": "すべてのゲーム",
   "ios.ui.padBottomButton": "下のボタン",
   "ios.ui.padButtonMapping": "ボタンの割り当て",

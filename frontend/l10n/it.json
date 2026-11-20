@@ -1259,6 +1259,7 @@
   "ios.ui.openControllerSettingsNote": "Aggiungi NX2Apple in Sostituzione tasto Home.",
   "ios.ui.opensChoiceList": "Apre l’elenco delle scelte",
   "ios.ui.overlayNote": "Usato dai giochi che non hanno una scelta propria.",
+  "ios.ui.packageEmpty": "Tap + to import a game package. Your games will appear here after import finishes.",
   "ios.ui.padAllGames": "Tutti i giochi",
   "ios.ui.padBottomButton": "Tasto in basso",
   "ios.ui.padButtonMapping": "Mappatura tasti",

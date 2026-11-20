@@ -1259,6 +1259,7 @@
   "ios.ui.openControllerSettingsNote": "Adicione o NX2Apple em Substituição do Botão de Início.",
   "ios.ui.opensChoiceList": "Abre a lista de opções",
   "ios.ui.overlayNote": "Usado pelos jogos que não têm uma escolha própria.",
+  "ios.ui.packageEmpty": "Tap + to import a game package. Your games will appear here after import finishes.",
   "ios.ui.padAllGames": "Todos os jogos",
   "ios.ui.padBottomButton": "Botão de baixo",
   "ios.ui.padButtonMapping": "Mapeamento de botões",

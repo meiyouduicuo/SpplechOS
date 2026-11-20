@@ -1259,6 +1259,7 @@
   "ios.ui.openControllerSettingsNote": "在“主屏幕按钮覆盖”中添加 NX2Apple。",
   "ios.ui.opensChoiceList": "打开选项列表",
   "ios.ui.overlayNote": "游戏未单独设置时使用。",
+  "ios.ui.packageEmpty": "点击＋导入游戏包，导入完成后游戏会显示在这里。",
   "ios.ui.padAllGames": "所有游戏",
   "ios.ui.padBottomButton": "下方按键",
   "ios.ui.padButtonMapping": "按键映射",

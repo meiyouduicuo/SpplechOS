@@ -125,7 +125,7 @@ public struct EmptyLibraryView: View {
             SectionHeading(title: ShellStrings.text("Your games"))
             Text(ShellStrings.text("A little room for adventure")).shellType(ShellType.heroTitle(30))
                 .fixedSize(horizontal: false, vertical: true)
-            Text(ShellStrings.text("Your games will appear here when they are included in this app."))
+            Text(ShellStrings.text("Tap + to import a game package. Your games will appear here after import finishes."))
                 .shellText(15).foregroundStyle(.white.opacity(0.6)).fixedSize(horizontal: false, vertical: true)
         }
         .padding(28).frame(maxWidth: 460, alignment: .leading)

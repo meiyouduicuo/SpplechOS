@@ -571,6 +571,13 @@ public struct LibraryView: View {
             .sharedBackgroundVisibility(.hidden)
         }
 
+        if let item = libraryActions.first(where: { $0.id == "gamePackage.import" }) {
+            ToolbarItem(placement: .primaryAction) {
+                toolbarButton(ShellStrings.text(item.title), item.symbol, item.id, item.target, item.action)
+                    .disabled(menuPresented).accessibilityHidden(menuPresented)
+            }
+            ToolbarSpacer(.fixed, placement: .primaryAction)
+        }
         if let item = libraryActions.first(where: { $0.id == "controllers.open" }) {
             controllerItem(item)
             ToolbarSpacer(.fixed, placement: .primaryAction)

@@ -1259,6 +1259,7 @@
   "ios.ui.openControllerSettingsNote": "‘홈 버튼 재정의’에 NX2Apple을 추가합니다.",
   "ios.ui.opensChoiceList": "선택 목록을 엽니다",
   "ios.ui.overlayNote": "자체 선택이 없는 게임에서 사용합니다.",
+  "ios.ui.packageEmpty": "Tap + to import a game package. Your games will appear here after import finishes.",
   "ios.ui.padAllGames": "모든 게임",
   "ios.ui.padBottomButton": "아래 버튼",
   "ios.ui.padButtonMapping": "버튼 매핑",
