@@ -1670,7 +1670,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Finish the current operation before importing a game package."
+            "value": "Beende den aktuellen Vorgang, bevor du ein Spielpaket importierst."
           }
         },
         "en": {
@@ -1682,43 +1682,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Finish the current operation before importing a game package."
+            "value": "Termina la operación actual antes de importar un paquete de juego."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Finish the current operation before importing a game package."
+            "value": "Terminez l’opération en cours avant d’importer un paquet de jeu."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Finish the current operation before importing a game package."
+            "value": "Completa l’operazione in corso prima di importare un pacchetto di gioco."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Finish the current operation before importing a game package."
+            "value": "現在の操作が完了してからゲームパッケージを読み込んでください。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Finish the current operation before importing a game package."
+            "value": "현재 작업을 마친 후 게임 패키지를 가져오세요."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Finish the current operation before importing a game package."
+            "value": "Conclua a operação atual antes de importar um pacote de jogo."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Finish the current operation before importing a game package."
+            "value": "Avsluta den pågående åtgärden innan du importerar ett spelpaket."
           }
         },
         "zh-Hans": {
@@ -1990,7 +1990,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Game imported. Your saved files have been kept."
+            "value": "Spiel importiert. Deine Spielstände wurden beibehalten."
           }
         },
         "en": {
@@ -2002,43 +2002,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Game imported. Your saved files have been kept."
+            "value": "Juego importado. Tus partidas guardadas se han conservado."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Game imported. Your saved files have been kept."
+            "value": "Jeu importé. Vos sauvegardes ont été conservées."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Game imported. Your saved files have been kept."
+            "value": "Gioco importato. I tuoi salvataggi sono stati conservati."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Game imported. Your saved files have been kept."
+            "value": "ゲームを読み込みました。セーブデータは保持されています。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Game imported. Your saved files have been kept."
+            "value": "게임을 가져왔습니다. 기존 저장 데이터는 유지됩니다."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Game imported. Your saved files have been kept."
+            "value": "Jogo importado. Seus arquivos salvos foram mantidos."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Game imported. Your saved files have been kept."
+            "value": "Spelet har importerats. Dina sparfiler har behållits."
           }
         },
         "zh-Hans": {
@@ -2182,7 +2182,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Importing game package…"
+            "value": "Spielpaket wird importiert…"
           }
         },
         "en": {
@@ -2194,43 +2194,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Importing game package…"
+            "value": "Importando paquete de juego…"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Importing game package…"
+            "value": "Importation du paquet de jeu…"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Importing game package…"
+            "value": "Importazione del pacchetto di gioco…"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Importing game package…"
+            "value": "ゲームパッケージを読み込み中…"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Importing game package…"
+            "value": "게임 패키지를 가져오는 중…"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Importing game package…"
+            "value": "Importando pacote de jogo…"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Importing game package…"
+            "value": "Importerar spelpaket…"
           }
         },
         "zh-Hans": {
@@ -2374,7 +2374,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep this app open until the import finishes."
+            "value": "Lass diese App geöffnet, bis der Import abgeschlossen ist."
           }
         },
         "en": {
@@ -2386,43 +2386,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep this app open until the import finishes."
+            "value": "Mantén esta app abierta hasta que termine la importación."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep this app open until the import finishes."
+            "value": "Gardez cette app ouverte jusqu’à la fin de l’importation."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep this app open until the import finishes."
+            "value": "Mantieni aperta questa app fino al termine dell’importazione."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep this app open until the import finishes."
+            "value": "読み込みが完了するまでアプリを開いたままにしてください。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep this app open until the import finishes."
+            "value": "가져오기가 끝날 때까지 앱을 열어 두세요."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep this app open until the import finishes."
+            "value": "Mantenha este app aberto até a importação terminar."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep this app open until the import finishes."
+            "value": "Håll appen öppen tills importen är klar."
           }
         },
         "zh-Hans": {
@@ -5382,7 +5382,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "There is not enough free space to import this game package."
+            "value": "Es ist nicht genügend freier Speicherplatz zum Importieren dieses Spielpakets vorhanden."
           }
         },
         "en": {
@@ -5394,43 +5394,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "There is not enough free space to import this game package."
+            "value": "No hay suficiente espacio libre para importar este paquete de juego."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "There is not enough free space to import this game package."
+            "value": "L’espace libre est insuffisant pour importer ce paquet de jeu."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "There is not enough free space to import this game package."
+            "value": "Lo spazio libero non è sufficiente per importare questo pacchetto di gioco."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "There is not enough free space to import this game package."
+            "value": "ゲームパッケージを読み込むための空き容量が不足しています。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "There is not enough free space to import this game package."
+            "value": "게임 패키지를 가져올 여유 공간이 부족합니다."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "There is not enough free space to import this game package."
+            "value": "Não há espaço livre suficiente para importar este pacote de jogo."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "There is not enough free space to import this game package."
+            "value": "Det finns inte tillräckligt med ledigt utrymme för att importera spelpaketet."
           }
         },
         "zh-Hans": {
@@ -5702,7 +5702,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package does not match this app or its game data."
+            "value": "Dieses Spielpaket passt nicht zu dieser App oder den Spieldaten."
           }
         },
         "en": {
@@ -5714,43 +5714,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package does not match this app or its game data."
+            "value": "Este paquete de juego no coincide con esta app o sus datos de juego."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package does not match this app or its game data."
+            "value": "Ce paquet de jeu ne correspond pas à cette app ou à ses données de jeu."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package does not match this app or its game data."
+            "value": "Questo pacchetto di gioco non corrisponde a questa app o ai suoi dati di gioco."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package does not match this app or its game data."
+            "value": "このゲームパッケージは現在のアプリまたはゲームデータと一致しません。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package does not match this app or its game data."
+            "value": "게임 패키지가 현재 앱이나 게임 데이터와 일치하지 않습니다."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package does not match this app or its game data."
+            "value": "Este pacote de jogo não corresponde a este app ou aos dados do jogo."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package does not match this app or its game data."
+            "value": "Spelpaketet matchar inte den här appen eller dess speldata."
           }
         },
         "zh-Hans": {
@@ -5766,7 +5766,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package is incomplete or damaged. Export it again."
+            "value": "Dieses Spielpaket ist unvollständig oder beschädigt. Exportiere es erneut."
           }
         },
         "en": {
@@ -5778,43 +5778,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package is incomplete or damaged. Export it again."
+            "value": "Este paquete de juego está incompleto o dañado. Expórtalo de nuevo."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package is incomplete or damaged. Export it again."
+            "value": "Ce paquet de jeu est incomplet ou endommagé. Exportez-le à nouveau."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package is incomplete or damaged. Export it again."
+            "value": "Questo pacchetto di gioco è incompleto o danneggiato. Esportalo di nuovo."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package is incomplete or damaged. Export it again."
+            "value": "ゲームパッケージが不完全または破損しています。再度書き出してください。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package is incomplete or damaged. Export it again."
+            "value": "게임 패키지가 불완전하거나 손상되었습니다. 다시 내보내세요."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package is incomplete or damaged. Export it again."
+            "value": "Este pacote de jogo está incompleto ou danificado. Exporte-o novamente."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package is incomplete or damaged. Export it again."
+            "value": "Spelpaketet är ofullständigt eller skadat. Exportera det igen."
           }
         },
         "zh-Hans": {
@@ -5830,7 +5830,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package is invalid or unsupported."
+            "value": "Dieses Spielpaket ist ungültig oder wird nicht unterstützt."
           }
         },
         "en": {
@@ -5842,43 +5842,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package is invalid or unsupported."
+            "value": "Este paquete de juego no es válido o no es compatible."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package is invalid or unsupported."
+            "value": "Ce paquet de jeu est invalide ou non pris en charge."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package is invalid or unsupported."
+            "value": "Questo pacchetto di gioco non è valido o non è supportato."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package is invalid or unsupported."
+            "value": "このゲームパッケージは無効、または対応していません。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package is invalid or unsupported."
+            "value": "유효하지 않거나 지원하지 않는 게임 패키지입니다."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package is invalid or unsupported."
+            "value": "Este pacote de jogo é inválido ou não é compatível."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package is invalid or unsupported."
+            "value": "Spelpaketet är ogiltigt eller stöds inte."
           }
         },
         "zh-Hans": {
@@ -5894,7 +5894,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package was signed for another app or account. Export it again for this SpplechOS installation."
+            "value": "Dieses Spielpaket wurde für eine andere App oder ein anderes Konto signiert. Exportiere es erneut für diese SpplechOS-Installation."
           }
         },
         "en": {
@@ -5906,43 +5906,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package was signed for another app or account. Export it again for this SpplechOS installation."
+            "value": "Este paquete de juego se firmó para otra app o cuenta. Expórtalo de nuevo para esta instalación de SpplechOS."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package was signed for another app or account. Export it again for this SpplechOS installation."
+            "value": "Ce paquet de jeu a été signé pour une autre app ou un autre compte. Exportez-le à nouveau pour cette installation de SpplechOS."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package was signed for another app or account. Export it again for this SpplechOS installation."
+            "value": "Questo pacchetto di gioco è stato firmato per un’altra app o un altro account. Esportalo di nuovo per questa installazione di SpplechOS."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package was signed for another app or account. Export it again for this SpplechOS installation."
+            "value": "このゲームパッケージは別のアプリまたはアカウント用に署名されています。この SpplechOS 用に再度書き出してください。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package was signed for another app or account. Export it again for this SpplechOS installation."
+            "value": "이 게임 패키지는 다른 앱이나 계정으로 서명되었습니다. 현재 SpplechOS에 맞게 다시 내보내세요."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package was signed for another app or account. Export it again for this SpplechOS installation."
+            "value": "Este pacote de jogo foi assinado para outro app ou conta. Exporte-o novamente para esta instalação do SpplechOS."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "This game package was signed for another app or account. Export it again for this SpplechOS installation."
+            "value": "Spelpaketet signerades för en annan app eller ett annat konto. Exportera det igen för den här installationen av SpplechOS."
           }
         },
         "zh-Hans": {

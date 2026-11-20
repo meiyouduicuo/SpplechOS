@@ -8710,7 +8710,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Import game package…"
+            "value": "Spielpaket importieren…"
           }
         },
         "en": {
@@ -8722,43 +8722,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Import game package…"
+            "value": "Importar paquete de juego…"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Import game package…"
+            "value": "Importer un paquet de jeu…"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Import game package…"
+            "value": "Importa pacchetto di gioco…"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Import game package…"
+            "value": "ゲームパッケージを読み込む…"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Import game package…"
+            "value": "게임 패키지 가져오기…"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Import game package…"
+            "value": "Importar pacote de jogo…"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Import game package…"
+            "value": "Importera spelpaket…"
           }
         },
         "zh-Hans": {
@@ -17862,7 +17862,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+            "value": "Tippe auf +, um ein Spielpaket zu importieren. Nach dem Import erscheint dein Spiel hier."
           }
         },
         "en": {
@@ -17874,43 +17874,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+            "value": "Toca + para importar un paquete de juego. Los juegos aparecerán aquí al terminar la importación."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+            "value": "Touchez + pour importer un paquet de jeu. Vos jeux apparaîtront ici une fois l’importation terminée."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+            "value": "Tocca + per importare un pacchetto di gioco. I giochi appariranno qui al termine dell’importazione."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+            "value": "＋をタップしてゲームパッケージを読み込んでください。完了するとゲームがここに表示されます。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+            "value": "＋를 눌러 게임 패키지를 가져오세요. 완료되면 여기에 게임이 표시됩니다."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+            "value": "Toque em + para importar um pacote de jogo. Os jogos aparecerão aqui quando a importação terminar."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tap + to import a game package. Your games will appear here after import finishes."
+            "value": "Tryck på + för att importera ett spelpaket. Dina spel visas här när importen är klar."
           }
         },
         "zh-Hans": {
