@@ -19,6 +19,7 @@ import os
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -26,7 +27,7 @@ sys.path.insert(0, str(ROOT / 'frontend-qt'))
 os.environ.setdefault('QT_QPA_PLATFORM', 'offscreen')
 
 try:
-    from PySide6.QtCore import QEvent
+    from PySide6.QtCore import QEvent, QSettings
     from PySide6.QtWidgets import QApplication, QScrollArea
 except ImportError:          # the packaged app always has it; a bare python3 may not
     QApplication = None
@@ -49,7 +50,11 @@ class BuildFailure(unittest.TestCase):
         from nspb_qt.i18n import Lang
         from nspb_qt.model import Model
         from nspb_qt.ui import MainWindow
-        m = Model()
+        settings_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(settings_dir.cleanup)
+        settings = QSettings(str(Path(settings_dir.name) / 'settings.ini'), QSettings.IniFormat)
+        with patch('nspb_qt.model.QSettings', return_value=settings):
+            m = Model()
         m.repo_path = ''  # A failure-view fixture never starts a process in a detected checkout.
         m.lang = Lang('en')   # these assertions read English whatever the device language is
         w = MainWindow(m)

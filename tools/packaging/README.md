@@ -9,7 +9,8 @@ The spec uses repository-relative sources and never copies a signing key, profil
 game image or saved game. Its ICU filter prevents an MSYS2 installation on PATH from
 substituting a DLL with incompatible exports for the Windows ICU used by Qt.
 
-Before distributing the output, start the frozen executable and verify that the main
-SpplechOS window opens. A running process alone is insufficient, because a PyInstaller
+Before distributing the output, run `python tools/packaging/smoke_windows.py <output>/SpplechOS/SpplechOS.exe`.
+It starts that build hidden, checks that the main window appears instead of an exception
+dialog, and closes only its own process. A running process alone is insufficient, because a PyInstaller
 exception dialog also leaves a process alive. Package the directory with Inno Setup
 using the existing application ID to update the desktop installation in place.

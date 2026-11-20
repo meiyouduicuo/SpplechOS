@@ -2,13 +2,15 @@
 import os
 import sys
 import unittest
+import tempfile
+from unittest.mock import patch
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 os.environ.setdefault('QT_QPA_PLATFORM', 'offscreen')
 try:
     from PySide6.QtWidgets import QApplication
-    from PySide6.QtCore import QEvent
+    from PySide6.QtCore import QEvent, QSettings
 except ImportError:
     QApplication = None
 
@@ -20,7 +22,11 @@ class PackageBuildUITests(unittest.TestCase):
         from nspb_qt.ui import MainWindow
         from nspb_qt import platform_util as pu
         app = QApplication.instance() or QApplication([])
-        model = Model()
+        settings_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(settings_dir.cleanup)
+        settings = QSettings(str(Path(settings_dir.name) / 'settings.ini'), QSettings.IniFormat)
+        with patch('nspb_qt.model.QSettings', return_value=settings):
+            model = Model()
         model.repo_path = ''
         window = MainWindow(model)
         try:
