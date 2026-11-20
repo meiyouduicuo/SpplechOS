@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / 'frontend-qt'))
 from nspb_qt.win import shell_export as shell  # noqa: E402
 from nspb_qt.refresh_flow import matches_romfs_identity  # noqa: E402
 from verify_framework_hle import verify_forced_hle  # noqa: E402
-from airport_test_env import release_environment, with_lan_defaults  # noqa: E402
+from airport_test_env import export_bundle_id, release_environment, with_lan_defaults  # noqa: E402
 
 TITLE_ID = '01006F8002326000'
 BUNDLE_ID = 'org.spplechos.acnh.airporttest'
@@ -29,10 +29,15 @@ def main():
                         help='validate the existing image without copying it into the IPA')
     parser.add_argument('--template', type=Path, required=True)
     parser.add_argument('--release', action='store_true',
-                        help='brand as SpplechOS, retain the tested app identity and omit default LAN tracing')
+                        help='brand as SpplechOS, upgrade the original app and omit default LAN tracing')
+    parser.add_argument('--upgrade-test-app', action='store_true',
+                        help='with --release, explicitly upgrade the separate airport test app instead')
     parser.add_argument('--version', default='1.8.0', help='release marketing version')
-    parser.add_argument('--build-number', default='180', help='release CFBundleVersion')
+    parser.add_argument('--build-number', default='181', help='release CFBundleVersion')
     args = parser.parse_args()
+    if args.upgrade_test_app and not args.release:
+        parser.error('--upgrade-test-app requires --release')
+    bundle_id = export_bundle_id(args.release, args.upgrade_test_app)
     target = args.root.resolve()
     framework = args.framework.resolve()
     expected_env = 'DM_ACNH_AIRPORT_TEST=1'
@@ -57,7 +62,7 @@ def main():
 
     target.mkdir(parents=True, exist_ok=True)
     os.environ['NSPB_SHELL_TEMPLATE'] = str(args.template.resolve())
-    shell.ShellLibrary(bundle_id=BUNDLE_ID).save(target)
+    shell.ShellLibrary(bundle_id=bundle_id).save(target)
     framework = shell.mirror_framework(framework, target, TITLE_ID)
     test_env = framework / 'dm/env.txt'
     prepare_env = release_environment if args.release else with_lan_defaults
@@ -89,8 +94,8 @@ def main():
     app = 'Payload/DmShell.app'
     with zipfile.ZipFile(ipa) as archive:
         info = plistlib.loads(archive.read(f'{app}/Info.plist'))
-        if info['CFBundleIdentifier'] != BUNDLE_ID:
-            raise SystemExit('The test app was packaged with an unexpected identifier')
+        if info['CFBundleIdentifier'] != bundle_id:
+            raise SystemExit('The app was packaged with an unexpected upgrade identifier')
         if any(name.lower().endswith('/romfs.img') for name in archive.namelist()):
             raise SystemExit('The test package unexpectedly contains a game image')
         packaged = archive.read(f'{app}/Frameworks/{framework.name}/dm/env.txt')

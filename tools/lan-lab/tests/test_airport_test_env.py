@@ -32,3 +32,11 @@ class AirportEnvironmentTests(unittest.TestCase):
     def test_release_preparation_is_idempotent(self):
         first=module.release_environment('DM_ACNH_AIRPORT_TEST=1')
         self.assertEqual(module.release_environment(first),first)
+
+    def test_release_upgrades_the_original_app_by_default(self):
+        self.assertEqual(module.export_bundle_id(True),'org.spplechos.shell')
+
+    def test_test_identity_requires_an_explicit_release_override(self):
+        self.assertEqual(module.export_bundle_id(False),'org.spplechos.acnh.airporttest')
+        self.assertEqual(module.export_bundle_id(True,True),'org.spplechos.acnh.airporttest')
+        with self.assertRaises(ValueError):module.export_bundle_id(False,True)

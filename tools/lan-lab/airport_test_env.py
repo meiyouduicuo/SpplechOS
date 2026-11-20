@@ -11,3 +11,9 @@ def release_environment(text):
     lines=[line for line in with_lan_defaults(text).splitlines()
            if line.partition('=')[0].strip()!='DM_LDN_TRACE']
     return '\n'.join(lines)+'\n'
+
+def export_bundle_id(release, upgrade_test_app=False):
+    """A release upgrades the original app unless the test upgrade is explicit."""
+    if upgrade_test_app and not release:
+        raise ValueError('Upgrading the test app as a release requires release mode')
+    return 'org.spplechos.shell' if release and not upgrade_test_app else 'org.spplechos.acnh.airporttest'

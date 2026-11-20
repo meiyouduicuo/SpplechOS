@@ -6,10 +6,15 @@ the island and successfully joined. The game build is 3.0.3, v2228224.
 
 ## Package and upgrade
 
-- Display name: SpplechOS; version: 1.8.0; build: 180.
-- Bundle ID: `org.spplechos.acnh.airporttest`, retained for an in-place upgrade
-  of the verified test app. Use the same sideloading account and do not uninstall
-  it first. The earlier `org.spplechos.shell` app remains a separate application.
+- Display name: SpplechOS; version: 1.8.0; original-app upgrade build: 181.
+- Bundle ID: `org.spplechos.shell`, matching the original SpplechOS app. Use
+  the same sideloading account and do not uninstall it first. Its Documents
+  saves, data and hot-pushed game frameworks are preserved by an in-place update.
+- The earlier build 180 retained the airport test app ID and therefore did not
+  replace the original application. That packaging choice was incorrect for
+  the requested original-app upgrade. Test-app release upgrades now require
+  explicit `--upgrade-test-app`; the default `--release` targets the original app.
+- Test-app saves are in a different container and are not automatically migrated.
 - Game framework and matching shaders are embedded; ROMFS, user saves and keys
   are not bundled. Existing game-folder selections and saves remain in Documents.
 - LAN is enabled by default. The release does not enable diagnostic tracing by
@@ -24,14 +29,14 @@ before rebuilding the game framework. Build the iOS shell template using the
 manual `build-spplechos-ios.yml` workflow, or with Xcode locally.
 
 Run `tools/lan-lab/export_acnh_airport_test.py` with `--release --version 1.8.0
---build-number 180`, an empty `--root`, the completed `--framework`, its matching
+--build-number 181`, an empty `--root`, the completed `--framework`, its matching
 `--shader-meta`, an existing `--romfs-image` for identity validation, and the
 compiled `--template`. Input game data stays local. Use a sideloader to sign
 the resulting IPA; the repository contains source, not a signing identity.
 
 ## Validation and limits
 
-- 108 Windows LAN tests pass, including publication-pending room settings,
+- 110 Windows LAN tests pass, including original-app release identity, publication-pending room settings,
   two-process discovery, joining, bidirectional UDP, reconnect and rejection.
 - The exact admission failure was captured on-device as policy 0 returning 674;
   the regression reproduced it before the local-room snapshot fix.
