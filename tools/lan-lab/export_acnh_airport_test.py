@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / 'frontend-qt'))
 from nspb_qt.win import shell_export as shell  # noqa: E402
 from nspb_qt.refresh_flow import matches_romfs_identity  # noqa: E402
 from verify_framework_hle import verify_forced_hle  # noqa: E402
-from airport_test_env import with_lan_defaults  # noqa: E402
+from airport_test_env import release_environment, with_lan_defaults  # noqa: E402
 
 TITLE_ID = '01006F8002326000'
 BUNDLE_ID = 'org.spplechos.acnh.airporttest'
@@ -28,6 +28,10 @@ def main():
     parser.add_argument('--romfs-image', type=Path, required=True,
                         help='validate the existing image without copying it into the IPA')
     parser.add_argument('--template', type=Path, required=True)
+    parser.add_argument('--release', action='store_true',
+                        help='brand as SpplechOS, retain the tested app identity and omit default LAN tracing')
+    parser.add_argument('--version', default='1.8.0', help='release marketing version')
+    parser.add_argument('--build-number', default='180', help='release CFBundleVersion')
     args = parser.parse_args()
     target = args.root.resolve()
     framework = args.framework.resolve()
@@ -56,7 +60,8 @@ def main():
     shell.ShellLibrary(bundle_id=BUNDLE_ID).save(target)
     framework = shell.mirror_framework(framework, target, TITLE_ID)
     test_env = framework / 'dm/env.txt'
-    test_env.write_text(with_lan_defaults(test_env.read_text(encoding='utf-8')), encoding='utf-8')
+    prepare_env = release_environment if args.release else with_lan_defaults
+    test_env.write_text(prepare_env(test_env.read_text(encoding='utf-8')), encoding='utf-8')
     bundled_msl = framework / 'msl'
     bundled_msl.mkdir(exist_ok=True)
     shutil.copy2(shader_image, bundled_msl / shader_image.name)
@@ -66,8 +71,11 @@ def main():
         update_plist(app, bundle_id, repo)
         path = app / 'Info.plist'
         info = plistlib.loads(path.read_bytes())
-        info['CFBundleDisplayName'] = DISPLAY_NAME
-        info['CFBundleName'] = 'SpplechOS ACNH Airport Test'
+        info['CFBundleDisplayName'] = 'SpplechOS' if args.release else DISPLAY_NAME
+        info['CFBundleName'] = 'SpplechOS' if args.release else 'SpplechOS ACNH Airport Test'
+        if args.release:
+            info['CFBundleShortVersionString'] = args.version
+            info['CFBundleVersion'] = args.build_number
         path.write_bytes(plistlib.dumps(info))
 
     shell._update_shell_plist = update_test_plist
@@ -89,9 +97,20 @@ def main():
         if expected_env.encode() not in packaged.splitlines():
             raise SystemExit('The packaged framework did not enable the airport test')
         packaged_keys = {line.partition(b'=')[0].strip() for line in packaged.splitlines() if b'=' in line}
-        for key in (b'DM_LAN', b'DM_LDN_TRACE'):
+        required_keys = (b'DM_LAN',) if args.release else (b'DM_LAN', b'DM_LDN_TRACE')
+        for key in required_keys:
             if key not in packaged_keys:
                 raise SystemExit('The airport test package is missing its LAN defaults')
+        if args.release:
+            if b'DM_LDN_TRACE' in packaged_keys:
+                raise SystemExit('Release still enables diagnostic tracing')
+            if (info.get('CFBundleDisplayName') != 'SpplechOS'
+                    or info.get('CFBundleShortVersionString') != args.version
+                    or info.get('CFBundleVersion') != args.build_number):
+                raise SystemExit('Release branding or version is incorrect')
+            if (not info.get('NSLocalNetworkUsageDescription')
+                    or '_spplechos-ldn._tcp' not in info.get('NSBonjourServices', [])):
+                raise SystemExit('Release is missing local network privacy metadata')
         if f'{app}/Frameworks/{framework.name}/msl/{shader_image.name}' not in archive.namelist():
             raise SystemExit('The packaged framework is missing its shader library')
     print(ipa)
