@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / 'frontend-qt'))
 from nspb_qt.win import shell_export as shell  # noqa: E402
 from nspb_qt.refresh_flow import matches_romfs_identity  # noqa: E402
 from verify_framework_hle import verify_forced_hle  # noqa: E402
+from airport_test_env import with_lan_defaults  # noqa: E402
 
 TITLE_ID = '01006F8002326000'
 BUNDLE_ID = 'org.spplechos.acnh.airporttest'
@@ -54,6 +55,8 @@ def main():
     os.environ['NSPB_SHELL_TEMPLATE'] = str(args.template.resolve())
     shell.ShellLibrary(bundle_id=BUNDLE_ID).save(target)
     framework = shell.mirror_framework(framework, target, TITLE_ID)
+    test_env = framework / 'dm/env.txt'
+    test_env.write_text(with_lan_defaults(test_env.read_text(encoding='utf-8')), encoding='utf-8')
     bundled_msl = framework / 'msl'
     bundled_msl.mkdir(exist_ok=True)
     shutil.copy2(shader_image, bundled_msl / shader_image.name)
@@ -85,6 +88,10 @@ def main():
         packaged = archive.read(f'{app}/Frameworks/{framework.name}/dm/env.txt')
         if expected_env.encode() not in packaged.splitlines():
             raise SystemExit('The packaged framework did not enable the airport test')
+        packaged_keys = {line.partition(b'=')[0].strip() for line in packaged.splitlines() if b'=' in line}
+        for key in (b'DM_LAN', b'DM_LDN_TRACE'):
+            if key not in packaged_keys:
+                raise SystemExit('The airport test package is missing its LAN defaults')
         if f'{app}/Frameworks/{framework.name}/msl/{shader_image.name}' not in archive.namelist():
             raise SystemExit('The packaged framework is missing its shader library')
     print(ipa)

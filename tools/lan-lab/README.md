@@ -113,3 +113,15 @@ policies 0/1/0 and advertisement data before publication, then completes
 discovery, joining, bidirectional datagrams, reconnecting and rejection.
 All 103 lab tests pass. The temporary `[DEBUG-ACNH-AIRPORT]` probes have
 been removed. Actual iOS airport opening and island travel remain pending.
+
+The admission fix was confirmed on-device: ACNH now opens the airport gate.
+Island discovery and travel still need a two-device check.
+
+The isolated airport exporter now bundles `DM_LAN=1` and `DM_LDN_TRACE=1`
+as defaults when absent. Earlier packages bundled only the airport policy
+flag and relied on a separately written Documents env.txt, which a fresh
+phone does not inherit when only the save is copied. The launcher still
+gives explicitly selected per-game settings priority. Normal app exports
+and the source framework are unchanged by this packaging step. All 106
+lab tests pass; the latest phone's save-then-no-action report still needs
+fresh logs because its USB data connection drops.
