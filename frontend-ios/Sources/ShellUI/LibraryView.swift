@@ -155,7 +155,7 @@ public struct LibraryView: View {
             let layout = ShellLayout.resolve(whole, accessibilityText: typeSize.isAccessibilitySize)
             let width = geometry.size.width
             ZStack(alignment: .topLeading) {
-                if layout.isCoverFlow, let selected { CoverFlowBackdrop(game: selected.game) } else { ShellPalette.background.ignoresSafeArea() }
+                ConsoleBackdrop(game: selected?.game)
                 if games.isEmpty {
                     EmptyLibraryView()
                 } else if let selected {
@@ -441,20 +441,11 @@ public struct LibraryView: View {
     }
 
     @ViewBuilder func library(_ selected: GameDetail, layout: ShellLayout, size: CGSize, insets: EdgeInsets) -> some View {
-        if layout.isCoverFlow {
-            CoverFlowView(games: games, selected: selected, controllers: controllers.count, showsHints: !touchMode, obscured: menuPresented, screenInsets: insets,
-                          select: select, primary: { primary($0) }, openSettings: openSettings, openControllers: openControllers,
-                          openShellSettings: openShellSettings)
-                .equatable()
-                .transition(.opacity)
-        } else {
-            PortraitLibrary(games: games, selected: selected, wide: layout == .grid, size: size, topInset: insets.top, bottomInset: insets.bottom, obscured: menuPresented,
-                            controllers: controllers.count, select: select, primary: { primary($0) },
-                            openSettings: openSettings, openControllers: openControllers, openShellSettings: openShellSettings,
-                            position: $libraryPosition)
-                .equatable()
-                .transition(.opacity)
-        }
+        ImmersiveConsoleLibrary(games: games, selected: selected, size: size, obscured: menuPresented,
+                                controllers: controllers.count, select: select, primary: { primary($0) },
+                                openSettings: openSettings, openControllers: openControllers,
+                                openShellSettings: openShellSettings, importPackage: actions.onImportGamePackage)
+            .transition(.opacity)
     }
 
     /// Game settings keep their content column inside the system sheet's safe area.

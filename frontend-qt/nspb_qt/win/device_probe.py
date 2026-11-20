@@ -17,7 +17,7 @@ class DeviceShell:
     identity: HostIdentity
 
 
-async def probe_shell() -> DeviceShell:
+async def probe_shell(lockdown=None) -> DeviceShell:
     """Find one paired USB device's compatible shell and validate its beacon."""
     try:
         from pymobiledevice3.lockdown import create_using_usbmux
@@ -26,7 +26,9 @@ async def probe_shell() -> DeviceShell:
     except ImportError as exc:
         raise HotInstallError('USB device communication component is not installed') from exc
 
-    lockdown = await create_using_usbmux()
+    owns_connection = lockdown is None
+    if owns_connection:
+        lockdown = await create_using_usbmux()
     try:
         apps = await InstallationProxyService(lockdown=lockdown).get_apps(application_type='User')
         matches = [(key, value) for key, value in apps.items()
@@ -43,4 +45,5 @@ async def probe_shell() -> DeviceShell:
         identity = check_host(data, expected_bundle_id=bundle_id, expected_team_id=team)
         return DeviceShell(bundle_id, identity)
     finally:
-        await lockdown.close()
+        if owns_connection:
+            await lockdown.close()

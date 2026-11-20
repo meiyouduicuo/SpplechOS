@@ -87,6 +87,7 @@ jobs:
             -only-testing:ShellDemoUITests/ShellHostUITests/testClearSavesRequiresConfirmationAndKeepsTheGameListed \
             -only-testing:ShellDemoUITests/ShellHostUITests/testGamePackagePickerCanBeCancelledWithoutChangingTheLibrary \
             -only-testing:ShellDemoUITests/ShellDemoUITests/testNativeLauncherBarsFollowTheActiveScreen \
+            -only-testing:ShellDemoUITests/ShellDemoUITests/testImmersiveShelfKeepsSelectionAndSettingsAcrossRotation \
             CODE_SIGNING_ALLOWED=NO 2>&1 | tee logs/shell-ios-ui-tests.log
 
       - name: Build the unsigned app template

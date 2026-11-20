@@ -132,7 +132,10 @@ public struct ShellHostBeacon: Codable, Equatable, Sendable {
         let expires = ProvisioningProfile.bundledExpiration(bundle: bundle, fileManager: fm).map { Int64($0.timeIntervalSince1970.rounded()) }
         let beacon = ShellHostBeacon(glueVersion: glueVersion, bundleID: bundleID, teamID: teamID,
                                      chain: chain, version: version, expiresAtEpoch: expires)
-        guard let data = try? JSONEncoder().encode(beacon) else { return }
+        guard let encoded = try? JSONEncoder().encode(beacon),
+              var fields = (try? JSONSerialization.jsonObject(with: encoded)) as? [String: Any] else { return }
+        fields["usbPackageImport"] = 1
+        guard let data = try? JSONSerialization.data(withJSONObject: fields, options: [.sortedKeys]) else { return }
         try? fm.createDirectory(at: documents, withIntermediateDirectories: true)
         try? data.write(to: documents.appendingPathComponent(fileName), options: .atomic)
     }

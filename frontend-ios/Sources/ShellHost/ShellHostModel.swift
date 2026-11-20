@@ -102,7 +102,11 @@ public struct ShellHostConfig: Sendable {
         var report: CloudSaveSyncCheck.Report
     }
 
-    @ObservationIgnored private let config: ShellHostConfig
+    @ObservationIgnored let config: ShellHostConfig
+    @ObservationIgnored var usbInboxMonitor: PackageInboxMonitor?
+    @ObservationIgnored var usbImportTask: Task<Void, Never>?
+    @ObservationIgnored nonisolated(unsafe) var usbActiveObserver: (any NSObjectProtocol)?
+    var acceptsUSBImport: Bool { !launchingGame && !modifyingSaves && !importingPackage && cloudConflict == nil }
     @ObservationIgnored private let launcher: any GameLauncher
     @ObservationIgnored private let picker: any FolderPicker
     @ObservationIgnored private let adapter = GamepadAdapter()
@@ -198,9 +202,12 @@ public struct ShellHostConfig: Sendable {
             }
         }
         #endif
+        startUSBGameImports()
     }
 
     deinit {
+        usbImportTask?.cancel()
+        usbActiveObserver.map(NotificationCenter.default.removeObserver)
         defaultsObserver.map(NotificationCenter.default.removeObserver)
         foregroundObserver.map(NotificationCenter.default.removeObserver)
     }
@@ -700,8 +707,15 @@ public struct ShellHostConfig: Sendable {
     }
 
     public func importGamePackage(_ url: URL) async {
+        do {
+            _ = try await importGamePackageNow(url)
+            notice = hostText("Game imported. Your saved files have been kept.")
+        } catch { notice = error.localizedDescription }
+    }
+
+    func importGamePackageNow(_ url: URL, onProgress: @escaping @Sendable (Double) -> Void = { _ in }) async throws -> String {
         guard !importingPackage, !launchingGame, !modifyingSaves, cloudConflict == nil,
-              let hotRoot = config.hotFrameworksRoot else { notice = GamePackage.Failure.busy.localizedDescription; return }
+              let hotRoot = config.hotFrameworksRoot else { throw GamePackage.Failure.busy }
         importingPackage = true
         packageProgress = 0
         await startupJoinTask?.value
@@ -712,22 +726,22 @@ public struct ShellHostConfig: Sendable {
         let teamID = ProvisioningProfile.bundledTeamIdentifier() ?? ""
         let scoped = url.startAccessingSecurityScopedResource()
         let updateProgress: @Sendable (Double) -> Void = { [weak self] value in
+            onProgress(value)
             Task { @MainActor in self?.packageProgress = value }
         }
         defer {
             if scoped { url.stopAccessingSecurityScopedResource() }
             importingPackage = false
             reload()
+            scheduleUSBImport()
         }
-        do {
-            let id = try await Task.detached(priority: .userInitiated) {
-                try GamePackage.install(from: url, dataRoot: dataRoot, frameworksRoot: hotRoot,
-                                        bundleID: bundleID, teamID: teamID, environment: environment, progress: updateProgress)
-            }.value
-            config.defaults(id).removeObject(forKey: GameDeletion.deletedKey)
-            useAppData(id)
-            notice = hostText("Game imported. Your saved files have been kept.")
-        } catch { notice = error.localizedDescription }
+        let id = try await Task.detached(priority: .userInitiated) {
+            try GamePackage.install(from: url, dataRoot: dataRoot, frameworksRoot: hotRoot,
+                                    bundleID: bundleID, teamID: teamID, environment: environment, progress: updateProgress)
+        }.value
+        config.defaults(id).removeObject(forKey: GameDeletion.deletedKey)
+        useAppData(id)
+        return id
     }
 
     public func change(_ id: String, setting: String, value: String) {
@@ -963,7 +977,7 @@ public struct ShellHostConfig: Sendable {
         let checkGeneration = cloudCheckGeneration
         pendingCloudLaunch = nil
         launchingGame = true
-        defer { launchingGame = false }
+        defer { launchingGame = false; scheduleUSBImport() }
         forgetCheckedRomfsImages()
         let resolved = await verifiedData(for: entry)
         let gameAppFolder = appFolder(for: id)
@@ -1064,7 +1078,7 @@ public struct ShellHostConfig: Sendable {
         pendingCloudLaunch = nil
         cloudConflict = nil
         launchingGame = true
-        defer { launchingGame = false }
+        defer { launchingGame = false; scheduleUSBImport() }
 
         let now = config.now()
         let report = pending.report
@@ -1099,7 +1113,7 @@ public struct ShellHostConfig: Sendable {
     func restoreLatestSaveBackupNow(_ id: String) async {
         guard !launchingGame, !modifyingSaves, cloudConflict == nil, entry(id) != nil else { return }
         modifyingSaves = true
-        defer { modifyingSaves = false }
+        defer { modifyingSaves = false; scheduleUSBImport() }
         cloudCheckGeneration &+= 1
         let checkGeneration = cloudCheckGeneration
         let folder = appFolder(for: id)

@@ -274,6 +274,22 @@ import XCTest
         XCTAssertTrue(app.buttons["shellSettings.open"].isHittable)
     }
 
+    func testImmersiveShelfKeepsSelectionAndSettingsAcrossRotation() {
+        extraArguments = ["--samples"]
+        launch("library")
+        XCTAssertTrue(app.buttons["tile.orbit"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["state.action"].isHittable)
+        capture("immersive-console-portrait")
+        XCUIDevice.shared.orientation = .landscapeLeft
+        XCTAssertTrue(app.buttons["tile.orbit"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["settings.open"].isHittable)
+        capture("immersive-console-landscape")
+        app.buttons["settings.open"].tap()
+        XCTAssertTrue(app.buttons["library.back"].waitForExistence(timeout: 5))
+        app.buttons["library.back"].tap()
+        XCTAssertTrue(app.buttons["shellSettings.open"].isHittable)
+    }
+
     // Run on a compact portrait device with standard Dynamic Type.
     func testPortraitScrollKeepsLibraryToolbarActionsAvailable() {
         XCUIDevice.shared.orientation = .portrait

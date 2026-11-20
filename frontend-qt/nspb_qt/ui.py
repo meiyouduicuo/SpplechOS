@@ -1590,8 +1590,41 @@ class MainWindow(QMainWindow):
         self.package_button.setObjectName('creamPill')
         self.package_button.clicked.connect(self._start_package_export)
         layout.addWidget(self.package_button)
+        self.usb_package_button = QPushButton(self.m.t('usb.button'))
+        self.usb_package_button.clicked.connect(self._start_usb_package_import)
+        layout.addWidget(self.usb_package_button)
         grp.add_row(row)
         return grp
+
+    def _start_usb_package_import(self) -> None:
+        if any(getattr(self, name, None) and getattr(self, name).isRunning()
+               for name in ('_hot_worker', '_usb_package_worker')):
+            return
+        path, _ = QFileDialog.getOpenFileName(self, self.m.t('usb.button'),
+                                             self.m.settings.value('lastUSBPackage', ''),
+                                             'SpplechOS (*.sppgame)')
+        if not path:
+            return
+        self.m.settings.setValue('lastUSBPackage', path)
+        from .win.usb_package_worker import USBPackageWorker
+        self._usb_package_worker = USBPackageWorker(Path(path), self)
+        self.usb_package_button.setEnabled(False)
+        self.package_button.setEnabled(False)
+        self.package_status.setText(self.m.t('usb.check'))
+        self._usb_package_worker.progress.connect(self._usb_package_progress)
+        self._usb_package_worker.result.connect(self._usb_package_result)
+        self._usb_package_worker.finished.connect(self._usb_package_finished)
+        self._usb_package_worker.start()
+
+    def _usb_package_progress(self, stage: str, percent: int) -> None:
+        self.package_status.setText(self.m.t(stage) + (f' {percent}%' if stage in ('usb.upload', 'usb.import') else ''))
+
+    def _usb_package_result(self, success: bool, message: str) -> None:
+        self.package_status.setText(self.m.t('usb.complete') if success else self.m.t(message))
+
+    def _usb_package_finished(self) -> None:
+        self.usb_package_button.setEnabled(True)
+        self.package_button.setEnabled(True)
 
     def _start_package_export(self) -> None:
         self._start_hot_install(package=True)
@@ -1802,6 +1835,9 @@ class MainWindow(QMainWindow):
         return grp
 
     def _start_hot_install(self, *, package: bool = False) -> None:
+        usb_worker = getattr(self, '_usb_package_worker', None)
+        if usb_worker is not None and usb_worker.isRunning():
+            return
         from .win.hot_worker import HotInstallWorker
         from .post_build_cleanup import primary_romfs_image
         tid = (self.m.packed_title_id or '').strip().upper()
@@ -3393,7 +3429,10 @@ class MainWindow(QMainWindow):
         self.install_group.setVisible(not pu.IS_WIN and (expanded or os.path.isfile(self._effective_ipa_path())
                                       or os.path.isdir(self._effective_archive_path())))
         if hasattr(self, 'package_button'):
-            self.package_button.setEnabled(not running and not bool(getattr(self, '_hot_worker', None) and self._hot_worker.isRunning()))
+            transferring = any(getattr(self, name, None) and getattr(self, name).isRunning()
+                               for name in ('_hot_worker', '_usb_package_worker'))
+            self.package_button.setEnabled(not running and not transferring)
+            self.usb_package_button.setEnabled(not running and not transferring)
         setup_needed = not self.m.repo_ok or (self.m.deps_checked and not self.m.all_deps_ok)
         self.setup_hint_card.setVisible(expanded and setup_needed)
 
@@ -3715,6 +3754,11 @@ class MainWindow(QMainWindow):
     # ================================================================ Full-Window Drag & Drop
 
     def closeEvent(self, event) -> None:
+        usb_worker = getattr(self, '_usb_package_worker', None)
+        if usb_worker is not None and usb_worker.isRunning():
+            QMessageBox.information(self, self.m.t('usb.button'), self.m.t('usb.waitClose'))
+            event.ignore()
+            return
         worker = getattr(self, '_hot_worker', None)
         if worker is not None and worker.isRunning():
             QMessageBox.information(self, '正在传输游戏', '请等待传输结束后再关闭应用。')
