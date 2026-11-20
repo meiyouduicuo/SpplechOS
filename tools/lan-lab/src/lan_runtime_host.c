@@ -45,7 +45,12 @@ int spple_runtime_host_update(spple_runtime_host *h,const spple_ldn_network_info
  h->room.network_id.intent.local_communication_id==room->network_id.intent.local_communication_id && h->room.network_id.intent.scene_id==room->network_id.intent.scene_id;
  if(ok)h->room=*room;pthread_mutex_unlock(&h->mu);return ok?0:-1;
 }
-int spple_runtime_host_snapshot(spple_runtime_host *h,spple_ldn_network_info *room){return h && room?snapshot(h,room):-1;}
+int spple_runtime_host_snapshot(spple_runtime_host *h,spple_ldn_network_info *room){
+ /* Local settings belong to the created room even while Bonjour is pending.
+  * The server's snapshot callback above still waits for publication. */
+ if(!h || !room)return -1;pthread_mutex_lock(&h->mu);int ok=!h->closing;
+ if(ok)*room=h->room;pthread_mutex_unlock(&h->mu);return ok?0:-1;
+}
 int spple_runtime_host_station_lost(spple_runtime_host *h){
  if(!h)return -1;pthread_mutex_lock(&h->mu);spple_ldn_network_info new_room;
  int rc=h->closing?-1:spple_ldn_room_remove_station(&h->room,&new_room);

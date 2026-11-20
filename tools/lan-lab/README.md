@@ -99,9 +99,17 @@ implementations from their respective files. It fails with `2 != 1` on the
 broken source and passes after removing the duplicate. The airport connection
 error remains open; the errno theory has not established its cause.
 
-The airport diagnostic framework adds read-only, test-app-gated messages with
-prefix `[DEBUG-ACNH-AIRPORT]`: the first eight socket errno queries per thread,
-socket-option results, acceptance-policy results, and blocked-user / online
-session service results with their guest call sites. It does not alter those
-return values or log UIDs, registration keys, or packet contents. These probes
-must be removed after capturing the failing device path.
+The device diagnostic run records `acceptance policy=0 result=674` after
+CreateNetwork succeeds and before Bonjour reports publication. The runtime
+used the server's publication-gated snapshot for a local settings update,
+rejecting the request even though the LDN room was already created. The
+two-process runtime regression reproduces this exact error when policy is
+changed before the fake Bonjour registration callback: `(0, 674)`.
+
+The public runtime-host snapshot now reads the local created room until the
+host closes. The server's snapshot callback still requires publication, so
+remote discovery/join readiness is unchanged. The regression now changes
+policies 0/1/0 and advertisement data before publication, then completes
+discovery, joining, bidirectional datagrams, reconnecting and rejection.
+All 103 lab tests pass. The temporary `[DEBUG-ACNH-AIRPORT]` probes have
+been removed. Actual iOS airport opening and island travel remain pending.

@@ -29,6 +29,7 @@ int main(void){
  if(acceptfn(owner,&user,1,0,&out))return 5;open_fail=0;if(joinfn(owner,123) || changes!=1)return 6;
  if(spple_runtime_host_station_lost(h) || changes!=2)return 7;
  r.network_id.session_id[0]++;if(!spple_runtime_host_update(h,&r))return 8;
+ spple_runtime_host_stop(h);if(!spple_runtime_host_snapshot(h,&out))return 9;
  spple_runtime_host_destroy(h);return 0;
 }
 """

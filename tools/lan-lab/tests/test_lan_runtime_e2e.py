@@ -41,6 +41,13 @@ def device(control,is_host,port):
   user=c.create_string_buffer(bytes(48));config=bytearray(32);config[:8]=(123).to_bytes(8,'little');config[18]=4;cfg=c.create_string_buffer(bytes(config))
   if is_host:
    assert b.open_ap()==0;assert b.create(cfg,secret,user)==0;assert b.state()==3
+   # ACNH opens admission after creation while Bonjour is still registering.
+   # A local room-setting update must not require publication to have finished.
+   for policy in (0,1,0):
+    result=b.policy(policy)
+    assert result==0,('acceptance policy before Bonjour registration',policy,result)
+   initial_advert=c.create_string_buffer(b'pending room')
+   assert b.advertise(initial_advert,12)==0,'advertise-data update before publication failed'
    pre_err=c.c_int();pre_fd=sk.socket(2,2,0,c.byref(pre_err));assert pre_fd>=0,('host socket before join',pre_err.value)
    peer_addr=c.create_string_buffer(bytes([16,2,0x11,0x5c,10,77,0,2])+bytes(8),16)
    payload=c.create_string_buffer(b'probe')
