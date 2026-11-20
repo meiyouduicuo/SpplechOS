@@ -57,27 +57,34 @@ async def send_package(service, path: Path, manifest: dict, report, *, timeout=3
     partial, package = base + '.part', base + '.sppgame'
     await service.makedirs(INBOX)
     report('usb.upload', 0)
-    digest = hashlib.sha1()
-    handle = await service.fopen(partial, 'w')
     try:
-        done = 0
-        with path.open('rb') as source:
-            while chunk := source.read(CHUNK):
-                await service.fwrite(handle, chunk)
-                digest.update(chunk)
-                done += len(chunk)
-                report('usb.upload', int(done * 100 / snapshot.st_size))
-    finally:
-        await service.fclose(handle)
-    current = path.stat()
-    if current.st_size != snapshot.st_size or current.st_mtime_ns != snapshot.st_mtime_ns:
-        raise HotInstallError('usb.changed')
-    report('usb.verify', 0)
-    if int((await service.stat(partial))['st_size']) != snapshot.st_size:
-        raise HotInstallError('usb.verifyFailed')
-    if await service.get_file_hash(partial) != digest.digest():
-        raise HotInstallError('usb.verifyFailed')
-    await service.rename(partial, package)
+        digest = hashlib.sha1()
+        handle = await service.fopen(partial, 'w')
+        try:
+            done = 0
+            with path.open('rb') as source:
+                while chunk := source.read(CHUNK):
+                    await service.fwrite(handle, chunk)
+                    digest.update(chunk)
+                    done += len(chunk)
+                    report('usb.upload', int(done * 100 / snapshot.st_size))
+        finally:
+            await service.fclose(handle)
+        current = path.stat()
+        if current.st_size != snapshot.st_size or current.st_mtime_ns != snapshot.st_mtime_ns:
+            raise HotInstallError('usb.changed')
+        report('usb.verify', 0)
+        if int((await service.stat(partial))['st_size']) != snapshot.st_size:
+            raise HotInstallError('usb.verifyFailed')
+        if await service.get_file_hash(partial) != digest.digest():
+            raise HotInstallError('usb.verifyFailed')
+        await service.rename(partial, package)
+    except BaseException:
+        try:
+            await service.rm(partial)
+        except Exception:
+            pass
+        raise
     request = json.dumps({'schema': 1, 'id': request_id, 'file': request_id + '.sppgame'}).encode()
     await service.set_file_contents(base + '.request.part', request)
     await service.rename(base + '.request.part', base + '.request.json')
@@ -92,7 +99,10 @@ async def send_package(service, path: Path, manifest: dict, report, *, timeout=3
             if status.get('state') == 'complete':
                 if status.get('titleID') != manifest['titleID']:
                     raise HotInstallError('usb.invalidReceipt')
-                await service.rm(status_path)
+                try:
+                    await service.rm(status_path)
+                except Exception:
+                    pass  # Receipt cleanup must not turn a successful import into a failure.
                 report('usb.complete', 100)
                 return manifest['titleID']
             if status.get('state') == 'failed':
@@ -109,13 +119,13 @@ async def import_package(path: Path, report=lambda stage, percent: None) -> str:
     from pymobiledevice3.services.house_arrest import HouseArrestService
     from .device_probe import probe_shell
 
-    devices = [d for d in await list_devices() if d.connection_type == 'USB']
+    devices = [d for d in await asyncio.wait_for(list_devices(), 15) if d.connection_type == 'USB']
     if len(devices) != 1:
         raise HotInstallError('usb.oneDevice')
     report('usb.check', 0)
-    device = await create_using_usbmux(serial=devices[0].serial, connection_type='USB')
+    device = await asyncio.wait_for(create_using_usbmux(serial=devices[0].serial, connection_type='USB'), 30)
     try:
-        host = await probe_shell(device)
+        host = await asyncio.wait_for(probe_shell(device), 45)
         if (manifest['bundleID'], manifest['teamID']) != (host.identity.bundle_id, host.identity.team_id):
             raise HotInstallError('usb.identity')
         async with await HouseArrestService.create(device, host.bundle_id, documents_only=True) as service:

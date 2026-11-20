@@ -89,6 +89,9 @@ jobs:
             -only-testing:ShellDemoUITests/ShellDemoUITests/testNativeLauncherBarsFollowTheActiveScreen \
             -only-testing:ShellDemoUITests/ShellDemoUITests/testImmersiveShelfKeepsSelectionAndSettingsAcrossRotation \
             CODE_SIGNING_ALLOWED=NO 2>&1 | tee logs/shell-ios-ui-tests.log
+          xcrun xcresulttool export attachments \
+            --path "$RUNNER_TEMP/shell-ui-tests.xcresult" \
+            --output-path logs/ui-screenshots
 
       - name: Build the unsigned app template
         run: |

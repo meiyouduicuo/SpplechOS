@@ -89,6 +89,8 @@ struct ImmersiveConsoleLibrary: View {
             .padding(.bottom, 12)
         }
         .scrollIndicators(.hidden)
+        .ignoresSafeArea(.container, edges: [.leading, .trailing])
+        .accessibilityIdentifier("library.grid")
         .safeAreaInset(edge: .bottom, spacing: 0) {
             GameLaunchActions(game: selected.game, primary: { primary(selected) }, settings: openSettings,
                               expands: !landscape)

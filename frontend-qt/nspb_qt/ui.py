@@ -1909,6 +1909,7 @@ class MainWindow(QMainWindow):
             self.package_button.setEnabled(True)
             self.package_status.setText(self.m.t('package.done', message) if ok else message)
             if ok:
+                self.m.settings.setValue('lastUSBPackage', message)
                 pu.reveal(message)
             return
         if ok:
