@@ -177,6 +177,7 @@ class MainWindow(QMainWindow):
     def __init__(self, model: Model) -> None:
         super().__init__()
         self.m = model
+        self.m._game_package_mode = pu.IS_WIN
         self.m.ask_folder = lambda title: QFileDialog.getExistingDirectory(
             self, title, str(Path.home())
         )
@@ -2311,7 +2312,7 @@ class MainWindow(QMainWindow):
         grp.add_divider()
         if pu.IS_WIN:
             initial = QPushButton(self.m.t('package.initialApp'))
-            initial.clicked.connect(self._repack_built_shell_ipa)
+            initial.clicked.connect(lambda: self.m.start_repack_shell_ipa(app_only=True))
             grp.add_row(initial)
 
         # Row 1: Project repository

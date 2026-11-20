@@ -4018,7 +4018,7 @@ class Model(QObject):
 
         return se.find_stale_frameworks(self.shell_cache_path, self.engine_path)
 
-    def repack_built_shell_ipa(self) -> tuple[bool, str]:
+    def repack_built_shell_ipa(self, *, app_only: bool = False) -> tuple[bool, str]:
         """Synchronously repack `<shell_cache>/export/NX2Apple.ipa` from already-built frameworks."""
         from .win import shell_export as se
 
@@ -4032,6 +4032,12 @@ class Model(QObject):
             self.stagesChanged.emit()
 
         py = self.python_path or sys.executable
+        if app_only:
+            ok, output, message, _ = se.export_app_only(root=self.shell_cache_path, repo=self.engine_path,
+                                                      python_exe=py, t_func=self.t, log=self.log, stage_cb=on_stage)
+            if ok:
+                self.ipa_path = output
+            return ok, message
         ok, out_ipa, msg, _notes = se.repack_built_shell(
             root=self.shell_cache_path,
             repo=self.engine_path,
@@ -4048,9 +4054,9 @@ class Model(QObject):
             self._emit_library_changed()
         return ok, msg
 
-    def start_repack_shell_ipa(self) -> bool:
+    def start_repack_shell_ipa(self, *, app_only: bool = False) -> bool:
         """Repack the shared IPA on a background thread and report via `runningChanged` / `finished`."""
-        if not self.can_export_built_games():
+        if self.running or (not app_only and not self.can_export_built_games()):
             return False
         self._last_error = ''
         self.failure = None
@@ -4061,7 +4067,7 @@ class Model(QObject):
 
         def worker() -> None:
             try:
-                ok, msg = self.repack_built_shell_ipa()
+                ok, msg = self.repack_built_shell_ipa(app_only=True) if app_only else self.repack_built_shell_ipa()
             except Exception as exc:  # noqa: BLE001
                 ok, msg = False, str(exc)
             QMetaObject.invokeMethod(
@@ -4775,7 +4781,7 @@ class Model(QObject):
 
         py = self.python_path or sys.executable
         picked = self.artwork.custom_paths.get(tid.upper())
-        if pu.IS_WIN or getattr(self, '_defer_shell_export', False) or self.settings_value('hotFrameworkOnly', False):
+        if getattr(self, '_game_package_mode', False) or getattr(self, '_defer_shell_export', False) or self.settings_value('hotFrameworkOnly', False):
             if not fw.is_dir():
                 folder = fw.parent.name or 'shell-framework'
                 return False, self.t('shell.noFramework', game_name, folder)

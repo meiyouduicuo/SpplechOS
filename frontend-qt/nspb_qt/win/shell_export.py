@@ -796,6 +796,15 @@ def _stage_and_pack_shell_ipa(
     return True, str(out_ipa), msg, notes
 
 
+def export_app_only(*, root: str | os.PathLike, repo: str | os.PathLike, python_exe: str = '',
+                    t_func=None, log=lambda _: None, stage_cb=None):
+    """Export the original app identity without bundling any built games or data."""
+    translate = t_func or (lambda key, *args: key + (': ' + ', '.join(map(str, args)) if args else ''))
+    return _stage_and_pack_shell_ipa(library=ShellLibrary(bundle_id=DEFAULT_BUNDLE_ID),
+                                    root_p=Path(root), repo_p=Path(repo), py_exe=_resolve_python_exe(python_exe),
+                                    notes=[], _t=translate, log=log, stage_cb=stage_cb, entry_limit=ZIP32_ENTRY_LIMIT)
+
+
 def export_shell(
     *,
     root: str | os.PathLike,
