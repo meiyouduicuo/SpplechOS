@@ -12,8 +12,10 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'frontend-qt'))
 from nspb_qt.win import shell_export as shell  # noqa: E402
 from nspb_qt.refresh_flow import matches_romfs_identity  # noqa: E402
+from nspb_qt.library import ArtworkStore  # noqa: E402
 from verify_framework_hle import verify_forced_hle  # noqa: E402
 from airport_test_env import export_bundle_id, release_environment, with_lan_defaults  # noqa: E402
+from airport_artwork import select_banner  # noqa: E402
 
 TITLE_ID = '01006F8002326000'
 BUNDLE_ID = 'org.spplechos.acnh.airporttest'
@@ -28,18 +30,22 @@ def main():
     parser.add_argument('--romfs-image', type=Path, required=True,
                         help='validate the existing image without copying it into the IPA')
     parser.add_argument('--template', type=Path, required=True)
+    parser.add_argument('--banner', type=Path, help='local banner image; otherwise use the desktop artwork cache or framework banner')
     parser.add_argument('--release', action='store_true',
                         help='brand as SpplechOS, upgrade the original app and omit default LAN tracing')
     parser.add_argument('--upgrade-test-app', action='store_true',
                         help='with --release, explicitly upgrade the separate airport test app instead')
-    parser.add_argument('--version', default='1.8.0', help='release marketing version')
-    parser.add_argument('--build-number', default='181', help='release CFBundleVersion')
+    parser.add_argument('--version', default='1.8.1', help='release marketing version')
+    parser.add_argument('--build-number', default='182', help='release CFBundleVersion')
     args = parser.parse_args()
     if args.upgrade_test_app and not args.release:
         parser.error('--upgrade-test-app requires --release')
     bundle_id = export_bundle_id(args.release, args.upgrade_test_app)
     target = args.root.resolve()
     framework = args.framework.resolve()
+    current_artwork = ArtworkStore().image_path(TITLE_ID)
+    legacy_artwork = ArtworkStore(state_dir=shell.tc.tools_dir().parent).image_path(TITLE_ID)
+    banner = select_banner(framework, args.banner, (current_artwork, legacy_artwork))
     expected_env = 'DM_ACNH_AIRPORT_TEST=1'
     if target.exists() and any(target.iterdir()):
         raise SystemExit(f'Test shell directory is not empty: {target}')
@@ -87,6 +93,7 @@ def main():
     ok, ipa, message, notes = shell.export_shell(
         root=target, repo=ROOT / 'engine', framework=framework,
         title_id=TITLE_ID, name='Animal Crossing: New Horizons',
+        picked_artwork=str(banner) if banner else None,
         python_exe=sys.executable, log=lambda line: print(line, end='', flush=True))
     if not ok:
         raise SystemExit(message)
@@ -98,6 +105,10 @@ def main():
             raise SystemExit('The app was packaged with an unexpected upgrade identifier')
         if any(name.lower().endswith('/romfs.img') for name in archive.namelist()):
             raise SystemExit('The test package unexpectedly contains a game image')
+        if banner:
+            packaged_banner=f'{app}/Frameworks/{framework.name}/banner.{banner.suffix.lstrip(".").lower()}'
+            if packaged_banner not in archive.namelist() or archive.read(packaged_banner)!=banner.read_bytes():
+                raise SystemExit('The packaged banner is missing or differs from the selected artwork')
         packaged = archive.read(f'{app}/Frameworks/{framework.name}/dm/env.txt')
         if expected_env.encode() not in packaged.splitlines():
             raise SystemExit('The packaged framework did not enable the airport test')
