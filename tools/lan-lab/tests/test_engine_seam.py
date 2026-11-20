@@ -1,7 +1,48 @@
 """Compile the real HLE seam with stubbed host bindings and exercise both paths."""
-import os, pathlib, subprocess, tempfile, unittest
+import os, pathlib, re, subprocess, tempfile, unittest
 ROOT=pathlib.Path(__file__).resolve().parents[3]
 class EngineSeamTests(unittest.TestCase):
+    def test_cpp_errno_query_sees_the_receive_error_used_by_animal_crossing(self):
+        """ACNH main+0xe061c calls the C++ GetLastErrno, not GetLastError."""
+        clang=os.environ.get('SPPLE_TEST_CLANG',r'C:\msys64\mingw64\bin\clang.exe')
+        source=(ROOT/'engine/dm/host/hle_net.c').read_text(encoding='utf-8')
+        seam=source[source.index('#define SK_ENETDOWN'):source.index('#define SKF')]
+        hooks=re.findall(r'HLE_FORCE\("([^"]+)",\s*"[^"]*",\s*int,\s*(\w+),\s*void\)\s*\{([^{}]*)\}',source)
+        hooks=[(name,fn,body) for name,fn,body in hooks if 'GetLastErr' in name]
+        code='''#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdatomic.h>
+#define LOG(...) ((void)0)
+#include "hle_lan_backend.h"
+'''+seam+'\n'
+        code+='\n'.join(f'static int {fn}(void) {{{body}}}' for _,fn,body in hooks)
+        code+='\nstruct entry {const char *name; int (*get)(void);};\nstatic struct entry queries[]={\n'
+        code+=',\n'.join('{"'+name+'",'+fn+'}' for name,fn,_ in hooks)+'};\n'
+        code+='''
+static long receive_empty(int fd,void *p,unsigned long n,int flags,void *a,unsigned *sz,int *error) {
+ (void)fd;(void)p;(void)n;(void)flags;(void)a;(void)sz;*error=11;return -1;
+}
+static int owned(int fd){return fd==7;}
+int main(void) {
+ dm_lan_socket_backend backend={0};backend.owns=owned;backend.recvfrom=receive_empty;
+ atomic_store(&g_lan_sockets,&backend);
+ if(dm_sk_recvfrom(7,0,0,0,0,0)!=-1)return 1;
+ const char *names[]={"_ZN2nn6socket12GetLastErrnoEv","_ZN2nn6socket12GetLastErrorEv","nnsocketGetLastErrno"};
+ for(unsigned n=0;n<sizeof names/sizeof names[0];++n){
+  int found=0;
+  for(unsigned i=0;i<sizeof queries/sizeof queries[0];++i)if(!strcmp(names[n],queries[i].name)){
+   found=1;if(queries[i].get()!=11)return 2;
+  }
+  if(!found)return 3;
+ }
+ return 0;
+}
+'''
+        with tempfile.TemporaryDirectory() as tmp:
+            src=pathlib.Path(tmp)/'errno.c'; exe=pathlib.Path(tmp)/'errno.exe'; src.write_text(code,encoding='utf-8')
+            subprocess.run([clang,'-std=c11','-I',str(ROOT/'engine/dm/host'),str(src),'-o',str(exe)],check=True)
+            subprocess.run([str(exe)],check=True)
     def test_socket_dispatch_and_error_propagation(self):
         clang=os.environ.get('SPPLE_TEST_CLANG',r'C:\msys64\mingw64\bin\clang.exe')
         source=(ROOT/'engine/dm/host/hle_net.c').read_text(encoding='utf-8')
