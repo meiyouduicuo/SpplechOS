@@ -26,19 +26,26 @@ index efe0975..a4d1b25 100644
  
  HLE_FORCE("_ZN2nn7account10InitializeEv", "connects to the acc:u0 account service; the host has one fixed local user", void, h_acc_Init, void) {}
 diff --git a/dm/host/hle_friends.c b/dm/host/hle_friends.c
-index 7f41e6c..dbfa38f 100644
+index 7f41e6c..5f71305 100644
 --- a/dm/host/hle_friends.c
 +++ b/dm/host/hle_friends.c
-@@ -2,6 +2,8 @@
+@@ -2,6 +2,15 @@
  // Not cut: the getters of Friend / Profile / FriendPresence and the constructors of Friend / Profile / UserPresence (they only read and write the game's own objects and do not go through the service).
  // Return convention: Result returns RES_FAIL; bool returns false; event pointers get a SystemEvent that is bound to a kernel event and never fires.
  #include "hle.h"
 +#include "hle_lan_backend.h"
 +#include <pthread.h>
++
++static void acnh_friend_result(const char *name,Result result,void *caller) {
++ if(!getenv("DM_ACNH_AIRPORT_TEST") || !getenv("DM_LDN_TRACE"))return;
++ module_t *m=module_of(caller);
++ if(m)LOG("[DEBUG-ACNH-AIRPORT] %s result=%u caller=%s+0x%llx",name,result,m->name,(unsigned long long)((uintptr_t)caller-(uintptr_t)m->base));
++ else LOG("[DEBUG-ACNH-AIRPORT] %s result=%u",name,result);
++}
  
  // Notification event that never fires (GetSystemEvent-style calls return a pointer; bound on the guest thread on first use)
  static _Alignas(16) uint8_t g_ev_notify[0x100], g_ev_invite[0x100];
-@@ -28,8 +30,30 @@ HLE_FORCE("_ZN2nn7friends16UpdateFriendInfoEPNS0_6FriendERKNS_7account3UidEPKNS3
+@@ -28,8 +37,30 @@ HLE_FORCE("_ZN2nn7friends16UpdateFriendInfoEPNS0_6FriendERKNS_7account3UidEPKNS3
            Result, h_fr_UpdateFriendInfo, void *f, const void *uid, const void *ids, int n) { (void)f; (void)uid; (void)ids; (void)n; return RES_FAIL; }
  HLE_FORCE("_ZN2nn7friends14AddPlayHistoryERKNS0_26PlayHistoryRegistrationKeyERKNS0_15InAppScreenNameES6_", "play history is not registered (cut)",
            Result, h_fr_AddPlayHistory, const void *k, const void *a, const void *b) { (void)k; (void)a; (void)b; return RES_FAIL; }
@@ -71,6 +78,18 @@ index 7f41e6c..dbfa38f 100644
  // Notification queue
  HLE_FORCE("_ZN2nn7friends17NotificationQueueC1Ev", "notification queue creates no session (cut)", void, h_fr_NqCtor, void *self) { (void)self; }
  HLE_FORCE("_ZN2nn7friends17NotificationQueueD1Ev", "notification queue has no session to close (cut)", void, h_fr_NqDtor, void *self) { (void)self; }
+@@ -56,9 +87,9 @@ HLE_FORCE("_ZN2nn7friends25StartSendingFriendRequestERKNS_7account3UidERKNS1_23N
+           Result, h_fr_StartSend, const void *uid, const void *nsa, const void *mine, const void *theirs) { (void)uid; (void)nsa; (void)mine; (void)theirs; return RES_FAIL; }
+ HLE_FORCE("_ZN2nn7friends33ShowMethodsOfSendingFriendRequestERKNS_7account3UidE", "send friend request applet (cut)", Result, h_fr_ShowSend, const void *uid) { (void)uid; return RES_FAIL; }
+ HLE_FORCE("_ZN2nn7friends18GetBlockedUserListEPiPNS_7account23NetworkServiceAccountIdERKNS2_3UidEii", "blocked user list is empty (cut)",
+-          Result, h_fr_GetBlocked, int *count, void *out, const void *uid, int off, int n) { (void)out; (void)uid; (void)off; (void)n; if (count) *count = 0; return RES_FAIL; }
++          Result, h_fr_GetBlocked, int *count, void *out, const void *uid, int off, int n) { (void)out; (void)uid; (void)off; (void)n; if (count) *count = 0; acnh_friend_result("GetBlockedUserList",RES_FAIL,dm_bigstack_caller(__builtin_return_address(0))); return RES_FAIL; }
+ // Online play sessions (DRAGON QUEST XI S)
+-HLE_FORCE("_ZN2nn7friends28DeclareOpenOnlinePlaySessionERKNS_7account3UidE", "online play session unavailable (cut)", Result, h_fr_OpenSession, const void *uid) { (void)uid; return RES_FAIL; }
++HLE_FORCE("_ZN2nn7friends28DeclareOpenOnlinePlaySessionERKNS_7account3UidE", "online play session unavailable (cut)", Result, h_fr_OpenSession, const void *uid) { (void)uid; acnh_friend_result("DeclareOpenOnlinePlaySession",RES_FAIL,dm_bigstack_caller(__builtin_return_address(0))); return RES_FAIL; }
+ HLE_FORCE("_ZN2nn7friends29DeclareCloseOnlinePlaySessionERKNS_7account3UidE", "online play session unavailable (cut)", Result, h_fr_CloseSession, const void *uid) { (void)uid; return RES_FAIL; }
+ // Presence
+ HLE_FORCE("_ZN2nn7friends12UserPresence10InitializeERKNS_7account3UidE", "presence unavailable (cut)", Result, h_fr_UpInit, void *self, const void *uid) { (void)self; (void)uid; return RES_FAIL; }
 diff --git a/dm/host/hle_lifecycle.c b/dm/host/hle_lifecycle.c
 index 80bdd7c..ac54d50 100644
 --- a/dm/host/hle_lifecycle.c
@@ -123,7 +142,7 @@ index a51d69b..94faccd 100644
  // show UI, the game passes 0). The host has no VR display (pl::BeginVrMode refuses, hle_sdk16.c): not permitted, so the game clears its VR flag and stays 2D (as MacNativeGames found on 1.6.0 and 1.9.0)
  HLE_FORCE("_ZN2nn4pctl33CheckAgcPermissionUnderMinimumAgeERKNS_7account3UidE", "parental controls · a user's permission under the minimum age (SDK 22), networking out of scope; never", unsigned, h_pctl_CheckAgc, const void *uid) { (void)uid; return 0; }
 diff --git a/dm/host/hle_net.c b/dm/host/hle_net.c
-index aa82a2a..2aabcec 100644
+index aa82a2a..0f64428 100644
 --- a/dm/host/hle_net.c
 +++ b/dm/host/hle_net.c
 @@ -1,6 +1,7 @@
@@ -134,7 +153,7 @@ index aa82a2a..2aabcec 100644
  #include <pthread.h>
  #include <stdatomic.h>
  
-@@ -25,19 +26,68 @@ HLE_FORCE("_ZN2nn4nifm22IsNetworkRequestOnHoldEv", "offline: on hold for the fir
+@@ -25,19 +26,75 @@ HLE_FORCE("_ZN2nn4nifm22IsNetworkRequestOnHoldEv", "offline: on hold for the fir
      while (h > 0 && !atomic_compare_exchange_weak(&g_nifm_hold, &h, h - 1)) {}
      return h > 0;
  }
@@ -160,7 +179,12 @@ index aa82a2a..2aabcec 100644
 +    const dm_lan_socket_backend *empty = NULL;
 +    return atomic_compare_exchange_strong(&g_lan_sockets, &empty, b) ? 0 : -1;
 +}
-+int dm_sk_last_errno(void) { return t_skerr; }
++int dm_sk_last_errno(void) {
++    static __thread unsigned trace_count;
++    if(getenv("DM_ACNH_AIRPORT_TEST") && getenv("DM_LDN_TRACE") && trace_count++<8)
++        LOG("[DEBUG-ACNH-AIRPORT] socket errno query: %d",t_skerr);
++    return t_skerr;
++}
 +int dm_sk_socket(int family, int type, int protocol) {
 +    const dm_lan_socket_backend *b = atomic_load(&g_lan_sockets);
 +    int r=b ? b->socket(family,type,protocol,&t_skerr) : sk_fail();
@@ -197,7 +221,9 @@ index aa82a2a..2aabcec 100644
 +}
 +int dm_sk_getsockopt(int fd,int level,int option,void *value,unsigned *size) {
 +    const dm_lan_socket_backend *b=atomic_load(&g_lan_sockets);
-+    return b && b->owns(fd) && b->getsockopt ? b->getsockopt(fd,level,option,value,size,&t_skerr) : sk_fail();
++    int r=b && b->owns(fd) && b->getsockopt ? b->getsockopt(fd,level,option,value,size,&t_skerr) : sk_fail();
++    if(getenv("DM_ACNH_AIRPORT_TEST") && getenv("DM_LDN_TRACE")) LOG("[DEBUG-ACNH-AIRPORT] getsockopt: level %d option %d result %d errno %d",level,option,r,t_skerr);
++    return r;
 +}
 +int dm_sk_fcntl(int fd,int command,uint64_t value) {
 +    const dm_lan_socket_backend *b=atomic_load(&g_lan_sockets);
@@ -206,7 +232,7 @@ index aa82a2a..2aabcec 100644
  #define SKF(m, cname, ...) HLE_FORCE(m, "bsd socket service (cut): returns -1/ENETDOWN", int, cname, __VA_ARGS__)
  // Poll / Select with nothing to wait on: the host creates no socket, so a game's descriptors are all -1, or it passes none. POSIX and Horizon's bsd service ignore negative
  // descriptors and wait out the timeout, returning 0. Failing at once made Dark Souls Remastered's network thread ("NexusRevolution Socket", main+0x92c7c4) spin a core at 100%
-@@ -53,14 +103,45 @@ typedef struct { int32_t fd; int16_t events, revents; } sk_pollfd;
+@@ -53,14 +110,45 @@ typedef struct { int32_t fd; int16_t events, revents; } sk_pollfd;
  // The numbers are the bsd service's: the lowest free one, from 0, as for its sockets (the host makes no other descriptor). Games size their tables for those small numbers: Minecraft's
  // NetherNet threads put theirs in a 1024-bit fd_set on the stack for Select (FD_SET at main+0x18b2ae8 in 1.21.120), and when the host numbered them from 0x4000 the bit landed 2 KB
  // past the set and the thread crashed (SIGBUS)
@@ -256,7 +282,7 @@ index aa82a2a..2aabcec 100644
      pthread_mutex_unlock(&g_efd_m);
      LOG("[RED] net: more than %d event descriptors", EFD_MAX);
      t_skerr = 24; return -1;   // EMFILE
-@@ -73,6 +154,10 @@ static int efd_close(int fd) {
+@@ -73,6 +161,10 @@ static int efd_close(int fd) {
      if (!ok) return sk_fail();
      return 0;
  }
@@ -267,7 +293,7 @@ index aa82a2a..2aabcec 100644
  __attribute__((weak)) int dm_teardown_is_parking(void) { return 0; }
  __attribute__((weak)) void dm_teardown_check_current_thread(void) {}
  void dm_net_wake_teardown(void) {
-@@ -104,11 +189,23 @@ static int efd_write(int fd, uint64_t v) {
+@@ -104,11 +196,23 @@ static int efd_write(int fd, uint64_t v) {
  }
  // With g_efd_m held: fills revents, returns how many descriptors have any. open holds the descriptors that were open when the wait began: one of those closed since is POLLNVAL, any other
  // is one the host never made, with nothing to say (see dm_sk_poll). The numbers start at 0, where a game's stale or never-valid descriptors fall too, so the range alone cannot tell them apart
@@ -292,7 +318,7 @@ index aa82a2a..2aabcec 100644
          if (!efd_used(p[i].fd)) { p[i].revents = SK_POLLNVAL; ready++; continue; }   // closed while waiting
          if (g_efd[p[i].fd].count) p[i].revents |= p[i].events & (SK_POLLIN | SK_POLLRDNORM);
          p[i].revents |= p[i].events & (SK_POLLOUT | SK_POLLWRNORM);
-@@ -122,9 +219,10 @@ static int efd_ready(sk_pollfd *p, uint64_t n, uint64_t open) {
+@@ -122,9 +226,10 @@ static int efd_ready(sk_pollfd *p, uint64_t n, uint64_t open) {
  int dm_sk_poll(void *fds, uint64_t n, int ms) {   // also hle_offline.c's plain pollfd form
      sk_pollfd *p = fds;
      uint64_t open = 0;   // EFD_MAX is 64: one bit per descriptor
@@ -304,7 +330,7 @@ index aa82a2a..2aabcec 100644
          static int once; if (!once++) LOG("socket: Poll of %llu descriptors with one the host never made (fd %d, events %#x; %d ms): nothing ready at the timeout", (unsigned long long)n, p[i].fd, p[i].events, ms);
      }
      pthread_mutex_unlock(&g_efd_m);
-@@ -135,7 +233,7 @@ int dm_sk_poll(void *fds, uint64_t n, int ms) {   // also hle_offline.c's plain
+@@ -135,7 +240,7 @@ int dm_sk_poll(void *fds, uint64_t n, int ms) {   // also hle_offline.c's plain
      uint64_t start = guest_ns();
      pthread_mutex_lock(&g_efd_m);
      int ready;
@@ -313,7 +339,7 @@ index aa82a2a..2aabcec 100644
          if (dm_teardown_is_parking()) { pthread_mutex_unlock(&g_efd_m); dm_teardown_check_current_thread(); return 0; }
          int64_t left = limit - (int64_t)(guest_ns() - start);
          if (left <= 0) break;
-@@ -169,17 +267,17 @@ int dm_sk_select(int nfds, uint64_t *r, uint64_t *w, uint64_t *e, const int64_t
+@@ -169,17 +274,17 @@ int dm_sk_select(int nfds, uint64_t *r, uint64_t *w, uint64_t *e, const int64_t
      }
      return n;
  }
@@ -338,7 +364,7 @@ index aa82a2a..2aabcec 100644
  // SDK 21 overloads Star Fox imports: plain sockaddr, the ShutdownMethod enum, Read / Write and a name lookup without options; SetAllocator keeps nothing, as no session is created
  SKF("_ZN2nn6socket11GetPeerNameEiP8sockaddrPj", h_sk_GetPeerName21, int s, void *a, unsigned *n) { (void)s; (void)a; (void)n; return sk_fail(); }
  SKF("_ZN2nn6socket8ShutdownEiNS0_14ShutdownMethodE", h_sk_Shutdown21, int s, int how) { (void)s; (void)how; return sk_fail(); }
-@@ -198,7 +296,7 @@ HLE_FORCE("_ZN2nn6socket12EventFdWriteEim", "adds to the host counter and wakes
+@@ -198,7 +303,7 @@ HLE_FORCE("_ZN2nn6socket12EventFdWriteEim", "adds to the host counter and wakes
  SKF("_ZN2nn6socket17ResolverGetOptionEPNS0_14ResolverOptionENS0_17ResolverOptionKeyE", h_sk_ResGet, void *o, int k) { (void)o; (void)k; return sk_fail(); }
  SKF("_ZN2nn6socket17ResolverSetOptionERKNS0_14ResolverOptionE", h_sk_ResSet, const void *o) { (void)o; return sk_fail(); }
  HLE_FORCE("_ZN2nn6socket4RecvEiPvmNS0_7MsgFlagE", "bsd socket service (cut)", long, h_sk_Recv, int s, void *b, unsigned long n, int f) { (void)s; (void)b; (void)n; (void)f; return sk_fail(); }
@@ -347,7 +373,7 @@ index aa82a2a..2aabcec 100644
  HLE_FORCE("_ZN2nn6socket4SendEiPKvmNS0_7MsgFlagE", "bsd socket service (cut)", long, h_sk_Send, int s, const void *b, unsigned long n, int f) { (void)s; (void)b; (void)n; (void)f; return sk_fail(); }
  HLE_FORCE("_ZN2nn6socket11GetAddrInfoEPKcS2_PKNS0_8AddrInfoEPPS3_", "name resolution (cut): EAI_FAIL", int, h_sk_GetAddrInfo, const char *h, const char *s, const void *hint, void **res) {
      (void)h; (void)s; (void)hint; if (res) *res = NULL; return 4;   // EAI_FAIL
-@@ -207,15 +305,15 @@ HLE_FORCE("_ZN2nn6socket12FreeAddrInfoEPNS0_8AddrInfoE", "pairs with GetAddrInfo
+@@ -207,15 +312,15 @@ HLE_FORCE("_ZN2nn6socket12FreeAddrInfoEPNS0_8AddrInfoE", "pairs with GetAddrInfo
  HLE_FORCE("_ZN2nn6socket16GetHostEntByNameEPKcPKNS0_14ResolverOptionEm", "name resolution (cut): NULL", void *, h_sk_GetHostEnt, const char *n, const void *o, unsigned long c) { (void)n; (void)o; (void)c; t_skerr = SK_ENETDOWN; return NULL; }
  HLE_FORCE("_ZN2nn6socket12GetLastErrorEv", "socket error code kept by the host", int, h_sk_GetLastError, void) { return t_skerr; }
  // C interface
@@ -371,7 +397,7 @@ index aa82a2a..2aabcec 100644
  SKF("nnsocketResolverGetOption", h_nsk_ResGet, void *o, int k) { (void)o; (void)k; return sk_fail(); }
  SKF("nnsocketResolverSetOption", h_nsk_ResSet, const void *o) { (void)o; return sk_fail(); }
 diff --git a/dm/host/hle_offline.c b/dm/host/hle_offline.c
-index 9aaedd5..c2304c5 100644
+index 9aaedd5..5e7677f 100644
 --- a/dm/host/hle_offline.c
 +++ b/dm/host/hle_offline.c
 @@ -2,6 +2,44 @@
@@ -473,7 +499,7 @@ index 9aaedd5..c2304c5 100644
 -HLE_FORCE("_ZN2nn3ldn22SetStationAcceptPolicyENS0_12AcceptPolicyE", "local wireless (cut)", Result, h_ldn_Policy, int p) { (void)p; return RES_FAIL; }
 -HLE_FORCE("_ZN2nn3ldn6RejectENS0_11Ipv4AddressE", "local wireless (cut)", Result, h_ldn_Reject, uint32_t a) { (void)a; return RES_FAIL; }
 -HLE_FORCE("_ZN2nn3ldn16GetNetworkConfigEPNS0_13NetworkConfigE", "local wireless (cut)", Result, h_ldn_NetCfg, void *o) { (void)o; return RES_FAIL; }
-+HLE_FORCE("_ZN2nn3ldn22SetStationAcceptPolicyENS0_12AcceptPolicyE", "local wireless acceptance policy", Result, h_ldn_Policy, int p) { ldn_trace("h_ldn_Policy"); const dm_lan_backend *b=LAN_BACKEND(); return b && b->policy ? b->policy(p) : RES_FAIL; }
++HLE_FORCE("_ZN2nn3ldn22SetStationAcceptPolicyENS0_12AcceptPolicyE", "local wireless acceptance policy", Result, h_ldn_Policy, int p) { ldn_trace("h_ldn_Policy"); const dm_lan_backend *b=LAN_BACKEND(); Result r=b && b->policy ? b->policy(p) : RES_FAIL; if(getenv("DM_ACNH_AIRPORT_TEST") && getenv("DM_LDN_TRACE"))LOG("[DEBUG-ACNH-AIRPORT] acceptance policy=%d result=%u",p,r); return r; }
 +HLE_FORCE("_ZN2nn3ldn6RejectENS0_11Ipv4AddressE", "local wireless (cut)", Result, h_ldn_Reject, uint32_t a) { const dm_lan_backend *b=LAN_BACKEND(); return b && b->reject ? b->reject(a) : RES_FAIL; }
 +HLE_FORCE("_ZN2nn3ldn16GetNetworkConfigEPNS0_13NetworkConfigE", "local wireless (cut)", Result, h_ldn_NetCfg, void *o) { ldn_trace("h_ldn_NetCfg"); const dm_lan_backend *b=LAN_BACKEND(); return b && b->network_config ? b->network_config(o) : RES_FAIL; }
  

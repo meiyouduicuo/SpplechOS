@@ -98,3 +98,10 @@ for exactly one registration of each errno query and compiles the actual
 implementations from their respective files. It fails with `2 != 1` on the
 broken source and passes after removing the duplicate. The airport connection
 error remains open; the errno theory has not established its cause.
+
+The airport diagnostic framework adds read-only, test-app-gated messages with
+prefix `[DEBUG-ACNH-AIRPORT]`: the first eight socket errno queries per thread,
+socket-option results, acceptance-policy results, and blocked-user / online
+session service results with their guest call sites. It does not alter those
+return values or log UIDs, registration keys, or packet contents. These probes
+must be removed after capturing the failing device path.
