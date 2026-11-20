@@ -125,11 +125,13 @@ def export_game_package(framework: Path, image: Path, destination: Path, identit
         raise HotInstallError('Invalid game image')
     with tempfile.TemporaryDirectory(prefix='sppgame-shaders-') as temporary:
         files = list(_tree(framework, 'framework'))
+        inline_shaders = any(n.startswith('framework/msl/') or
+                             re.fullmatch(r'framework/msl-[^/]+\.aar', n) for n, _, _ in files)
         files.append(('data/romfs.img', image, size))
         aoc = image.parent / 'aoc'
         if aoc.exists():
             files.extend(_tree(aoc, 'data/aoc'))
-        if size != image.stat().st_size:
+        if not inline_shaders and size != image.stat().st_size:
             if not romfs_tool or not romfs_tool.is_file():
                 raise HotInstallError('Shader extraction tool is unavailable')
             spec = importlib.util.spec_from_file_location('_sppgame_romfs', romfs_tool)
@@ -142,9 +144,9 @@ def export_game_package(framework: Path, image: Path, destination: Path, identit
                 progress('extract', 0, 0)
             tool.extract_msl(str(image), temporary)
             files.extend(_tree(Path(temporary), 'data/msl'))
-        elif (image.parent / 'msl').is_dir():
+        elif not inline_shaders and (image.parent / 'msl').is_dir():
             files.extend(_tree(image.parent / 'msl', 'data/msl'))
-        elif shader_dir and re.fullmatch(r'b-[A-Za-z0-9._-]+', manifest.get('chain', '')):
+        elif not inline_shaders and shader_dir and re.fullmatch(r'b-[A-Za-z0-9._-]+', manifest.get('chain', '')):
             packed = shader_dir / (manifest['chain'] + '.img')
             if packed.is_file() and not packed.is_symlink():
                 files.append(('data/msl/' + packed.name, packed, packed.stat().st_size))

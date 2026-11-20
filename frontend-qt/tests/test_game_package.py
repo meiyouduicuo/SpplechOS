@@ -98,6 +98,19 @@ class GamePackageTests(unittest.TestCase):
             self.assertTrue(any(n.startswith('data/msl/') for n in names))
             self.assertFalse(any('save' in n for n in names))
             self.assertEqual((root / 'data/save/main.dat').read_bytes(), b'private save must stay here')
+            # An inline shader tree is already part of the signed framework copy.
+            # Keep it intact and do not also add a second copy beside the image.
+            inline = fw / 'msl/b-3f9a2c/synthetic.metallib'
+            inline.parent.mkdir(parents=True)
+            inline.write_bytes(b'inline shader')
+            target = export_game_package(fw, root / 'data/romfs.img', root / 'inline.sppgame',
+                                         HostIdentity(header['bundleID'], header['teamID'], 'b-3f9a2c', None))
+            with target.open('rb') as package:
+                package.read(8)
+                manifest = json.loads(package.read(struct.unpack('<Q', package.read(8))[0]))
+            names = {e['path'] for e in manifest['files']}
+            self.assertIn('framework/msl/b-3f9a2c/synthetic.metallib', names)
+            self.assertFalse(any(n.startswith('data/msl/') for n in names))
 
 
 if __name__ == '__main__':
