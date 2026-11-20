@@ -611,6 +611,7 @@ public struct LibraryView: View {
 
     var libraryActions: [ToolbarAction] {
         var items: [ToolbarAction] = []
+        items.append(.init(title: "Import game package…", symbol: "plus", id: "gamePackage.import", target: "lib.import", placement: .actions, action: actions.onImportGamePackage))
         items.append(.init(title: "Controllers", symbol: controllers.isEmpty ? "gamecontroller" : "gamecontroller.fill", id: "controllers.open", target: "lib.controllers", placement: .actions, action: openControllers))
         items.append(.init(title: "App settings", symbol: "gearshape", id: "shellSettings.open", target: "lib.shellSettings", placement: .actions, action: openShellSettings))
         return items

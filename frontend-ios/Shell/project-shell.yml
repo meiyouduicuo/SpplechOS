@@ -47,6 +47,12 @@ targets:
         UILaunchScreen: {}
         UIFileSharingEnabled: true          # Documents (log.txt, shell-log.txt, games/<id>/) visible in the Files app
         LSSupportsOpeningDocumentsInPlace: true
+        UTExportedTypeDeclarations:
+          - UTTypeIdentifier: org.spplechos.game-package
+            UTTypeDescription: SpplechOS game package
+            UTTypeConformsTo: [public.data]
+            UTTypeTagSpecification:
+              public.filename-extension: [sppgame]
         UISupportedInterfaceOrientations:   # the library turns, the game view asks for landscape (front_ios.m, dm_shell_present_game)
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationLandscapeRight

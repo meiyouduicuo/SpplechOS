@@ -272,6 +272,7 @@ public struct PadSnapshot: Equatable, Sendable {
 
 /// All effects leave the package through these closures. The game ID is always explicit.
 public struct ShellActions {
+    public var onImportGamePackage: () -> Void
     public var onSelect: (String) -> Void
     public var onPlay: (String) -> Void
     public var onChange: (_ gameID: String, _ settingID: String, _ value: String) -> Void
@@ -302,7 +303,7 @@ public struct ShellActions {
     public var onClearGameSaves: (String) -> Void
     /// Opens the system Game Controller settings (or fallback app settings) to configure Home Button Override.
     public var onOpenHomeButtonSettings: () -> Void
-    public init(onSelect: @escaping (String) -> Void = { _ in }, onPlay: @escaping (String) -> Void = { _ in },
+    public init(onImportGamePackage: @escaping () -> Void = {}, onSelect: @escaping (String) -> Void = { _ in }, onPlay: @escaping (String) -> Void = { _ in },
                 onChange: @escaping (String, String, String) -> Void = { _, _, _ in },
                 onPickGameData: @escaping (String) -> Void = { _ in }, onUseAppData: @escaping (String) -> Void = { _ in },
                 onPickCloudSaves: @escaping (String) -> Void = { _ in }, onDisableCloudSaves: @escaping (String) -> Void = { _ in },
@@ -318,6 +319,7 @@ public struct ShellActions {
                 onDeleteGame: @escaping (String, Bool) -> Void = { _, _ in },
                 onClearGameSaves: @escaping (String) -> Void = { _ in },
                 onOpenHomeButtonSettings: @escaping () -> Void = {}) {
+        self.onImportGamePackage = onImportGamePackage
         self.onSelect = onSelect
         self.onPlay = onPlay
         self.onChange = onChange

@@ -1,5 +1,6 @@
 import SwiftUI
 import ShellUI
+import UniformTypeIdentifiers
 
 /// `LibraryView` on a `ShellHostModel`: the real shell screen, plus the read-only log sheet and the notice alert. The
 /// launch arguments of the demo (initial selection and so on) are not part of it.
@@ -21,12 +22,20 @@ public struct ShellHostView: View {
                     signingWarning: model.signingWarning,
                     onDismissSigningWarning: { model.dismissSigningWarning() },
                     canOpenHomeButtonSettings: model.canOpenHomeButtonSettings)
-            .disabled(model.launchingGame)
+            .disabled(model.launchingGame || model.importingPackage)
             .overlay {
-                if model.launchingGame {
+                if model.launchingGame || model.importingPackage {
                     ZStack {
                         Color.black.opacity(0.45).ignoresSafeArea()
-                        ProgressView { Text("Preparing game…", bundle: .module) }
+                        VStack(spacing: 12) {
+                            if model.importingPackage {
+                                ProgressView(value: model.packageProgress) { Text(hostText("Importing game package…")) }
+                                    .frame(maxWidth: 280)
+                                Text(hostText("Keep this app open until the import finishes.")).font(.footnote)
+                            } else {
+                                ProgressView { Text("Preparing game…", bundle: .module) }
+                            }
+                        }
                             .padding(24)
                             .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20))
                             .accessibilityIdentifier("launch.progress")
@@ -50,6 +59,13 @@ public struct ShellHostView: View {
             } message: { Text(model.notice ?? "") }
             .onAppear { model.startControllers() }
             .onDisappear { model.stopControllers() }
+            .fileImporter(isPresented: $model.pickingGamePackage,
+                          allowedContentTypes: [UTType(filenameExtension: "sppgame") ?? .data]) { result in
+                switch result {
+                case .success(let url): Task { await model.importGamePackage(url) }
+                case .failure(let error): model.notice = error.localizedDescription
+                }
+            }
     }
 }
 

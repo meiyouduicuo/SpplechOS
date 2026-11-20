@@ -23,6 +23,23 @@ import XCTest
         app.alerts.buttons["OK"].tap()
     }
 
+    func testGamePackagePickerCanBeCancelledWithoutChangingTheLibrary() {
+        let id = "0100000000010000"
+        launch(select: id)
+        let button = app.buttons["gamePackage.import"]
+        XCTAssertTrue(button.isHittable)
+        button.tap()
+        let cancel = app.buttons["Cancel"].firstMatch
+        XCTAssertTrue(cancel.waitForExistence(timeout: 10))
+        cancel.tap()
+        XCTAssertTrue(app.buttons["tile.\(id)"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["shellSettings.open"].isHittable)
+        XCTAssertFalse(app.alerts.firstMatch.exists)
+        XCUIDevice.shared.orientation = .landscapeLeft
+        XCTAssertTrue(button.waitForExistence(timeout: 5))
+        XCTAssertTrue(button.isHittable)
+    }
+
     func testClearSavesRequiresConfirmationAndKeepsTheGameListed() {
         let id = "0100000000010000"
         launch(select: id)

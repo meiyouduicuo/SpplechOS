@@ -13,12 +13,13 @@ class HotInstallWorker(QThread):
 
     def __init__(self, framework: Path, title_id: str, image: Path | None,
                  zsign: Path, credential_dir: Path, parent=None, *, romfs_tool: Path | None = None,
-                 shader_dir: Path | None = None):
+                 shader_dir: Path | None = None, package_path: Path | None = None):
         super().__init__(parent)
         self.framework, self.title_id, self.image = framework, title_id, image
         self.zsign, self.credential_dir = zsign, credential_dir
         self.romfs_tool = romfs_tool
         self.shader_dir = shader_dir
+        self.package_path = package_path
 
     def run(self):
         try:
@@ -31,8 +32,8 @@ class HotInstallWorker(QThread):
                     self.progress.emit(*current)
             asyncio.run(deliver_game(self.framework, self.title_id, self.image,
                                      self.zsign, self.credential_dir, report, romfs_tool=self.romfs_tool,
-                                     shader_dir=self.shader_dir))
-            self.result.emit(True, '')
+                                     shader_dir=self.shader_dir, package_path=self.package_path))
+            self.result.emit(True, str(self.package_path or ''))
         except BaseException as exc:
             from .hot_install import HotInstallError
             message = str(exc) if isinstance(exc, HotInstallError) else '连接、签名或传输失败，请检查设备连接与签名环境。'

@@ -2343,5 +2343,15 @@
   "xcodeChoice.reset": "Usa Xcode di sistema",
   "xcodeChoice.system": "Usa l’Xcode selezionato in macOS.",
   "xcodeChoice.title": "Xcode per NX2Apple",
-  "xcodeChoice.unavailable": "Ricollega l’unità con l’Xcode selezionato o scegli un’altra copia."
+  "xcodeChoice.unavailable": "Ricollega l’unità con l’Xcode selezionato o scegli un’altra copia.",
+  "ios.ui.importGamePackage": "Import game package…",
+  "ios.host.packageImporting": "Importing game package…",
+  "ios.host.packageKeepOpen": "Keep this app open until the import finishes.",
+  "ios.host.packageInvalid": "This game package is invalid or unsupported.",
+  "ios.host.packageIdentity": "This game package was signed for another app or account. Export it again for this SpplechOS installation.",
+  "ios.host.packageIncomplete": "This game package is incomplete or damaged. Export it again.",
+  "ios.host.packageSpace": "There is not enough free space to import this game package.",
+  "ios.host.packageIncompatible": "This game package does not match this app or its game data.",
+  "ios.host.packageBusy": "Finish the current operation before importing a game package.",
+  "ios.host.packageImported": "Game imported. Your saved files have been kept."
 }

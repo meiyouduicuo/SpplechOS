@@ -83,6 +83,9 @@ public struct ShellHostConfig: Sendable {
     /// Play is preparing the game's resources or handing over to the engine.
     public private(set) var launchingGame = false
     private var modifyingSaves = false
+    public var pickingGamePackage = false
+    public private(set) var importingPackage = false
+    public private(set) var packageProgress = 0.0
     /// Cloud save conflict or unreadable-archive prompt awaiting the player's decision before launch.
     public var cloudConflict: CloudSavePrompt?
     /// Mild heads-up when the app's provisioning profile expires within 48 hours.
@@ -160,6 +163,10 @@ public struct ShellHostConfig: Sendable {
         }
         let gamesRoot = config.gamesRoot
         let hotRoot = config.hotFrameworksRoot
+        if let hotRoot {
+            do { try GamePackage.recover(dataRoot: dataRoot, frameworksRoot: hotRoot) }
+            catch { notice = error.localizedDescription }
+        }
         startupJoinTask = Task { [weak self] in
             let joined = await Task.detached(priority: .utility) { () -> Bool in
                 let documents = dataRoot.deletingLastPathComponent()
@@ -186,7 +193,7 @@ public struct ShellHostConfig: Sendable {
         #if canImport(UIKit)
         foregroundObserver = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main) { [weak self] _ in
             MainActor.assumeIsolated {
-                guard let self, !self.launchingGame else { return }
+                guard let self, !self.launchingGame, !self.importingPackage else { return }
                 self.reload()
             }
         }
@@ -335,6 +342,7 @@ public struct ShellHostConfig: Sendable {
     }
 
     private func reload(afterClaim: Bool) {
+        guard !importingPackage else { return }
         forgetCheckedRomfsImages()
         resolvedProfiles.removeAll()
         if let hotRoot = config.hotFrameworksRoot {
@@ -661,6 +669,7 @@ public struct ShellHostConfig: Sendable {
     /// The closures for `LibraryView`.
     public var actions: ShellActions {
         ShellActions(
+            onImportGamePackage: { [weak self] in self?.pickingGamePackage = true },
             onPlay: { [weak self] id in self?.play(id) },
             onChange: { [weak self] id, setting, value in self?.change(id, setting: setting, value: value) },
             onPickGameData: { [weak self] id in self?.pickGameData(id) },
@@ -688,6 +697,36 @@ public struct ShellHostConfig: Sendable {
             onDeleteGame: { [weak self] id, saves in self?.deleteGame(id, saves: saves) },
             onClearGameSaves: { [weak self] id in self?.clearGameSaves(id) },
             onOpenHomeButtonSettings: { [weak self] in self?.openHomeButtonSettings() })
+    }
+
+    public func importGamePackage(_ url: URL) async {
+        guard !importingPackage, !launchingGame, !modifyingSaves, cloudConflict == nil,
+              let hotRoot = config.hotFrameworksRoot else { notice = GamePackage.Failure.busy.localizedDescription; return }
+        importingPackage = true
+        packageProgress = 0
+        await startupJoinTask?.value
+        await looseClaimTask?.value
+        let dataRoot = config.appDataRoot
+        let environment = config.environment
+        let bundleID = Bundle.main.bundleIdentifier ?? ""
+        let teamID = ProvisioningProfile.bundledTeamIdentifier() ?? ""
+        let scoped = url.startAccessingSecurityScopedResource()
+        defer {
+            if scoped { url.stopAccessingSecurityScopedResource() }
+            importingPackage = false
+            reload()
+        }
+        do {
+            let id = try await Task.detached(priority: .userInitiated) { [weak self] in
+                try GamePackage.install(from: url, dataRoot: dataRoot, frameworksRoot: hotRoot,
+                                        bundleID: bundleID, teamID: teamID, environment: environment) { value in
+                    Task { @MainActor [weak self] in self?.packageProgress = value }
+                }
+            }.value
+            config.defaults(id).removeObject(forKey: GameDeletion.deletedKey)
+            useAppData(id)
+            notice = hostText("Game imported. Your saved files have been kept.")
+        } catch { notice = error.localizedDescription }
     }
 
     public func change(_ id: String, setting: String, value: String) {
@@ -916,7 +955,7 @@ public struct ShellHostConfig: Sendable {
     }
 
     func playNow(_ id: String) async {
-        guard !launchingGame, !modifyingSaves, cloudConflict == nil,
+        guard !launchingGame, !modifyingSaves, !importingPackage, cloudConflict == nil,
               let entry = entry(id), let manifest = entry.manifest, let framework = entry.frameworkURL,
               details.first(where: { $0.id == id })?.game.state == .playable else { return }
         cloudCheckGeneration &+= 1

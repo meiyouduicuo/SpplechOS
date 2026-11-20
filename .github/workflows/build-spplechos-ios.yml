@@ -73,7 +73,7 @@ jobs:
           print('Simulator:', devices[0]['name'])
           PY
 
-      - name: Test save reset and app settings on iOS
+      - name: Test game package import, save reset and app settings on iOS
         run: |
           set -euo pipefail
           (cd frontend-ios/Demo && xcodegen generate)
@@ -85,6 +85,7 @@ jobs:
             -resultBundlePath "$RUNNER_TEMP/shell-ui-tests.xcresult" \
             -parallel-testing-enabled NO \
             -only-testing:ShellDemoUITests/ShellHostUITests/testClearSavesRequiresConfirmationAndKeepsTheGameListed \
+            -only-testing:ShellDemoUITests/ShellHostUITests/testGamePackagePickerCanBeCancelledWithoutChangingTheLibrary \
             -only-testing:ShellDemoUITests/ShellDemoUITests/testNativeLauncherBarsFollowTheActiveScreen \
             CODE_SIGNING_ALLOWED=NO 2>&1 | tee logs/shell-ios-ui-tests.log
 

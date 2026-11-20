@@ -204,6 +204,7 @@ class MainWindow(QMainWindow):
         self._drive_folder = ''
         self._drive_status: tuple[str, str, str] | None = None
         self._options_expanded = True
+        self._files_expanded = False
         self._deps_expanded = True
         self._deps_sig: tuple | None = None
         self._dep_row_widgets: dict[str, dict] = {}
@@ -1364,6 +1365,10 @@ class MainWindow(QMainWindow):
 
         # Card 3: Install or Export / Shared App vs One-Game IPA + Drive Copy (InstallCard)
         self.install_group = self._build_install_card()
+        if pu.IS_WIN:
+            self.install_group.hide()
+            self.package_group = self._build_package_card()
+            self.body_col.addWidget(self.package_group)
         self.body_col.addWidget(self.install_group)
 
         # Card 4: Action + BuildFailureCard + OutcomeCard
@@ -1418,9 +1423,9 @@ class MainWindow(QMainWindow):
         rf_lay.addWidget(self.folder_cta_dot)
         fcol = QVBoxLayout()
         fcol.setSpacing(2)
-        self.folder_cta_title = QLabel(self.m.t('build.folderCTA') + ' · ' + self.m.t('data.note'))
+        self.folder_cta_title = QLabel(self.m.t('build.folderCTA'))
         self.folder_cta_title.setObjectName('rowTitle')
-        self.folder_cta_sub = QLabel(self.m.t('build.folderNote') + ' (' + self.m.t('data.folderHint') + ')')
+        self.folder_cta_sub = QLabel(self.m.t('package.folderNote'))
         self.folder_cta_sub.setObjectName('muted')
         self.folder_cta_sub.setWordWrap(True)
         fcol.addWidget(self.folder_cta_title)
@@ -1431,19 +1436,31 @@ class MainWindow(QMainWindow):
         self.pick_folder_btn.setFixedWidth(184)
         self.pick_folder_btn.clicked.connect(self._pick_game_dir)
         rf_lay.addWidget(self.pick_folder_btn)
+        self.files_toggle_btn = QToolButton()
+        self.files_toggle_btn.setArrowType(Qt.RightArrow)
+        self.files_toggle_btn.setToolTip(self.m.t('package.inputs'))
+        self.files_toggle_btn.setAccessibleName(self.m.t('package.inputs'))
+        self.files_toggle_btn.clicked.connect(self._toggle_file_details)
+        rf_lay.addWidget(self.files_toggle_btn)
         grp.add_row(r_folder)
         grp.add_divider()
 
         self.input_rows: dict[str, dict] = {}
 
+        self.file_details = QWidget()
+        details_col = QVBoxLayout(self.file_details)
+        details_col.setContentsMargins(0, 0, 0, 0)
+        details_col.setSpacing(0)
+        grp.add_row(self.file_details)
+        self.file_details.setVisible(self._files_expanded)
+
         # Row 2 & 3: Required slots (base, keys)
         for idx, (key, title_key, req, multi) in enumerate([
             ('base', 'data.base', True, False),
-            ('keys', 'data.keys', True, False),
         ]):
             if idx > 0:
-                grp.add_divider()
-            grp.add_row(self._make_input_slot_row(key, title_key, req, multi))
+                details_col.addWidget(make_divider())
+            details_col.addWidget(self._make_input_slot_row(key, title_key, req, multi))
 
         # KeyCheck live verification row (under prod.keys)
         self.keycheck_row = QWidget()
@@ -1457,8 +1474,7 @@ class MainWindow(QMainWindow):
         kc_lay.addWidget(self.keycheck_dot)
         kc_lay.addWidget(self.keycheck_lbl, 1)
         self.keycheck_row.hide()
-        grp.add_row(self.keycheck_row)
-        grp.add_divider()
+        details_col.addWidget(make_divider())
 
         # Row 4: Disclosure for Updates & DLC (optional)
         disc_head = QWidget()
@@ -1469,7 +1485,7 @@ class MainWindow(QMainWindow):
         self.opt_toggle_btn.clicked.connect(self._toggle_optional_inputs)
         dh_lay.addWidget(self.opt_toggle_btn)
         dh_lay.addStretch(1)
-        grp.add_row(disc_head)
+        details_col.addWidget(disc_head)
 
         self.opt_container = QWidget()
         opt_col = QVBoxLayout(self.opt_container)
@@ -1477,8 +1493,8 @@ class MainWindow(QMainWindow):
         opt_col.setSpacing(0)
         opt_col.addWidget(self._make_input_slot_row('update', 'data.update', False, False))
         opt_col.addWidget(self._make_input_slot_row('dlc', 'data.dlc', False, True))
-        grp.add_row(self.opt_container)
-        grp.add_divider()
+        details_col.addWidget(self.opt_container)
+        details_col.addWidget(make_divider())
 
         # Row 5: Output folder (build.saveTo)
         out_row = QWidget()
@@ -1504,7 +1520,7 @@ class MainWindow(QMainWindow):
         self.out_btn.setFixedWidth(184)
         self.out_btn.clicked.connect(self._pick_out_dir)
         or_lay.addWidget(self.out_btn)
-        grp.add_row(out_row)
+        details_col.addWidget(out_row)
 
         return grp
 
@@ -1552,6 +1568,31 @@ class MainWindow(QMainWindow):
         self.opt_container.setVisible(self._options_expanded)
         arrow = '▾' if self._options_expanded else '▸'
         self.opt_toggle_btn.setText(f"{arrow}  {self.m.t('build.options')}")
+
+    def _toggle_file_details(self) -> None:
+        self._files_expanded = not self._files_expanded
+        self.file_details.setVisible(self._files_expanded)
+        self.files_toggle_btn.setArrowType(Qt.DownArrow if self._files_expanded else Qt.RightArrow)
+        self.files_group.set_footer(self.m.t('msg.workdirHint') if self._files_expanded else '')
+
+    def _build_package_card(self) -> CardGroup:
+        grp = CardGroup(title=self.m.t('package.title'))
+        row = QWidget()
+        layout = QHBoxLayout(row)
+        layout.setContentsMargins(18, 14, 18, 14)
+        self.package_status = QLabel(self.m.t('package.note'))
+        self.package_status.setObjectName('muted')
+        self.package_status.setWordWrap(True)
+        layout.addWidget(self.package_status, 1)
+        self.package_button = QPushButton(self.m.t('package.export'))
+        self.package_button.setObjectName('creamPill')
+        self.package_button.clicked.connect(self._start_package_export)
+        layout.addWidget(self.package_button)
+        grp.add_row(row)
+        return grp
+
+    def _start_package_export(self) -> None:
+        self._start_hot_install(package=True)
 
     def _build_target_card(self) -> CardGroup:
         grp = CardGroup(title=self.m.t('section.target'))
@@ -1758,7 +1799,7 @@ class MainWindow(QMainWindow):
 
         return grp
 
-    def _start_hot_install(self) -> None:
+    def _start_hot_install(self, *, package: bool = False) -> None:
         from .win.hot_worker import HotInstallWorker
         from .post_build_cleanup import primary_romfs_image
         tid = (self.m.packed_title_id or '').strip().upper()
@@ -1780,11 +1821,24 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, '无法添加游戏', '未找到签名工具，请使用包含热传输组件的 SpplechOS 安装包。')
             return
         credential_dir = Path(os.environ.get('APPDATA', '')) / 'sideloadly'
+        package_path = None
+        if package:
+            chosen, _ = QFileDialog.getSaveFileName(self, self.m.t('package.export'),
+                                                   str(Path(out_dir) / f'{tid}.sppgame'),
+                                                   'SpplechOS game (*.sppgame)')
+            if not chosen:
+                return
+            package_path = Path(chosen)
+            if package_path.suffix.lower() != '.sppgame':
+                package_path = Path(str(package_path) + '.sppgame')
+            self.package_button.setEnabled(False)
+            self.package_status.setText(self.m.t('package.sign'))
         self.hot_button.setEnabled(False)
         self.hot_status.setText('正在检查设备和签名…')
         self._hot_worker = HotInstallWorker(framework, tid, Path(image), zsign, credential_dir, self,
                                             romfs_tool=Path(self.m.engine_path) / 'dm' / 'tools' / 'romfs_image.py',
-                                            shader_dir=Path(out_dir) / f'{tid}_build' / 'shader' / 'ios')
+                                            shader_dir=Path(out_dir) / f'{tid}_build' / 'shader' / 'ios',
+                                            package_path=package_path)
         self._hot_worker.progress.connect(self._hot_install_progress)
         self._hot_worker.result.connect(self._hot_install_finished)
         self._hot_worker.finished.connect(self._hot_worker_finished)
@@ -1797,14 +1851,25 @@ class MainWindow(QMainWindow):
                     'aoc': f'正在传输附加内容：{pct}%',
                     'framework': f'正在传输游戏框架：{pct}%'}
         self.hot_status.setText(messages.get(stage, '正在准备传输…'))
+        if getattr(self._hot_worker, 'package_path', None) is not None:
+            key = {'hash': 'package.hash', 'package': 'package.writing', 'extract': 'package.shaders'}.get(stage, 'package.sign')
+            self.package_status.setText(self.m.t(key, pct))
 
     def _hot_worker_finished(self) -> None:
+        if hasattr(self, 'package_button'):
+            self.package_button.setEnabled(True)
         if not self.hot_button.isEnabled():
             self.hot_button.setEnabled(True)
             self.hot_status.setText('传输未完成，请检查手机连接后重试。')
 
     def _hot_install_finished(self, ok: bool, message: str) -> None:
         self.hot_button.setEnabled(True)
+        if getattr(self._hot_worker, 'package_path', None) is not None:
+            self.package_button.setEnabled(True)
+            self.package_status.setText(self.m.t('package.done', message) if ok else message)
+            if ok:
+                pu.reveal(message)
+            return
         if ok:
             note = '未传输游戏数据；请在手机中选择匹配的数据。' if self._hot_worker.image is None else ''
             self.hot_status.setText('传输完成。请彻底关闭并重新打开手机上的 SpplechOS。' + note)
@@ -2241,6 +2306,13 @@ class MainWindow(QMainWindow):
 
     def _build_tools_card(self) -> CardGroup:
         grp = CardGroup(title=self.m.t('section.tools'))
+        grp.add_row(self._make_input_slot_row('keys', 'data.keys', True, False))
+        grp.add_row(self.keycheck_row)
+        grp.add_divider()
+        if pu.IS_WIN:
+            initial = QPushButton(self.m.t('package.initialApp'))
+            initial.clicked.connect(self._repack_built_shell_ipa)
+            grp.add_row(initial)
 
         # Row 1: Project repository
         r_repo = QWidget()
@@ -2818,9 +2890,9 @@ class MainWindow(QMainWindow):
         self.running_setup.setText(t('section.setup'))
         self.preparing.setText(t('library.preparing'))
         self.files_group.set_title(t('section.files'))
-        self.files_group.set_footer(t('msg.workdirHint'))
-        self.folder_cta_title.setText(t('build.folderCTA') + ' · ' + t('data.note'))
-        self.folder_cta_sub.setText(t('build.folderNote') + ' (' + t('data.folderHint') + ')')
+        self.files_group.set_footer(t('msg.workdirHint') if self._files_expanded else '')
+        self.folder_cta_title.setText(t('build.folderCTA'))
+        self.folder_cta_sub.setText(t('package.folderNote'))
         self.pick_folder_btn.setText(t('data.pickFolder'))
         arrow = '▾' if self._options_expanded else '▸'
         self.opt_toggle_btn.setText(f"{arrow}  {t('build.options').replace('&', '&&')}")
@@ -3186,7 +3258,7 @@ class MainWindow(QMainWindow):
                 widgets['clear'].setVisible(True)
                 widgets['choose'].setText(t('data.choose'))
                 widgets['choose'].setVisible(True)
-            elif folder is not None and folder_text is not None:
+            elif key != 'keys' and folder is not None and folder_text is not None:
                 has_val = key == 'base' or (key == 'update' and folder.newest_update is not None) or (key == 'dlc' and bool(folder.dlc))
                 widgets['path'].setText(folder_text)
                 widgets['path'].setObjectName('mono' if has_val else 'muted')
@@ -3311,8 +3383,10 @@ class MainWindow(QMainWindow):
         self.target_group.setEnabled(not running)
         self.ipa_kind_seg.setEnabled(not running)
         # A previous export can still be revealed or copied to a drive.
-        self.install_group.setVisible(expanded or os.path.isfile(self._effective_ipa_path())
-                                      or os.path.isdir(self._effective_archive_path()))
+        self.install_group.setVisible(not pu.IS_WIN and (expanded or os.path.isfile(self._effective_ipa_path())
+                                      or os.path.isdir(self._effective_archive_path())))
+        if hasattr(self, 'package_button'):
+            self.package_button.setEnabled(not running and not bool(getattr(self, '_hot_worker', None) and self._hot_worker.isRunning()))
         setup_needed = not self.m.repo_ok or (self.m.deps_checked and not self.m.all_deps_ok)
         self.setup_hint_card.setVisible(expanded and setup_needed)
 

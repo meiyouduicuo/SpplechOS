@@ -12,7 +12,7 @@ from .hot_sign import sign_framework_copy
 
 async def deliver_game(framework: Path, title_id: str, image: Path | None,
                        zsign: Path, credential_dir: Path, progress=None, *, romfs_tool: Path | None = None,
-                       shader_dir: Path | None = None) -> None:
+                       shader_dir: Path | None = None, package_path: Path | None = None) -> None:
     """Sign and stage an FH framework, optionally copying its matching image first.
 
     A device-side restart is required to promote the framework. The installed app
@@ -43,6 +43,14 @@ async def deliver_game(framework: Path, title_id: str, image: Path | None,
                     progress('sign', 0, 0)
                 signed = await sign_framework_copy(framework, Path(temp) / Path(framework).name,
                                                    title_id, shell.identity, device, zsign, credential_dir)
+                if package_path is not None:
+                    from .game_package import export_game_package
+                    if image is None:
+                        raise HotInstallError('Game data is required to export a complete package')
+                    # No files are written to the phone in package-export mode.
+                    export_game_package(signed, image, package_path, shell.identity,
+                                        romfs_tool=romfs_tool, shader_dir=shader_dir, progress=progress)
+                    return
                 if image is not None:
                     if progress:
                         progress('prepare', 0, 0)

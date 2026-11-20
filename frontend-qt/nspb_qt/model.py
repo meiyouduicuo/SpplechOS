@@ -485,7 +485,7 @@ class Model(QObject):
             self.update_path = (game.inputs.get('update') or [''])[0]
             self.dlc_paths = list(game.inputs.get('dlc') or [])
             keys = (game.inputs.get('keys') or [''])[0]
-            if keys:
+            if keys and not self.keys_path and os.path.isfile(keys):
                 self.keys_path = keys
         self.out_dir = game.output_dir or ''
         self.ipa_path = game.ipa_path if game.has_ipa else ''
@@ -2335,7 +2335,8 @@ class Model(QObject):
                 files.append(p)
             elif p.is_dir():
                 files += [q for q in sorted(p.iterdir()) if q.is_file()]
-        self.keys_path = next((str(f) for f in files if f.name.lower() == 'prod.keys'), self.keys_path)
+        if not self.keys_path:
+            self.keys_path = next((str(f) for f in files if f.name.lower() == 'prod.keys'), '')
         found = inputs.classify(files, keys_path=self.keys_path)
         self.base_path = str(found['base']) if found['base'] else ''
         self.update_path = str(found['update']) if found['update'] else ''
@@ -4774,7 +4775,7 @@ class Model(QObject):
 
         py = self.python_path or sys.executable
         picked = self.artwork.custom_paths.get(tid.upper())
-        if getattr(self, '_defer_shell_export', False) or self.settings_value('hotFrameworkOnly', False):
+        if pu.IS_WIN or getattr(self, '_defer_shell_export', False) or self.settings_value('hotFrameworkOnly', False):
             if not fw.is_dir():
                 folder = fw.parent.name or 'shell-framework'
                 return False, self.t('shell.noFramework', game_name, folder)

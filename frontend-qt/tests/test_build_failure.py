@@ -53,6 +53,7 @@ class BuildFailure(unittest.TestCase):
         m.repo_path = ''  # A failure-view fixture never starts a process in a detected checkout.
         m.lang = Lang('en')   # these assertions read English whatever the device language is
         w = MainWindow(m)
+        w._prompt_defender_before_build = lambda: True  # This fixture never builds or configures Defender.
         # Delete while the app exists: PySide destroys leftovers after it at exit and segfaults.
         self.addCleanup(self._delete, m, w)
         w.resize(900, height)
@@ -80,8 +81,14 @@ class BuildFailure(unittest.TestCase):
             m.archive_path = archive
             w._refresh_install_card()
             w._refresh_running()
-            self.assertTrue(w.install_group.isVisible())
-            self.assertTrue(w.drive_copy_btn.isEnabled())
+            from nspb_qt import platform_util as pu
+            if pu.IS_WIN:
+                self.assertFalse(w.install_group.isVisible())
+                self.assertTrue(w.package_group.isVisible())
+                self.assertFalse(w.package_button.isEnabled())
+            else:
+                self.assertTrue(w.install_group.isVisible())
+                self.assertTrue(w.drive_copy_btn.isEnabled())
         w._switch_page('settings')
         self.assertTrue(w.activity_bar.isVisible())
         w.act_view_btn.click()
