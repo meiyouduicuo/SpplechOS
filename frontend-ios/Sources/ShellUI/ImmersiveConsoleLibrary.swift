@@ -20,41 +20,46 @@ struct ImmersiveConsoleLibrary: View {
     @Environment(\.dynamicTypeSize) private var typeSize
 
     private var landscape: Bool { size.width > size.height }
-    private var margin: CGFloat { landscape ? 32 : 24 }
+    private var compactLandscape: Bool { landscape && size.height < 440 }
+    private var margin: CGFloat { landscape && !compactLandscape ? 32 : 24 }
     private var cardWidth: CGFloat {
-        min(typeSize.isAccessibilitySize ? 320 : landscape ? 220 : 264, max(140, size.width * 0.62))
+        min(typeSize.isAccessibilitySize ? 320 : compactLandscape ? 176 : landscape ? 220 : 264, max(140, size.width * 0.62))
     }
 
     var body: some View {
         ScrollView(.vertical) {
-            VStack(alignment: .leading, spacing: landscape ? 18 : 28) {
-                HStack {
-                    Text("SpplechOS").font(.headline).tracking(2)
-                        .foregroundStyle(.white.opacity(0.8))
-                    Spacer()
-                    if !nativeBars {
-                        ControllerChip(count: controllers, action: openControllers)
-                        ShellSettingsChip(action: openShellSettings)
+            VStack(alignment: .leading, spacing: compactLandscape ? 12 : landscape ? 18 : 28) {
+                if !compactLandscape || !nativeBars {
+                    HStack {
+                        Text("SpplechOS").font(.headline).tracking(2)
+                            .foregroundStyle(.white.opacity(0.8))
+                        Spacer()
+                        if !nativeBars {
+                            ControllerChip(count: controllers, action: openControllers)
+                            ShellSettingsChip(action: openShellSettings)
+                        }
                     }
+                    .padding(.horizontal, margin)
+                    .padding(.top, 12)
                 }
-                .padding(.horizontal, margin)
-                .padding(.top, 12)
 
                 Spacer(minLength: landscape ? 8 : max(40, size.height * 0.16))
 
                 HeroText(status: selected.game.state, title: selected.game.title,
                          explanation: selected.game.state == .playable ? "" : selected.game.state.explanation,
-                         titleSize: landscape ? 36 : 38,
+                         titleSize: compactLandscape ? 26 : landscape ? 36 : 38,
                          recentlyPlayed: selected.game.recentlyPlayed ?? "")
                     .frame(maxWidth: landscape ? size.width * 0.7 : .infinity, alignment: .leading)
                     .padding(.horizontal, margin)
                     .shadow(color: .black.opacity(0.55), radius: 12, y: 3)
 
-                HStack {
-                    Text(ShellStrings.text("Your games")).font(.headline)
-                    Spacer()
-                    Text("\(games.count)").monospacedDigit().foregroundStyle(.white.opacity(0.7))
-                }.padding(.horizontal, margin)
+                if !compactLandscape {
+                    HStack {
+                        Text(ShellStrings.text("Your games")).font(.headline)
+                        Spacer()
+                        Text("\(games.count)").monospacedDigit().foregroundStyle(.white.opacity(0.7))
+                    }.padding(.horizontal, margin)
+                }
 
                 ScrollViewReader { proxy in
                     ScrollView(.horizontal) {
@@ -70,7 +75,7 @@ struct ImmersiveConsoleLibrary: View {
                             .buttonStyle(.plain)
                             .accessibilityLabel(ShellStrings.text("Import game package…"))
                             .accessibilityIdentifier("console.import")
-                            .shellTarget("lib.import", action: importPackage)
+                            .shellTarget("lib.packageTile", action: importPackage)
                         }.padding(.horizontal, margin).padding(.vertical, 6)
                     }
                     .scrollIndicators(.hidden)

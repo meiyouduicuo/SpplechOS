@@ -282,6 +282,7 @@ import XCTest
         capture("immersive-console-portrait")
         XCUIDevice.shared.orientation = .landscapeLeft
         XCTAssertTrue(app.buttons["tile.orbit"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["tile.orbit"].isHittable)
         XCTAssertTrue(app.buttons["settings.open"].isHittable)
         capture("immersive-console-landscape")
         app.buttons["settings.open"].tap()
