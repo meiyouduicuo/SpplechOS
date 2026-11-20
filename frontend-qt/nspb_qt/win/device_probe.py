@@ -11,6 +11,13 @@ from .hot_install import HotInstallError, HostIdentity, check_host
 ORIGINAL_BUNDLE_ID = 'org.spplechos.shell'
 
 
+def is_original_shell(bundle_id: str, metadata: dict) -> bool:
+    team = (metadata.get('Entitlements') or {}).get('com.apple.developer.team-identifier')
+    return (bundle_id == ORIGINAL_BUNDLE_ID
+            or metadata.get('ALTBundleIdentifier') == ORIGINAL_BUNDLE_ID
+            or isinstance(team, str) and bool(team) and bundle_id == ORIGINAL_BUNDLE_ID + '.' + team)
+
+
 @dataclass(frozen=True)
 class DeviceShell:
     bundle_id: str
@@ -31,8 +38,7 @@ async def probe_shell(lockdown=None) -> DeviceShell:
         lockdown = await create_using_usbmux()
     try:
         apps = await InstallationProxyService(lockdown=lockdown).get_apps(application_type='User')
-        matches = [(key, value) for key, value in apps.items()
-                   if key == ORIGINAL_BUNDLE_ID or value.get('ALTBundleIdentifier') == ORIGINAL_BUNDLE_ID]
+        matches = [(key, value) for key, value in apps.items() if is_original_shell(key, value)]
         if len(matches) != 1:
             raise HotInstallError('Expected exactly one installed SpplechOS app on the connected device')
         bundle_id, app = matches[0]
