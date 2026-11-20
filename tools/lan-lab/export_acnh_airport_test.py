@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'frontend-qt'))
 from nspb_qt.win import shell_export as shell  # noqa: E402
 from nspb_qt.refresh_flow import matches_romfs_identity  # noqa: E402
+from verify_framework_hle import verify_forced_hle  # noqa: E402
 
 TITLE_ID = '01006F8002326000'
 BUNDLE_ID = 'org.spplechos.acnh.airporttest'
@@ -37,6 +38,7 @@ def main():
         raise SystemExit('Expected an Animal Crossing test framework')
     if expected_env not in env.read_text(encoding='utf-8').splitlines():
         raise SystemExit('The framework did not enable the airport test')
+    verify_forced_hle(framework / framework.stem)
 
     manifest = json.loads((framework / 'game.manifest.json').read_text(encoding='utf-8'))
     if not matches_romfs_identity(args.romfs_image, manifest['romfs_identity']):

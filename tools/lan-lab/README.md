@@ -83,20 +83,18 @@ and does not implement Nintendo play-history synchronization. The regression
 failed with "local player setup rejected" before the change; 99 lab tests
 pass afterward. On-device lobby creation/joining remains pending.
 
-## Animal Crossing airport host creation: C++ errno query
+## Animal Crossing airport host creation: investigation and duplicate-registration regression
 
 The ACNH 3.0.3 device trace creates an access point successfully (LDN state 3),
 then receives empty nonblocking UDP reads before closing the session. Main
 build `ff1d1c05670db6021c85b624a710b963`, call site `0xe061c`, uses
 `nn::socket::GetLastErrno()`: error 11 takes the retry branch at `0xe0638`.
-The existing host registered `GetLastError()` and `nnsocketGetLastErrno`,
-but not this distinct C++ export. SDK 20.5's original implementation at
-`sdk+0x15f210` checks its uninitialized socket-service state and returns
-EINVAL (22) at `0x15f250`, which ACNH treats as fatal.
-
-Register the missing C++ query against the same thread-local host errno as
-the other queries. This changes no game's code, timeout, or error decision.
-The real HLE dispatch regression fails with exit 3 (missing query) before
-the fix and passes afterward, including an empty receive followed by all
-three query names. Source reproduction is fixed; airport opening on a real
-device and two-device island travel still require confirmation.
+The initial diagnosis incorrectly searched only hle_net.c: the existing
+`h_sk_Errno` in hle_offline.c already routes the C++ query to
+`dm_sk_last_errno()`. Adding the same export to hle_net.c caused a real
+startup abort: `FATAL duplicate entry in the forced takeover list`.
+That duplicate has been removed. The regression now checks all host C files
+for exactly one registration of each errno query and compiles the actual
+implementations from their respective files. It fails with `2 != 1` on the
+broken source and passes after removing the duplicate. The airport connection
+error remains open; the errno theory has not established its cause.

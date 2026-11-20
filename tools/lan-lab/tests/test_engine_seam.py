@@ -7,7 +7,12 @@ class EngineSeamTests(unittest.TestCase):
         clang=os.environ.get('SPPLE_TEST_CLANG',r'C:\msys64\mingw64\bin\clang.exe')
         source=(ROOT/'engine/dm/host/hle_net.c').read_text(encoding='utf-8')
         seam=source[source.index('#define SK_ENETDOWN'):source.index('#define SKF')]
-        hooks=re.findall(r'HLE_FORCE\("([^"]+)",\s*"[^"]*",\s*int,\s*(\w+),\s*void\)\s*\{([^{}]*)\}',source)
+        # The C++ errno entry lives in hle_offline.c. Query all host files so
+        # adding it again in hle_net.c cannot pass this test and crash at load.
+        all_source='\n'.join(p.read_text(encoding='utf-8') for p in sorted((ROOT/'engine/dm/host').glob('*.c')))
+        for name in ('_ZN2nn6socket12GetLastErrnoEv','_ZN2nn6socket12GetLastErrorEv','nnsocketGetLastErrno'):
+            self.assertEqual(len(re.findall(r'HLE_FORCE\("'+re.escape(name)+r'"',all_source)),1,name)
+        hooks=re.findall(r'HLE_FORCE\("([^"]+)",\s*"[^"]*",\s*int,\s*(\w+),\s*void\)\s*\{([^{}]*)\}',all_source)
         hooks=[(name,fn,body) for name,fn,body in hooks if 'GetLastErr' in name]
         code='''#include <stdint.h>
 #include <stdlib.h>
