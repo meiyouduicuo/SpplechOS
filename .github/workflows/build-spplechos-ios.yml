@@ -100,9 +100,15 @@ jobs:
             -only-testing:ShellDemoUITests/ShellDemoUITests/testImmersiveShelfKeepsSelectionAndSettingsAcrossRotation \
             -only-testing:ShellDemoUITests/ShellDemoUITests/testPortraitScrollKeepsLibraryToolbarActionsAvailable \
             CODE_SIGNING_ALLOWED=NO 2>&1 | tee logs/shell-ios-ui-tests.log
-          xcrun xcresulttool export attachments \
-            --path "$RUNNER_TEMP/shell-ui-tests.xcresult" \
-            --output-path logs/ui-screenshots
+
+      - name: Export simulator screenshots
+        if: always()
+        run: |
+          if [ -d "$RUNNER_TEMP/shell-ui-tests.xcresult" ]; then
+            xcrun xcresulttool export attachments \
+              --path "$RUNNER_TEMP/shell-ui-tests.xcresult" \
+              --output-path logs/ui-screenshots
+          fi
 
       - name: Build the unsigned app template
         run: |
