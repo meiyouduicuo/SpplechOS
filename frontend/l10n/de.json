@@ -1874,6 +1874,7 @@
   "package.note": "Nach dem Erstellen das entsperrte iPhone verbinden und eine signierte .sppgame-Datei exportieren. In SpplechOS mit + importieren. Keine erneute IPA-Installation erforderlich.",
   "package.shaders": "Shader werden vorbereitet…",
   "package.sign": "Gerät wird geprüft und Spielframework signiert…",
+  "package.target": "Ein Spielpaket für iPhone und iPad erstellen.",
   "package.title": "Spielpaket",
   "package.writing": "Spielpaket wird geschrieben… {0}%",
   "pad.back": "Zurück",

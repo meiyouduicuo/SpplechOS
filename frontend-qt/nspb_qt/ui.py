@@ -1438,6 +1438,7 @@ class MainWindow(QMainWindow):
         self.pick_folder_btn.clicked.connect(self._pick_game_dir)
         rf_lay.addWidget(self.pick_folder_btn)
         self.files_toggle_btn = QToolButton()
+        self.files_toggle_btn.setStyleSheet('background: transparent; border: none; color: #cccccc; padding: 6px;')
         self.files_toggle_btn.setArrowType(Qt.RightArrow)
         self.files_toggle_btn.setToolTip(self.m.t('package.inputs'))
         self.files_toggle_btn.setAccessibleName(self.m.t('package.inputs'))
@@ -3247,6 +3248,8 @@ class MainWindow(QMainWindow):
         }
 
         _set_dot(self.folder_cta_dot, style.GREEN if (folder or self.m.base_path) else style.NEUTRAL_DOT)
+        selected_folder = folder.folder if folder is not None else (str(Path(self.m.base_path).parent) if self.m.base_path else '')
+        self.folder_cta_sub.setText(selected_folder or t('package.folderNote'))
 
         for key, widgets in self.input_rows.items():
             widgets['title'].setText(t(widgets['title_key']))
@@ -3325,7 +3328,7 @@ class MainWindow(QMainWindow):
         self.target_title_lbl.setText(t('build.ios') if ios else t('build.mac'))
         self.target_btn.setText(t('target.ios' if ios else 'target.mac'))
         self.target_btn.setToolTip(t('target.tip'))
-        self.target_hint.setText(t('target.hint.ios' if ios else 'target.hint.mac'))
+        self.target_hint.setText(t('package.target') if pu.IS_WIN else t('target.hint.ios' if ios else 'target.hint.mac'))
 
     def _toggle_target(self) -> None:
         if self.m.running or pu.IS_WIN:

@@ -1873,6 +1873,7 @@
   "package.note": "构建完成后连接已解锁的手机，签名并导出一个 .sppgame 文件。在手机 SpplechOS 中点「＋」导入，无需重装 IPA。",
   "package.shaders": "正在准备游戏着色器…",
   "package.sign": "正在检查设备并签名框架…",
+  "package.target": "构建可导入 iPhone / iPad 的游戏包。",
   "package.title": "游戏包",
   "package.writing": "正在写入游戏包… {0}%",
   "pad.back": "返回",

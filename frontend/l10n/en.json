@@ -1872,6 +1872,7 @@
   "package.note": "After building, connect your unlocked phone to sign and export one .sppgame file. Import it using + in SpplechOS. No IPA reinstall is needed.",
   "package.shaders": "Preparing game shaders…",
   "package.sign": "Checking device and signing framework…",
+  "package.target": "Build a game package for iPhone and iPad.",
   "package.title": "Game package",
   "package.writing": "Writing game package… {0}%",
   "pad.back": "Back",

@@ -711,17 +711,18 @@ public struct ShellHostConfig: Sendable {
         let bundleID = Bundle.main.bundleIdentifier ?? ""
         let teamID = ProvisioningProfile.bundledTeamIdentifier() ?? ""
         let scoped = url.startAccessingSecurityScopedResource()
+        let updateProgress: @Sendable (Double) -> Void = { [weak self] value in
+            Task { @MainActor in self?.packageProgress = value }
+        }
         defer {
             if scoped { url.stopAccessingSecurityScopedResource() }
             importingPackage = false
             reload()
         }
         do {
-            let id = try await Task.detached(priority: .userInitiated) { [weak self] in
+            let id = try await Task.detached(priority: .userInitiated) {
                 try GamePackage.install(from: url, dataRoot: dataRoot, frameworksRoot: hotRoot,
-                                        bundleID: bundleID, teamID: teamID, environment: environment) { value in
-                    Task { @MainActor [weak self] in self?.packageProgress = value }
-                }
+                                        bundleID: bundleID, teamID: teamID, environment: environment, progress: updateProgress)
             }.value
             config.defaults(id).removeObject(forKey: GameDeletion.deletedKey)
             useAppData(id)

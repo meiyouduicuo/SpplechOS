@@ -132,7 +132,12 @@ public enum GamePackage {
             } catch { try? output.close(); throw error }
         }
         let framework = stage.appendingPathComponent("framework", isDirectory: true)
+        guard let gameJSON = manifest.files.first(where: { $0.path == "framework/game.manifest.json" }),
+              gameJSON.size <= 4 * 1024 * 1024 else { throw Failure.invalid }
         let game = try GameManifest.parse(Data(contentsOf: framework.appendingPathComponent("game.manifest.json")))
+        guard game.frameworkExecutable == "DmGame\(manifest.titleID)", safePath("framework/" + game.launcher),
+              let launcherJSON = manifest.files.first(where: { $0.path == "framework/" + game.launcher }),
+              launcherJSON.size <= 4 * 1024 * 1024 else { throw Failure.invalid }
         let profile = try LauncherProfile.parse(Data(contentsOf: framework.appendingPathComponent(game.launcher)))
         guard profile.game == manifest.titleID, game.titleID == manifest.titleID,
               game.framework == "DmGame\(manifest.titleID).framework",
@@ -201,6 +206,8 @@ public enum GamePackage {
             guard (try stage.resourceValues(forKeys: [.isSymbolicLinkKey])).isSymbolicLink != true else { throw Failure.invalid }
             let record = stage.appendingPathComponent("transaction.json")
             guard fm.fileExists(atPath: record.path) else { try fm.removeItem(at: stage); continue }
+            guard let size = (try fm.attributesOfItem(atPath: record.path)[.size] as? NSNumber)?.intValue,
+                  size <= 64 * 1024 else { throw Failure.invalid }
             let journal = try JSONDecoder().decode(Journal.self, from: Data(contentsOf: record))
             guard journal.titleID.range(of: "^[0-9A-F]{16}$", options: .regularExpression) != nil,
                   Set(journal.names).isSubset(of: Set(owners)), Set(journal.existing).isSubset(of: Set(journal.names)) else { throw Failure.invalid }
