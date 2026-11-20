@@ -147,7 +147,7 @@ struct ConsoleBackdrop: View {
             ZStack {
                 Image("ConsoleMountains", bundle: .module).resizable().scaledToFill()
                 if let game, game.banner != nil {
-                    ArtView(game: game, backdrop: true)
+                    ArtView(game: game, lettering: false)
                 }
             }
             .frame(width: geometry.size.width, height: geometry.size.height).clipped()
