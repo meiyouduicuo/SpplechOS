@@ -140,6 +140,8 @@ import Testing
         #expect(!ShellHostModel(config: cfg).details.contains { $0.id == Fixtures.orbit }, "stays deleted across relaunch")
     }
 
+    #if os(macOS)
+    // This integration test invokes the host's clang and codesign, unavailable on iOS.
     @Test func frameworkSignatureInspectsRealMachOBinariesAndEnforcesTeamMatch() throws {
         let box = try FrameworkBox()
         let appBundle = box.root.appendingPathComponent("DmShell.app", isDirectory: true)
@@ -185,6 +187,8 @@ import Testing
         #expect(!strippedInfo.hasCodeSignature)
         #expect(FrameworkSignature.preflightExternal(executable: dylib, appBundleURL: appBundle, hostTeamID: nil)?.contains("unsigned") == true)
     }
+
+    #endif
 
     @Test func reinstallingLegacyBundledFrameworkWithoutBuiltAtDiscardsOlderHotCopy() throws {
         let box = try FrameworkBox()
