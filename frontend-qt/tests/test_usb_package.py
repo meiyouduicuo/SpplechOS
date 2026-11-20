@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import AsyncMock, patch
 
 from nspb_qt.win.game_package import write_package
 from nspb_qt.win.hot_install import HotInstallError
@@ -99,6 +100,19 @@ class USBPackageTests(unittest.IsolatedAsyncioTestCase):
         afc = FakeAFC(complete=False)
         with self.assertRaisesRegex(HotInstallError, 'usb.waitTimeout'):
             await send_package(afc, self.path, self.manifest, lambda *_: None, timeout=0)
+
+    async def test_large_active_import_is_not_timed_out_while_progress_advances(self):
+        afc = FakeAFC()
+        states = [('importing', 0.1), ('importing', 0.7), ('complete', 1)]
+        async def receipt(path):
+            status = json.loads(afc.files[path])
+            status['state'], status['progress'] = states.pop(0)
+            return json.dumps(status).encode()
+        afc.get_file_contents = receipt
+        with patch('nspb_qt.win.usb_package.monotonic', side_effect=range(20)), \
+             patch('nspb_qt.win.usb_package.asyncio.sleep', new=AsyncMock()):
+            result = await send_package(afc, self.path, self.manifest, lambda *_: None, timeout=2.5)
+        self.assertEqual(result, self.manifest['titleID'])
 
     def test_truncated_source_is_rejected_before_transfer(self):
         self.path.write_bytes(self.path.read_bytes()[:-1])

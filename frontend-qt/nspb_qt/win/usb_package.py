@@ -8,7 +8,7 @@ import asyncio
 import hashlib
 import json
 import struct
-import time
+from time import monotonic
 import uuid
 from pathlib import Path
 
@@ -89,13 +89,18 @@ async def send_package(service, path: Path, manifest: dict, report, *, timeout=3
     await service.set_file_contents(base + '.request.part', request)
     await service.rename(base + '.request.part', base + '.request.json')
     report('usb.wait', 0)
-    deadline = time.monotonic() + timeout
-    while time.monotonic() < deadline:
+    deadline = monotonic() + timeout
+    previous_receipt = None
+    while monotonic() < deadline:
         status_path = base + '.status.json'
         if await service.exists(status_path):
-            status = json.loads(await service.get_file_contents(status_path))
+            receipt = await service.get_file_contents(status_path)
+            status = json.loads(receipt)
             if status.get('schema') != 1 or status.get('id') != request_id:
                 raise HotInstallError('usb.invalidReceipt')
+            if receipt != previous_receipt:
+                previous_receipt = receipt
+                deadline = monotonic() + timeout
             if status.get('state') == 'complete':
                 if status.get('titleID') != manifest['titleID']:
                     raise HotInstallError('usb.invalidReceipt')
