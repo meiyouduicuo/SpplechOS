@@ -1151,6 +1151,7 @@
   "ios.host.peerTimeout": "连接超时，请保持双方应用在前台后重试。",
   "ios.host.peerUpdateNote": "校验通过后更新已有的同款游戏，保留原有存档和设置。",
   "ios.host.peerWaiting": "等待另一台设备连接…",
+  "ios.host.peerWaitingAcceptance": "等待对方确认接收…",
   "ios.host.player": "玩家 %@",
   "ios.host.preparingGame": "正在准备游戏…",
   "ios.host.quitButton": "退出",

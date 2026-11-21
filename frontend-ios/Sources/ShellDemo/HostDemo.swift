@@ -45,6 +45,7 @@ struct HostDemoScreen: View {
         }
         let suite = Self.suite
         let config = ShellHostConfig(gamesRoot: gamesRoot, appDataRoot: appData,
+                                     hotFrameworksRoot: appData.deletingLastPathComponent().appendingPathComponent("Frameworks"),
                                      environment: HostEnvironment(chain: "b-3f9a2c"),
                                      updateURL: URL(string: "https://github.com/LNPANDY/NX2Apple/releases"),
                                      defaults: { UserDefaults(suiteName: suite + $0) ?? .standard })

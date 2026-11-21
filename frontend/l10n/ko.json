@@ -1151,6 +1151,7 @@
   "ios.host.peerTimeout": "The connection timed out. Keep both apps open and try again.",
   "ios.host.peerUpdateNote": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged.",
   "ios.host.peerWaiting": "Waiting for another device…",
+  "ios.host.peerWaitingAcceptance": "Waiting for the other device to accept…",
   "ios.host.player": "플레이어 %@",
   "ios.host.preparingGame": "게임을 준비하는 중…",
   "ios.host.quitButton": "종료",

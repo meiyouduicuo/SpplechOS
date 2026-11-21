@@ -117,9 +117,11 @@ final class PeerGameSink: @unchecked Sendable {
         let game = try GameManifest.parse(Data(contentsOf: root.appendingPathComponent("game.manifest.json")))
         guard game.titleID == manifest.titleID, game.frameworkExecutable == "DmGame" + manifest.titleID,
               GamePackage.safePath("framework/" + game.launcher),
-              game.loader == "FH" || environment.chain == nil || game.chain == environment.chain,
-              FrameworkSignature.preflightExternal(executable: root.appendingPathComponent(game.frameworkExecutable),
-                  appBundleURL: Bundle.main.bundleURL, hostTeamID: teamID) == nil else { throw GamePackage.Failure.identity }
+              game.loader == "FH" || environment.chain == nil || game.chain == environment.chain else { throw GamePackage.Failure.incompatible }
+        if let reason = FrameworkSignature.preflightExternal(executable: root.appendingPathComponent(game.frameworkExecutable),
+            appBundleURL: Bundle.main.bundleURL, hostTeamID: teamID) {
+            throw NSError(domain: "SpplechOSPeer", code: 2, userInfo: [NSLocalizedDescriptionKey: reason])
+        }
         if let minimum = game.minOSVersion, !isVersion(environment.osVersion, atLeast: minimum) { throw GamePackage.Failure.incompatible }
     }
     func commit() throws -> String {

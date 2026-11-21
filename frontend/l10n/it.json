@@ -1151,6 +1151,7 @@
   "ios.host.peerTimeout": "The connection timed out. Keep both apps open and try again.",
   "ios.host.peerUpdateNote": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged.",
   "ios.host.peerWaiting": "Waiting for another device…",
+  "ios.host.peerWaitingAcceptance": "Waiting for the other device to accept…",
   "ios.host.player": "Giocatore %@",
   "ios.host.preparingGame": "Preparazione del gioco…",
   "ios.host.quitButton": "Esci",

@@ -24,6 +24,8 @@ struct PeerGameTransferView: View {
                             Button(device.name) { transfer.choose(device) }
                         }
                     }
+                case .waiting:
+                    ProgressView(hostText("Waiting for the other device to accept…"))
                 case .connecting, .preparing:
                     ProgressView(transfer.phase == .connecting ? hostText("Checking connection and signing compatibility…") : hostText("Preparing game files without making a copy…"))
                 case .pairing:
@@ -68,7 +70,7 @@ struct PeerGameTransferView: View {
             #endif
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(hostText("Close")) { transfer.stop(); dismiss() }
+                    Button(transfer.phase == .complete || transfer.phase == .failed ? hostText("Close") : hostText("Cancel")) { transfer.stop(); dismiss() }
                         .accessibilityIdentifier("peer.close")
                 }
             }

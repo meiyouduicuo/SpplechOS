@@ -53,6 +53,7 @@ jobs:
         run: |
           set -euo pipefail
           swift build --package-path frontend-ios 2>&1 | tee logs/shell-package-build.log
+          swift test --package-path frontend-ios --filter PeerGameTransferTests 2>&1 | tee logs/shell-peer-tests.log
           SPPLECHOS_IMPORT_TEST_BYTES=5368709120 swift test --package-path frontend-ios --filter GamePackageMemoryTests 2>&1 | tee logs/shell-package-memory-tests.log
           SPPLECHOS_PEER_TEST_BYTES=5368709120 swift test --package-path frontend-ios --filter PeerGameTransferTests/encryptedLoopbackTransfersAndPreservesExistingSaves 2>&1 | tee logs/shell-peer-memory-tests.log
           swift test --package-path frontend-ios 2>&1 | tee logs/shell-package-tests.log

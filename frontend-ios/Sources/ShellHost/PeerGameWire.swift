@@ -11,6 +11,7 @@ enum PeerGameWire {
                      progress: @Sendable (Double) -> Void) async throws {
         try await channel.send(JSONEncoder().encode(Offer(title: source.title, manifest: source.manifest)))
         guard try await channel.read(limit: 128) == approve else { throw GamePackage.Failure.invalid }
+        progress(0)
         var done: UInt64 = 0
         var shown = -1
         var frameworkChecked = false

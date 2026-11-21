@@ -31,6 +31,16 @@ struct PeerGameTransferTests {
         try Data("private save".utf8).write(to: root.appendingPathComponent("save/main.dat"))
         let entry = GameCatalogue.readFramework(at: box.root.appendingPathComponent("hot/DmGame\(id).framework"))
         let source = try PeerGameSource.prepare(entry: entry, image: root.appendingPathComponent("romfs.img"), bundleID: old.bundleID, teamID: old.teamID)
+        let sink = try PeerGameSink(manifest: source.manifest, dataRoot: box.root.appendingPathComponent("receive"),
+            frameworksRoot: box.root.appendingPathComponent("receive-hot"), bundleID: old.bundleID,
+            teamID: old.teamID, environment: HostEnvironment(chain: "b-3f9a2c"))
+        for file in source.files where file.entry.path.hasPrefix("framework/") {
+            let target = sink.stage.appendingPathComponent(file.entry.path)
+            try FileManager.default.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try FileManager.default.copyItem(at: file.url, to: target)
+        }
+        #expect(FrameworkSignature.inspect(executable: sink.stage.appendingPathComponent("framework/DmGame" + id))?.teamID == old.teamID)
+        try sink.checkFramework()
         #expect(source.files.allSatisfy { !$0.entry.path.contains("save/") })
         #expect(source.files.contains { $0.entry.path == "data/romfs.img" })
         #expect(source.files.first?.entry.path.hasPrefix("framework/") == true)
@@ -42,6 +52,7 @@ struct PeerGameTransferTests {
         let sourceBox = try Sandbox(), destination = try Sandbox()
         let old = GamePackageTests()
         let id = try old.install(old.fixture, box: sourceBox)
+        print("[peer-test] fixture installed")
         let root = sourceBox.appData.appendingPathComponent(id)
         let payloadSize = ProcessInfo.processInfo.environment["SPPLECHOS_PEER_TEST_BYTES"].flatMap(Int.init) ?? 32 * 1024 * 1024
         let extra = root.appendingPathComponent("aoc/transfer-test.img")
@@ -51,6 +62,7 @@ struct PeerGameTransferTests {
         try sparse.truncate(atOffset: UInt64(payloadSize)); try sparse.close()
         let entry = GameCatalogue.readFramework(at: sourceBox.root.appendingPathComponent("hot/DmGame\(id).framework"))
         let source = try PeerGameSource.prepare(entry: entry, image: root.appendingPathComponent("romfs.img"), bundleID: old.bundleID, teamID: old.teamID)
+        print("[peer-test] source prepared")
         let save = destination.appData.appendingPathComponent(id + "/save/main.dat")
         try FileManager.default.createDirectory(at: save.deletingLastPathComponent(), withIntermediateDirectories: true)
         try Data("keep my save".utf8).write(to: save)
@@ -60,13 +72,16 @@ struct PeerGameTransferTests {
         async let b = pair.server.handshake(bundleID: old.bundleID, teamID: old.teamID)
         let codes = try await (a, b)
         #expect(codes.0 == codes.1)
+        print("[peer-test] handshake compatible")
         let memory = TransferMemoryProbe()
         async let send: Void = PeerGameWire.send(source, over: pair.client, progress: { _ in memory.sample() })
         let received = try await pair.server.read()
         let offer = try JSONDecoder().decode(PeerGameWire.Offer.self, from: received)
+        print("[peer-test] offer received")
         let sink = try PeerGameSink(manifest: offer.manifest, dataRoot: destination.appData,
             frameworksRoot: destination.root.appendingPathComponent("hot"), bundleID: old.bundleID,
             teamID: old.teamID, environment: HostEnvironment(chain: "b-3f9a2c"))
+        print("[peer-test] receiver staged")
         try await pair.server.send(PeerGameWire.approve)
         let imported = try await PeerGameWire.receive(sink, over: pair.server, progress: { _ in memory.sample() })
         try await send
