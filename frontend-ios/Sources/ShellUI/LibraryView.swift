@@ -144,7 +144,7 @@ public struct LibraryView: View {
         .environment(\.shellFocus, focus)
         .environment(\.shellFocusRefresh, focusRefresh)
         .coordinateSpace(name: "shell")
-        .tint(ShellPalette.cream).preferredColorScheme(.dark)
+        .tint(ShellPalette.accent)
     }
 
     var content: some View {
@@ -155,7 +155,7 @@ public struct LibraryView: View {
             let layout = ShellLayout.resolve(whole, accessibilityText: typeSize.isAccessibilitySize)
             let width = geometry.size.width
             ZStack(alignment: .topLeading) {
-                ConsoleBackdrop(game: selected?.game)
+                ConsoleBackdrop()
                 if games.isEmpty {
                     EmptyLibraryView()
                 } else if let selected {
@@ -229,8 +229,8 @@ public struct LibraryView: View {
         .environment(\.shellFocus, focus)
         .environment(\.shellFocusRefresh, focusRefresh)
         .environment(\.shellInputDevice, device)
-        .foregroundStyle(.white)
-        .font(ShellFonts.font(15)).tint(ShellPalette.cream).preferredColorScheme(.dark)
+        .foregroundStyle(ShellPalette.ink)
+        .font(ShellFonts.font(15)).tint(ShellPalette.accent)
         .onChange(of: input) { _, log in
             // Every event since the last update, in order: several can come between two updates.
             for event in log.since(inputSeen) {
@@ -340,7 +340,7 @@ public struct LibraryView: View {
                 }
         }
         .background {
-            if settingsOpen, let selected { CoverFlowBackdrop(game: selected.game) }
+            if settingsOpen { ShellPalette.background.ignoresSafeArea() }
         }
         #if os(iOS)
         .toolbarBackground(settingsOpen ? .hidden : .automatic, for: .navigationBar)
@@ -360,8 +360,8 @@ public struct LibraryView: View {
         .environment(\.shellFocusRefresh, focusRefresh)
             .environment(\.shellIgnoresPress, { [gate] in gate.isSystemEcho })
             .onPreferenceChange(FocusTargets.self) { targets.values = visibleTargets($0) }
-            .tint(ShellPalette.cream)
-            .preferredColorScheme(.dark)
+            .tint(ShellPalette.accent)
+
             .interactiveDismissDisabled()
             .modifier(ShellKeyboardNavigation(active: true) { handle($0, from: .keyboard) })
     }
@@ -507,7 +507,7 @@ public struct LibraryView: View {
             ForEach(toolbarActions.filter { $0.placement == .done }) { item in
                 toolbarButton(ShellStrings.text(item.title), item.symbol, item.id, item.target, item.action)
                     .disabled(item.id == "touchLayout.done" && touchLayout?.invalidPlacement == true)
-                    .buttonStyle(.borderedProminent).tint(ShellPalette.cream).foregroundStyle(.black)
+                    .buttonStyle(.borderedProminent).tint(ShellPalette.accent).foregroundStyle(.black)
             }
         }
         if settingsOpen, helpGameID == nil, restoreBackupGameID == nil, deleteGameID == nil, choice == nil, padMapping == nil,
@@ -516,7 +516,7 @@ public struct LibraryView: View {
                 toolbarButton(selected.game.state.actionTitle, selected.game.state.actionSymbol, "state.action", "set.play") { primary(selected, fromSettings: true) }
                     .labelStyle(.iconOnly)
                     .buttonStyle(.borderedProminent)
-                    .tint(ShellPalette.cream)
+                    .tint(ShellPalette.accent)
                     .foregroundStyle(.black)
                     .disabled(selected.game.state.isJoining)
             }
@@ -623,11 +623,11 @@ public struct LibraryView: View {
         return Button { if !fromSystemEcho { action() } } label: {
             if identifier == "controllers.open" {
                 ZStack(alignment: .topTrailing) {
-                    Image(systemName: symbol).foregroundStyle(.white).frame(width: 32, height: 32)
+                    Image(systemName: symbol).foregroundStyle(ShellPalette.ink).frame(width: 32, height: 32)
                         if !controllers.isEmpty {
                             Text(controllers.count, format: .number)
                                 .font(.caption2.weight(.semibold)).monospacedDigit()
-                                .foregroundStyle(.white)
+                                .foregroundStyle(ShellPalette.ink)
                                 .padding(.horizontal, 4).frame(minWidth: 18, minHeight: 18)
                                 .background(.black, in: Capsule())
                                 .fixedSize().offset(x: 4, y: -4)
@@ -690,7 +690,7 @@ private struct PaneBanner: View {
             if game.isSwitch2 {
                 ConsoleBadge().accessibilityIdentifier("detail.switch2")
                 Text(ShellStrings.text("A Switch 2 game. It needs a lot of memory and may not start on every device."))
-                    .shellText(12.5).foregroundStyle(.white.opacity(0.62)).fixedSize(horizontal: false, vertical: true)
+                    .shellText(12.5).foregroundStyle(ShellPalette.ink.opacity(0.62)).fixedSize(horizontal: false, vertical: true)
             }
         }
     }
@@ -713,7 +713,7 @@ struct CoverThumbnail: View {
         }
         .saturation(game.state == .playable ? 1 : 0)
         .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-        .overlay(RoundedRectangle(cornerRadius: cornerRadius).strokeBorder(.white.opacity(0.14)))
+        .overlay(RoundedRectangle(cornerRadius: cornerRadius).strokeBorder(ShellPalette.ink.opacity(0.14)))
         .shadow(color: showsShadow ? .black.opacity(0.4) : .clear, radius: 16, y: 6)
         .accessibilityHidden(true)
     }

@@ -275,30 +275,35 @@ import UIKit
         XCTAssertTrue(app.buttons["shellSettings.open"].isHittable)
     }
 
-    func testImmersiveShelfKeepsSelectionAndSettingsAcrossRotation() {
-        extraArguments = ["--samples"]
-        launch("library")
-        XCTAssertTrue(app.buttons["tile.orbit"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["state.action"].isHittable)
-        let screenshot = try! XCTUnwrap(app.screenshot().image.cgImage)
-        let sky = try! XCTUnwrap(screenshot.cropping(to: CGRect(x: screenshot.width / 2, y: screenshot.height / 4, width: 1, height: 1)))
-        var pixel = [UInt8](repeating: 0, count: 4)
-        pixel.withUnsafeMutableBytes { bytes in
-            let context = CGContext(data: bytes.baseAddress, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4,
-                                    space: CGColorSpace(name: CGColorSpace.sRGB)!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
-            context.draw(sky, in: CGRect(x: 0, y: 0, width: 1, height: 1))
+    func testClassicConsoleFollowsLightAndDarkAppearance() throws {
+        for dark in [false, true] {
+            XCUIDevice.shared.orientation = .portrait
+            extraArguments = ["--samples", dark ? "--dark-appearance" : "--light-appearance"]
+            launch("library")
+            XCTAssertTrue(app.buttons["tile.orbit"].waitForExistence(timeout: 5))
+            XCTAssertTrue(app.buttons["state.action"].isHittable)
+            let screenshot = try XCTUnwrap(app.screenshot().image.cgImage)
+            let surface = try XCTUnwrap(screenshot.cropping(to: CGRect(x: screenshot.width / 2, y: screenshot.height / 4, width: 1, height: 1)))
+            var pixel = [UInt8](repeating: 0, count: 4)
+            pixel.withUnsafeMutableBytes { bytes in
+                let context = CGContext(data: bytes.baseAddress, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4,
+                                        space: CGColorSpace(name: CGColorSpace.sRGB)!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+                context.draw(surface, in: CGRect(x: 0, y: 0, width: 1, height: 1))
+            }
+            let brightness = Int(pixel[0]) + Int(pixel[1]) + Int(pixel[2])
+            if dark { XCTAssertLessThan(brightness, 180) } else { XCTAssertGreaterThan(brightness, 650) }
+            XCTAssertLessThan(abs(Int(pixel[0]) - Int(pixel[2])), 16, "The console background must be neutral")
+            capture(dark ? "classic-dark-portrait" : "classic-light-portrait")
+            app.buttons["shellSettings.open"].tap()
+            XCTAssertTrue(app.buttons["shellSettings.data"].waitForExistence(timeout: 5))
+            capture(dark ? "classic-dark-settings" : "classic-light-settings")
+            app.buttons["shellSettings.close"].tap()
+            XCUIDevice.shared.orientation = .landscapeLeft
+            XCTAssertTrue(app.buttons["settings.open"].waitForExistence(timeout: 5))
+            XCTAssertTrue(app.buttons["settings.open"].isHittable)
+            capture(dark ? "classic-dark-landscape" : "classic-light-landscape")
+            app.terminate()
         }
-        XCTAssertGreaterThan(Int(pixel[0]) + Int(pixel[1]) + Int(pixel[2]), 30, "The scenic wallpaper must be visible behind the library")
-        capture("immersive-console-portrait")
-        XCUIDevice.shared.orientation = .landscapeLeft
-        XCTAssertTrue(app.buttons["tile.orbit"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["tile.orbit"].isHittable)
-        XCTAssertTrue(app.buttons["settings.open"].isHittable)
-        capture("immersive-console-landscape")
-        app.buttons["settings.open"].tap()
-        XCTAssertTrue(app.buttons["library.back"].waitForExistence(timeout: 5))
-        app.buttons["library.back"].tap()
-        XCTAssertTrue(app.buttons["shellSettings.open"].isHittable)
     }
 
     // Run on a compact portrait device with standard Dynamic Type.

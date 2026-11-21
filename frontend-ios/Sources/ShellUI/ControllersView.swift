@@ -140,8 +140,8 @@ public struct ControllersView: View {
                 }
             }
         }
-        .tint(ShellPalette.cream)
-        .foregroundStyle(.primary).preferredColorScheme(.dark)
+        .tint(ShellPalette.accent)
+        .foregroundStyle(.primary)
     }
 
     private func actionLabel(_ title: String, note: String, symbol: String, value: String = "") -> some View {
@@ -168,8 +168,8 @@ public struct ControllersView: View {
 
     private func hint(_ icon: some View, _ label: String) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 14) {
-            icon.frame(width: 22).foregroundStyle(.white.opacity(0.75))
-            Text(label).shellText(14.5).foregroundStyle(.white.opacity(0.7))
+            icon.frame(width: 22).foregroundStyle(ShellPalette.ink.opacity(0.75))
+            Text(label).shellText(14.5).foregroundStyle(ShellPalette.ink.opacity(0.7))
                 .fixedSize(horizontal: false, vertical: true)
         }.accessibilityElement(children: .combine)
     }
@@ -203,8 +203,8 @@ private struct ControllerRow: View {
     private var icon: some View {
         Image(systemName: "gamecontroller.fill").font(.system(size: 20))
             .frame(width: 48, height: 48)
-            .background(.white.opacity(0.07), in: Circle())
-            .foregroundStyle(.white.opacity(0.9))
+            .background(ShellPalette.ink.opacity(0.07), in: Circle())
+            .foregroundStyle(ShellPalette.ink.opacity(0.9))
             .accessibilityHidden(true)
     }
     private var name: some View {
@@ -224,7 +224,7 @@ struct BatteryChip: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     var body: some View {
         let low = (controller.batteryPercent ?? 100) < 20 && !controller.charging
-        let tint: Color = low ? ShellPalette.attention : controller.charging ? ShellPalette.ready : .white.opacity(0.75)
+        let tint: Color = low ? ShellPalette.attention : controller.charging ? ShellPalette.ready : ShellPalette.ink.opacity(0.75)
         HStack(spacing: 7) {
             if let percent = controller.batteryPercent {
                 BatteryShape(fraction: Double(percent) / 100, charging: controller.charging).foregroundStyle(tint)
@@ -236,9 +236,9 @@ struct BatteryChip: View {
         .lineLimit(typeSize.isAccessibilitySize && controller.batteryPercent == nil ? nil : 1)
         .fixedSize(horizontal: !typeSize.isAccessibilitySize || controller.batteryPercent != nil, vertical: true)
         .shellText(12.5, .semibold, relativeTo: .footnote)
-        .foregroundStyle(controller.batteryPercent == nil ? .white.opacity(0.45) : tint)
+        .foregroundStyle(controller.batteryPercent == nil ? ShellPalette.ink.opacity(0.45) : tint)
         .padding(.horizontal, 10).padding(.vertical, 4).frame(minHeight: 28)
-        .background(.white.opacity(0.06), in: Capsule())
+        .background(ShellPalette.ink.opacity(0.06), in: Capsule())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityText)
     }

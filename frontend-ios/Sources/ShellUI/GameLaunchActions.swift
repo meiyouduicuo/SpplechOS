@@ -8,6 +8,8 @@ struct GameLaunchActions: View {
     var focusPrefix = "lib."
     var expands = false
     var alignment: Alignment = .leading
+    var primaryTint: Color = ShellPalette.cream
+    var primaryInk: Color = .black
     var transitionDuration: Double = 0.3
     @State private var divisionInsets = EdgeInsets()
     /// Supplied when the parent coordinates actions across its adaptive layouts.
@@ -42,10 +44,10 @@ struct GameLaunchActions: View {
                     .contentTransition(.opacity)
                     .padding(.horizontal, expands ? 0 : 14)
                     .frame(maxWidth: expands ? .infinity : nil, minHeight: 26)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(primaryInk)
             }
             .buttonStyle(.glassProminent)
-            .tint(ShellPalette.cream)
+            .tint(primaryTint)
             .controlSize(.large)
             .disabled(joining)
             .glassEffectID("primary", in: namespace)

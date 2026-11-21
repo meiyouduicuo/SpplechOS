@@ -62,7 +62,6 @@ targets:
           - UIInterfaceOrientationPortraitUpsideDown
           - UIInterfaceOrientationLandscapeRight
           - UIInterfaceOrientationLandscapeLeft
-        UIUserInterfaceStyle: Dark
         LSApplicationCategoryType: public.app-category.games
         DMShowFPS: false
         LSSupportsGameMode: true

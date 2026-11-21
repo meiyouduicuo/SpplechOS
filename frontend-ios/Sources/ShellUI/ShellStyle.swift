@@ -2,17 +2,40 @@ import SwiftUI
 import CoreText
 #if os(iOS)
 import UIKit
+#else
+import AppKit
 #endif
 
 public enum ShellPalette {
-    public static let background = Color(red: 0.055, green: 0.055, blue: 0.06)
-    public static let surface = Color(red: 0.10, green: 0.10, blue: 0.11)
+    public static let background = adaptive(light: 0xF2F3F5, dark: 0x25262A)
+    public static let surface = adaptive(light: 0xFFFFFF, dark: 0x33353A)
+    public static let ink = adaptive(light: 0x202226, dark: 0xF3F4F6)
+    public static let accent = adaptive(light: 0x007EA8, dark: 0x49CAE9)
+    public static let action = Color(red: 0, green: 126.0 / 255, blue: 168.0 / 255)
     public static let cream = Color(red: 1, green: 0.94, blue: 0.84)
     public static let ready = Color(red: 0.25, green: 0.84, blue: 0.47)
     public static let attention = Color(red: 1, green: 0.78, blue: 0.24)
     public static let muted = Color(red: 0.57, green: 0.58, blue: 0.61)
     /// Hairlines between rows and around cards.
-    static let hairline = Color.white.opacity(0.08)
+    static let hairline = ink.opacity(0.14)
+
+    private static func adaptive(light: UInt32, dark: UInt32) -> Color {
+        func components(_ value: UInt32) -> (Double, Double, Double) {
+            (Double((value >> 16) & 255) / 255, Double((value >> 8) & 255) / 255, Double(value & 255) / 255)
+        }
+        let l = components(light), d = components(dark)
+        #if os(iOS)
+        return Color(uiColor: UIColor { traits in
+            let c = traits.userInterfaceStyle == .dark ? d : l
+            return UIColor(red: c.0, green: c.1, blue: c.2, alpha: 1)
+        })
+        #else
+        return Color(nsColor: NSColor(name: nil) { appearance in
+            let c = appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua ? d : l
+            return NSColor(srgbRed: c.0, green: c.1, blue: c.2, alpha: 1)
+        })
+        #endif
+    }
 
     @MainActor static func configureNativeAppearance() {
         #if os(iOS)
@@ -23,8 +46,8 @@ public enum ShellPalette {
     #if os(iOS)
     @MainActor private static let nativeAppearance: Void = {
         let segments = UISegmentedControl.appearance()
-        segments.selectedSegmentTintColor = UIColor(cream)
-        segments.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .selected)
+        segments.selectedSegmentTintColor = UIColor(action)
+        segments.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
     }()
     #endif
 
@@ -132,10 +155,10 @@ struct SectionHeading: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
             Text(title.uppercased()).shellType(ShellType.sectionCaps)
-                .foregroundStyle(ShellPalette.cream.opacity(0.72)).accessibilityAddTraits(.isHeader)
+                .foregroundStyle(ShellPalette.ink.opacity(0.65)).accessibilityAddTraits(.isHeader)
             if let trailing {
                 Spacer(minLength: 8)
-                Text(trailing).shellText(12, .medium, relativeTo: .caption).monospacedDigit().foregroundStyle(.white.opacity(0.4))
+                Text(trailing).shellText(12, .medium, relativeTo: .caption).monospacedDigit().foregroundStyle(ShellPalette.ink.opacity(0.4))
             }
         }
     }
@@ -153,7 +176,7 @@ struct ShellButtonStyle: ButtonStyle {
             .padding(.horizontal, 14).frame(maxWidth: fills ? .infinity : nil, minHeight: 44)
             .foregroundStyle(destructive ? DeleteStyle.red : .white.opacity(0.92))
             .background(.white.opacity(configuration.isPressed ? 0.13 : 0.055), in: RoundedRectangle(cornerRadius: 9))
-            .overlay(RoundedRectangle(cornerRadius: 9).strokeBorder(.white.opacity(0.10)))
+            .overlay(RoundedRectangle(cornerRadius: 9).strokeBorder(ShellPalette.ink.opacity(0.10)))
             .opacity(enabled ? 1 : 0.4)
             .contentShape(RoundedRectangle(cornerRadius: 9))
     }
@@ -184,7 +207,7 @@ struct RoundIconButtonStyle: ButtonStyle {
             .frame(width: size, height: size)
             .foregroundStyle(active ? .black : .white)
             .background(active ? ShellPalette.cream : .white.opacity(configuration.isPressed ? 0.2 : 0.10), in: Circle())
-            .overlay(Circle().strokeBorder(.white.opacity(active ? 0 : 0.14)))
+            .overlay(Circle().strokeBorder(ShellPalette.ink.opacity(active ? 0 : 0.14)))
             .contentShape(Circle())
     }
 }
@@ -201,7 +224,7 @@ struct ChipButtonStyle: ButtonStyle {
                     .overlay(Capsule().fill(.black.opacity(configuration.isPressed ? 0.62 : 0.5)))
             }
             .environment(\.colorScheme, .dark)
-            .overlay(Capsule().strokeBorder(.white.opacity(0.14)))
+            .overlay(Capsule().strokeBorder(ShellPalette.ink.opacity(0.14)))
             .contentShape(Capsule())
     }
 }

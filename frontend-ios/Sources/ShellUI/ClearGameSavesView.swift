@@ -14,10 +14,10 @@ struct ClearGameSavesView: View {
                 .accessibilityAddTraits(.isHeader)
                 .accessibilityIdentifier("clearSaves.title")
             Text(ShellStrings.text("Removes all current save slots for this game on this device. Your next launch starts a new game. Existing local backups remain available."))
-                .shellText(15).foregroundStyle(.white.opacity(0.78))
+                .shellText(15).foregroundStyle(ShellPalette.ink.opacity(0.78))
                 .fixedSize(horizontal: false, vertical: true)
             Text(ShellStrings.text("Cloud save sync for this game will be turned off. You can enable it again in Game settings."))
-                .shellText(15).foregroundStyle(.white.opacity(0.78))
+                .shellText(15).foregroundStyle(ShellPalette.ink.opacity(0.78))
                 .fixedSize(horizontal: false, vertical: true)
             Button(role: .destructive, action: clear) {
                 Text(ShellStrings.text("Clear saves")).frame(maxWidth: .infinity)
@@ -34,7 +34,7 @@ struct ClearGameSavesView: View {
         }
         .padding(28)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .foregroundStyle(.white)
+        .foregroundStyle(ShellPalette.ink)
     }
 }
 

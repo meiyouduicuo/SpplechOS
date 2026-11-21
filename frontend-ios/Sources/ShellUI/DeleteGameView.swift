@@ -15,7 +15,7 @@ struct DeleteGameView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader).accessibilityIdentifier("delete.title")
             Text(ShellStrings.text("The game’s data on this device is deleted and the game leaves the list. A folder you chose yourself is not touched. Send the game data from your Mac again to bring it back."))
-                .shellText(15).foregroundStyle(.white.opacity(0.78)).fixedSize(horizontal: false, vertical: true)
+                .shellText(15).foregroundStyle(ShellPalette.ink.opacity(0.78)).fixedSize(horizontal: false, vertical: true)
             VStack(alignment: .leading, spacing: 8) {
                 Toggle(isOn: $saves) { Text(ShellStrings.text("Also delete saves")).shellText(15, .semibold) }
                     .toggleStyle(NativeCreamToggleStyle())
@@ -23,12 +23,12 @@ struct DeleteGameView: View {
                     .shellTarget("del.saves") { saves.toggle() }
                 Text(saves ? ShellStrings.text("Saves are deleted too and cannot be brought back.")
                            : ShellStrings.text("Saves stay unless you choose to delete them too."))
-                    .shellText(12.5).foregroundStyle(saves ? DeleteStyle.red : .white.opacity(0.5))
+                    .shellText(12.5).foregroundStyle(saves ? DeleteStyle.red : ShellPalette.ink.opacity(0.5))
                     .fixedSize(horizontal: false, vertical: true)
             }
             .padding(14)
-            .background(.white.opacity(0.04), in: RoundedRectangle(cornerRadius: 12))
-            .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(.white.opacity(0.08)))
+            .background(ShellPalette.ink.opacity(0.04), in: RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(ShellPalette.ink.opacity(0.08)))
             VStack(spacing: 10) {
                 Button(role: .destructive, action: delete) {
                     Text(saves ? ShellStrings.text("Delete game and saves") : ShellStrings.text("Delete game")).frame(maxWidth: .infinity)
@@ -44,7 +44,7 @@ struct DeleteGameView: View {
         }
         .padding(28)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .foregroundStyle(.white)
+        .foregroundStyle(ShellPalette.ink)
     }
 }
 
@@ -59,7 +59,7 @@ struct DeletePillStyle: ButtonStyle {
         configuration.label.shellType(ShellType.primaryButton)
             .fixedSize(horizontal: false, vertical: true)
             .padding(.horizontal, 26).frame(minHeight: 50)
-            .foregroundStyle(.white)
+            .foregroundStyle(ShellPalette.ink)
             .background(Color(red: 0.86, green: 0.25, blue: 0.24), in: Capsule())
             .opacity(configuration.isPressed ? 0.78 : 1)
             .scaleEffect(configuration.isPressed ? 0.98 : 1)

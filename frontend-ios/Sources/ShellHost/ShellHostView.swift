@@ -93,7 +93,7 @@ struct LogView: View {
             #endif
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button(hostText("Done")) { dismiss() }.accessibilityIdentifier("log.close") } }
         }
-        .preferredColorScheme(.dark)
+
         .accessibilityIdentifier("log.sheet")
     }
 }

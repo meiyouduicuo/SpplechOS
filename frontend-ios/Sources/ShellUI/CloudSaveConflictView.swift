@@ -22,8 +22,8 @@ public struct CloudSaveConflictView: View {
         .padding(28)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(ShellPalette.background)
-        .foregroundStyle(.white)
-        .preferredColorScheme(.dark)
+        .foregroundStyle(ShellPalette.ink)
+
     }
 
     @ViewBuilder private var conflictContent: some View {
@@ -40,7 +40,7 @@ public struct CloudSaveConflictView: View {
             .accessibilityIdentifier("cloud.conflict.title")
         Text(ShellStrings.text("Both the cloud save and this device's save for \(prompt.gameTitle) changed since they were last in sync. The save you do not pick is backed up in save-backups."))
             .shellText(15)
-            .foregroundStyle(.white.opacity(0.78))
+            .foregroundStyle(ShellPalette.ink.opacity(0.78))
             .fixedSize(horizontal: false, vertical: true)
             .accessibilityIdentifier("cloud.conflict.note")
 
@@ -97,7 +97,7 @@ public struct CloudSaveConflictView: View {
         }
         Text(ShellStrings.text("The cloud save for \(prompt.gameTitle) could not be read right now. You can play with this device's save without overwriting the cloud file."))
             .shellText(15)
-            .foregroundStyle(.white.opacity(0.78))
+            .foregroundStyle(ShellPalette.ink.opacity(0.78))
             .fixedSize(horizontal: false, vertical: true)
             .accessibilityIdentifier("cloud.conflict.note")
 
@@ -132,21 +132,21 @@ public struct CloudSaveConflictView: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(title)
                         .shellText(15.5, .bold)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(ShellPalette.ink)
                     Text(detail)
                         .shellText(13)
-                        .foregroundStyle(.white.opacity(0.66))
+                        .foregroundStyle(ShellPalette.ink.opacity(0.66))
                 }
                 Spacer(minLength: 8)
                 Image(systemName: "chevron.right")
                     .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.white.opacity(0.45))
+                    .foregroundStyle(ShellPalette.ink.opacity(0.45))
                     .accessibilityHidden(true)
             }
             .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(ShellPalette.surface, in: RoundedRectangle(cornerRadius: 14))
-            .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(.white.opacity(0.12), lineWidth: 1))
+            .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(ShellPalette.ink.opacity(0.12), lineWidth: 1))
             .contentShape(RoundedRectangle(cornerRadius: 14))
         }
         .buttonStyle(.plain)
@@ -179,7 +179,7 @@ public struct RestoreSaveBackupView: View {
                 .accessibilityIdentifier("restore.title")
             Text(ShellStrings.text("Replaces this device's current save with the backup from \(backup). Your current save is backed up first."))
                 .shellText(15)
-                .foregroundStyle(.white.opacity(0.78))
+                .foregroundStyle(ShellPalette.ink.opacity(0.78))
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("restore.note")
             VStack(spacing: 10) {
@@ -201,7 +201,7 @@ public struct RestoreSaveBackupView: View {
         }
         .padding(28)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .foregroundStyle(.white)
+        .foregroundStyle(ShellPalette.ink)
     }
 }
 
@@ -230,7 +230,7 @@ public struct SigningWarningBanner: View {
                     .accessibilityIdentifier("signing.headline")
                 Text(ShellStrings.text("Refresh this app on your computer or signing tool soon. Your saves and game data stay safe."))
                     .shellText(12.5, .regular, relativeTo: .footnote)
-                    .foregroundStyle(.white.opacity(0.82))
+                    .foregroundStyle(ShellPalette.ink.opacity(0.82))
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityIdentifier("signing.note")
             }
@@ -238,9 +238,9 @@ public struct SigningWarningBanner: View {
             Button(action: onDismiss) {
                 Image(systemName: "xmark")
                     .font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(.white.opacity(0.65))
+                    .foregroundStyle(ShellPalette.ink.opacity(0.65))
                     .frame(width: 28, height: 28)
-                    .background(.white.opacity(0.08), in: Circle())
+                    .background(ShellPalette.ink.opacity(0.08), in: Circle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel(ShellStrings.text("Close"))

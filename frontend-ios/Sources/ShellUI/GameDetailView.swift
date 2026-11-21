@@ -32,7 +32,7 @@ public struct GameDetailView: View {
                 VStack(alignment: .leading, spacing: 30) { contents }
             }
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(ShellPalette.ink)
         .animation(reduceMotion ? nil : .snappy(duration: 0.22), value: sectionRowIDs)
         .sheet(isPresented: $localRestoreBackup) {
             if let backup = detail.latestSaveBackup {
@@ -124,7 +124,7 @@ public struct GameDetailView: View {
                 .accessibilityIdentifier("set.clearSaves")
                 .shellTarget("set.clearSaves") { askClearSaves(detail.game) }
                 Text(ShellStrings.text("Clear this game's current saves on this device and start over."))
-                    .shellText(12.5).foregroundStyle(.white.opacity(0.45))
+                    .shellText(12.5).foregroundStyle(ShellPalette.ink.opacity(0.45))
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -134,7 +134,7 @@ public struct GameDetailView: View {
                 .disabled(!detail.hasModifiedSettings)
                 .shellTarget("set.reset", enabled: detail.hasModifiedSettings) { actions.onResetDefaults(detail.id) }
             Text(ShellStrings.text("Brings back the settings this game was tested with."))
-                .shellText(12.5).foregroundStyle(.white.opacity(0.45)).fixedSize(horizontal: false, vertical: true)
+                .shellText(12.5).foregroundStyle(ShellPalette.ink.opacity(0.45)).fixedSize(horizontal: false, vertical: true)
         }
         if let askDelete {
             // Last and apart from the rest: the one action here that removes something. It only asks, the question names what goes.
@@ -143,7 +143,7 @@ public struct GameDetailView: View {
                     .accessibilityIdentifier("set.delete")
                     .shellTarget("set.delete") { askDelete(detail.game) }
                 Text(ShellStrings.text("Deletes the game’s data on this device. You choose whether its saves go too."))
-                    .shellText(12.5).foregroundStyle(.white.opacity(0.45)).fixedSize(horizontal: false, vertical: true)
+                    .shellText(12.5).foregroundStyle(ShellPalette.ink.opacity(0.45)).fixedSize(horizontal: false, vertical: true)
             }
         }
     }
@@ -168,14 +168,14 @@ public struct GameDetailView: View {
                     if detail.game.isSwitch2 {   // #696: the manifest's console
                         ConsoleBadge().accessibilityIdentifier("detail.switch2")
                         Text(ShellStrings.text("A Switch 2 game. It needs a lot of memory and may not start on every device."))
-                            .shellText(12.5).foregroundStyle(.white.opacity(0.62)).fixedSize(horizontal: false, vertical: true)
+                            .shellText(12.5).foregroundStyle(ShellPalette.ink.opacity(0.62)).fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
             }
             if showsPrimaryAction {
                 if !detail.game.state.explanation.isEmpty {
-                    Text(detail.game.state.explanation).shellText(14).foregroundStyle(.white.opacity(0.72))
+                    Text(detail.game.state.explanation).shellText(14).foregroundStyle(ShellPalette.ink.opacity(0.72))
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 GameStateView(game: detail.game, actions: actions, showsExplanation: false)
@@ -184,7 +184,7 @@ public struct GameDetailView: View {
     }
 
     @ViewBuilder private var divider: some View {
-        if !nativeSections { Rectangle().fill(.white.opacity(0.06)).frame(height: 1) }
+        if !nativeSections { Rectangle().fill(ShellPalette.ink.opacity(0.06)).frame(height: 1) }
     }
 
     @ViewBuilder private func group<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
@@ -229,8 +229,8 @@ private struct GameSettingsGlassButton: View {
         }
         .buttonStyle(.glass)
         .controlSize(.large)
-        .tint(destructive ? DeleteStyle.red : .white)
-        .foregroundStyle(destructive ? DeleteStyle.red : .white)
+        .tint(destructive ? DeleteStyle.red : ShellPalette.ink)
+        .foregroundStyle(destructive ? DeleteStyle.red : ShellPalette.ink)
     }
 }
 
@@ -296,7 +296,7 @@ struct SegmentedChoice: View {
                         Button { if !ignoresPress() { change(option.id) } } label: {
                             Text(option.label).shellText(13.5, chosen ? .bold : .medium).lineLimit(1)
                                 .padding(.horizontal, 14).frame(maxWidth: .infinity, minHeight: 40)
-                                .foregroundStyle(chosen ? .black : .white.opacity(0.75))
+                                .foregroundStyle(chosen ? .black : ShellPalette.ink.opacity(0.75))
                                 .background(chosen ? ShellPalette.cream : .clear, in: RoundedRectangle(cornerRadius: 8))
                                 .contentShape(RoundedRectangle(cornerRadius: 8))
                         }
@@ -309,8 +309,8 @@ struct SegmentedChoice: View {
             }
         }
         .padding(3)
-        .background(.white.opacity(0.055), in: RoundedRectangle(cornerRadius: 11))
-        .overlay(RoundedRectangle(cornerRadius: 11).strokeBorder(.white.opacity(0.08)))
+        .background(ShellPalette.ink.opacity(0.055), in: RoundedRectangle(cornerRadius: 11))
+        .overlay(RoundedRectangle(cornerRadius: 11).strokeBorder(ShellPalette.ink.opacity(0.08)))
     }
 }
 
@@ -402,7 +402,7 @@ struct NativeChoiceControl: View {
         } else {
             picker(options)
                 .pickerStyle(.menu)
-                .tint(ShellPalette.cream)
+                .tint(ShellPalette.accent)
                 .accessibilityIdentifier("setting.\(row.id)")
         }
     }

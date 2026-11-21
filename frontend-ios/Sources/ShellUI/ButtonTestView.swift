@@ -57,14 +57,14 @@ struct ButtonTestView: View {
                             .accessibilityAddTraits(.isHeader).accessibilityIdentifier("buttonTest.title")
                     }
                     Text(controllerName)
-                        .shellType(ShellType.note).foregroundStyle(.white.opacity(0.5))
+                        .shellType(ShellType.note).foregroundStyle(ShellPalette.ink.opacity(0.5))
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 8)
                 if !nativeBars {
                     Button { if !ignoresPress() { close() } } label: {
                         Image(systemName: "xmark").font(.system(size: 14, weight: .semibold)).frame(width: 44, height: 44)
-                            .background(.white.opacity(0.08), in: Circle()).contentShape(Circle())
+                            .background(ShellPalette.ink.opacity(0.08), in: Circle()).contentShape(Circle())
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(ShellStrings.text("Close"))
@@ -86,7 +86,7 @@ struct ButtonTestView: View {
             }
         }
         .overlay {
-            if !nativeBars { RoundedRectangle(cornerRadius: 26).strokeBorder(.white.opacity(0.10)) }
+            if !nativeBars { RoundedRectangle(cornerRadius: 26).strokeBorder(ShellPalette.ink.opacity(0.10)) }
         }
         .shadow(color: .black.opacity(nativeBars ? 0 : 0.5), radius: nativeBars ? 0 : 40)
     }
@@ -107,12 +107,12 @@ struct ButtonTestView: View {
                 .accessibilityIdentifier("buttonTest.pressed")
             HStack(spacing: 10) {
                 ZStack {
-                    Circle().stroke(.white.opacity(0.15), lineWidth: 3)
+                    Circle().stroke(ShellPalette.ink.opacity(0.15), lineWidth: 3)
                     Circle().trim(from: 0, to: holding ? 1 : 0).stroke(ShellPalette.cream, style: StrokeStyle(lineWidth: 3, lineCap: .round))
                         .rotationEffect(.degrees(-90))
                     Text(verbatim: "B").font(ShellFonts.fixed(10, weight: .bold))
                 }.frame(width: 22, height: 22).accessibilityHidden(true)
-                Text(ShellStrings.text("Hold B to close")).shellText(13, .medium, relativeTo: .footnote).foregroundStyle(.white.opacity(0.6))
+                Text(ShellStrings.text("Hold B to close")).shellText(13, .medium, relativeTo: .footnote).foregroundStyle(ShellPalette.ink.opacity(0.6))
             }
             .frame(maxWidth: .infinity).padding(.bottom, 18).padding(.top, 4)
         }

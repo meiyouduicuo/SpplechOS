@@ -33,7 +33,7 @@ struct ImmersiveConsoleLibrary: View {
                 if !compactLandscape || !nativeBars {
                     HStack {
                         Text("SpplechOS").font(.headline).tracking(2)
-                            .foregroundStyle(.white.opacity(0.8))
+                            .foregroundStyle(.secondary)
                         Spacer()
                         if !nativeBars {
                             ControllerChip(count: controllers, action: openControllers)
@@ -44,21 +44,26 @@ struct ImmersiveConsoleLibrary: View {
                     .padding(.top, 12)
                 }
 
-                Spacer(minLength: landscape ? 8 : max(40, size.height * 0.16))
+                Spacer(minLength: landscape ? 8 : 24)
 
-                HeroText(status: selected.game.state, title: selected.game.title,
-                         explanation: selected.game.state == .playable ? "" : selected.game.state.explanation,
-                         titleSize: compactLandscape ? 26 : landscape ? 36 : 38,
-                         recentlyPlayed: selected.game.recentlyPlayed ?? "")
-                    .frame(maxWidth: landscape ? size.width * 0.7 : .infinity, alignment: .leading)
-                    .padding(.horizontal, margin)
-                    .shadow(color: .black.opacity(0.55), radius: 12, y: 3)
+                VStack(alignment: .leading, spacing: 8) {
+                    if let played = selected.game.recentlyPlayed {
+                        Text(played).font(.subheadline).foregroundStyle(.secondary)
+                    }
+                    Text(selected.game.title)
+                        .shellType(ShellType.heroTitle(compactLandscape ? 26 : 34))
+                        .lineLimit(2).accessibilityAddTraits(.isHeader)
+                        .accessibilityIdentifier("hero.title")
+                    if selected.game.state != .playable { StatusLabel(state: selected.game.state) }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, margin)
 
                 if !compactLandscape {
                     HStack {
                         Text(ShellStrings.text("Your games")).font(.headline)
                         Spacer()
-                        Text("\(games.count)").monospacedDigit().foregroundStyle(.white.opacity(0.7))
+                        Text("\(games.count)").monospacedDigit().foregroundStyle(.secondary)
                     }.padding(.horizontal, margin)
                 }
 
@@ -70,8 +75,8 @@ struct ImmersiveConsoleLibrary: View {
                                 Image(systemName: "plus")
                                     .font(.system(size: 32, weight: .light))
                                     .frame(width: 92, height: cardWidth * 9 / 16)
-                                    .background(.white.opacity(0.09), in: RoundedRectangle(cornerRadius: 12))
-                                    .overlay { RoundedRectangle(cornerRadius: 12).strokeBorder(.white.opacity(0.25)) }
+                                    .background(ShellPalette.surface, in: RoundedRectangle(cornerRadius: 12))
+                                    .overlay { RoundedRectangle(cornerRadius: 12).strokeBorder(ShellPalette.hairline) }
                             }
                             .buttonStyle(.plain)
                             .accessibilityLabel(ShellStrings.text("Import game package…"))
@@ -100,10 +105,11 @@ struct ImmersiveConsoleLibrary: View {
         .accessibilityIdentifier("library.grid")
         .safeAreaInset(edge: .bottom, spacing: 0) {
             GameLaunchActions(game: selected.game, primary: { primary(selected) }, settings: openSettings,
-                              expands: !landscape)
+                              expands: !landscape, primaryTint: ShellPalette.action, primaryInk: .white)
                 .padding(.horizontal, margin).padding(.vertical, 14)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(.black.opacity(0.32))
+                .background(ShellPalette.background)
+                .overlay(alignment: .top) { Rectangle().fill(ShellPalette.hairline).frame(height: 1) }
                 .hiddenIfObscured(obscured)
         }
     }
@@ -114,15 +120,16 @@ struct ImmersiveConsoleLibrary: View {
         return Button { select(detail.id) } label: {
             VStack(alignment: .leading, spacing: 10) {
                 CoverView(game: detail.game, showsState: true)
+                    .frame(width: cardWidth, height: cardWidth * 9 / 16)
                     .overlay {
                         RoundedRectangle(cornerRadius: 10)
-                            .strokeBorder(Color.cyan.opacity(chosen || focused ? 1 : 0.18), lineWidth: chosen || focused ? 3 : 1)
+                            .strokeBorder(ShellPalette.accent.opacity(chosen || focused ? 1 : 0.18), lineWidth: chosen || focused ? 3 : 1)
                     }
                     .shadow(color: .black.opacity(0.3), radius: 8, y: 4)
                     .shellTarget("lib.tile.\(detail.id)", showsRing: false) { primary(detail) }
                 Text(detail.game.title).font(.subheadline.weight(chosen ? .semibold : .regular))
                     .lineLimit(typeSize.isAccessibilitySize ? 3 : 2)
-                    .foregroundStyle(.white.opacity(chosen ? 1 : 0.75))
+                    .foregroundStyle(ShellPalette.ink.opacity(chosen ? 1 : 0.7))
             }.frame(width: cardWidth).contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -145,34 +152,9 @@ private extension View {
     }
 }
 
-/// Keep artwork crisp. A quiet scenic wallpaper fills absent banners, including an empty library.
+/// A neutral console surface follows the system appearance, independent of game artwork.
 struct ConsoleBackdrop: View {
-    var game: GameTile?
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                if let wallpaper = ConsoleWallpaper.artwork {
-                    Image(decorative: wallpaper.image, scale: 1).resizable().interpolation(.high).scaledToFill()
-                }
-                if let game, game.banner != nil {
-                    ArtView(game: game, lettering: false)
-                }
-            }
-            .frame(width: geometry.size.width, height: geometry.size.height).clipped()
-            .overlay {
-                LinearGradient(colors: [.black.opacity(0.12), .black.opacity(0.2), .black.opacity(0.78)],
-                               startPoint: .top, endPoint: .bottom)
-            }
-        }.ignoresSafeArea().accessibilityHidden(true)
+        ShellPalette.background.ignoresSafeArea().accessibilityHidden(true)
     }
-}
-
-enum ConsoleWallpaper {
-    // SwiftPM copies the PNG as a loose resource. Decode it explicitly instead of
-    // relying on platform named-image lookup, which can return an empty image.
-    static let artwork: Artwork? = {
-        guard let url = Bundle.module.url(forResource: "ConsoleMountains", withExtension: "png"),
-              let data = try? Data(contentsOf: url) else { return nil }
-        return Artwork(id: "console.mountains", data: data)
-    }()
 }

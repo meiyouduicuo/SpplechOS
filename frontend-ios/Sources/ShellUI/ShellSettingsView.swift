@@ -172,8 +172,8 @@ struct ShellSettingsView: View {
                 }
             }
         }
-        .tint(ShellPalette.cream)
-        .preferredColorScheme(.dark)
+        .tint(ShellPalette.accent)
+
         .onReceive(NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification)) { _ in revision += 1 }
     }
 }

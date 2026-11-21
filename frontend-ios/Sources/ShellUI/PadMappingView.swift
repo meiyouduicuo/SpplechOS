@@ -240,8 +240,8 @@ struct PadMappingCard: View {
                     .onPreferenceChange(FocusTargets.self) { onChoiceTargets?($0) }
                 }
                 .modifier(ShellKeyboardNavigation(active: true) { onChoiceInput?($0) })
-                .tint(ShellPalette.cream)
-                .preferredColorScheme(.dark)
+                .tint(ShellPalette.accent)
+
                 .presentationSizing(.form)
                 .presentationDragIndicator(.visible)
             }
@@ -276,7 +276,7 @@ struct PadMappingCard: View {
                 mappingsScrolled = scrolled
             }
             .scrollEdgeEffectStyle(.soft, for: .top)
-            .tint(ShellPalette.cream)
+            .tint(ShellPalette.accent)
             .accessibilityIdentifier("padMapping.mappings")
             .onChange(of: focus.id) { _, id in
                 guard focus.visible, shown == nil, let id,
@@ -360,7 +360,7 @@ struct PadMappingCard: View {
         }
         .clipShape(RoundedRectangle(cornerRadius: nativeBars ? 0 : 26))
         .overlay {
-            if !nativeBars { RoundedRectangle(cornerRadius: 26).strokeBorder(.white.opacity(0.10)) }
+            if !nativeBars { RoundedRectangle(cornerRadius: 26).strokeBorder(ShellPalette.ink.opacity(0.10)) }
         }
         .shadow(color: .black.opacity(nativeBars ? 0 : 0.5), radius: nativeBars ? 0 : 40)
         .accessibilityElement(children: .contain)
@@ -393,7 +393,7 @@ struct PadMappingCard: View {
                         Text(ShellStrings.text("Button mapping")).shellType(ShellType.flowTitle(20)).lineLimit(2)
                             .accessibilityAddTraits(.isHeader).accessibilityIdentifier("padMapping.title")
                     }
-                    Text(title).shellType(ShellType.note).foregroundStyle(.white.opacity(0.5)).lineLimit(2)
+                    Text(title).shellType(ShellType.note).foregroundStyle(ShellPalette.ink.opacity(0.5)).lineLimit(2)
                 }
             }
             Spacer(minLength: 8)
@@ -407,7 +407,7 @@ struct PadMappingCard: View {
     private func roundButton(_ symbol: String, label: String, id: String, target: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: symbol).font(.system(size: 14, weight: .semibold)).frame(width: 44, height: 44)
-                .background(.white.opacity(0.08), in: Circle()).contentShape(Circle())
+                .background(ShellPalette.ink.opacity(0.08), in: Circle()).contentShape(Circle())
         }
         .buttonStyle(.plain)
         .accessibilityLabel(label)
@@ -420,7 +420,7 @@ struct PadMappingCard: View {
         HStack(spacing: 12) {
             HStack(spacing: 8) {
                 ChangedDot()
-                Text(ShellStrings.text("Changed")).shellType(ShellType.note).foregroundStyle(.white.opacity(0.55))
+                Text(ShellStrings.text("Changed")).shellType(ShellType.note).foregroundStyle(ShellPalette.ink.opacity(0.55))
             }
             .opacity(changedAny ? 1 : 0)
             .accessibilityHidden(true)
@@ -441,7 +441,7 @@ struct PadMappingCard: View {
         VStack(alignment: .leading, spacing: 22) {
             Text(ShellStrings.text(isGame ? "For this game only. A button left alone does what it does in all games."
                                           : "For controllers in games only. This app’s menus keep A to confirm and B to go back."))
-                .shellType(ShellType.note).foregroundStyle(.white.opacity(0.5)).fixedSize(horizontal: false, vertical: true)
+                .shellType(ShellType.note).foregroundStyle(ShellPalette.ink.opacity(0.5)).fixedSize(horizontal: false, vertical: true)
             drawing
             if let swapRow { swap(swapRow) }
             ForEach(PadMap.groups, id: \.title) { group in
@@ -449,7 +449,7 @@ struct PadMappingCard: View {
                     SectionHeading(title: group.title)
                     VStack(spacing: 0) {
                         ForEach(Array(group.buttons.enumerated()), id: \.element) { index, button in
-                            if index > 0 { Rectangle().fill(.white.opacity(0.06)).frame(height: 1).padding(.leading, 62) }
+                            if index > 0 { Rectangle().fill(ShellPalette.ink.opacity(0.06)).frame(height: 1).padding(.leading, 62) }
                             if let row = rows.first(where: { PadMappingRows.button(of: $0) == button }) { buttonRow(row) }
                         }
                     }
@@ -457,7 +457,7 @@ struct PadMappingCard: View {
                     .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(ShellPalette.hairline))
                     if group.buttons.first == "A" {
                         Text(ShellStrings.text("Named as on a Switch controller, by where they sit."))
-                            .shellType(ShellType.note).foregroundStyle(.white.opacity(0.4)).fixedSize(horizontal: false, vertical: true)
+                            .shellType(ShellType.note).foregroundStyle(ShellPalette.ink.opacity(0.4)).fixedSize(horizontal: false, vertical: true)
                             .padding(.horizontal, 4)
                     }
                 }
@@ -507,7 +507,7 @@ struct PadMappingCard: View {
                 if !row.fromShell { ChangedDot() }
             }
             Text(ShellStrings.text("Puts A on the bottom button, where Xbox and PlayStation controllers confirm."))
-                .shellType(ShellType.note).foregroundStyle(.white.opacity(0.5)).fixedSize(horizontal: false, vertical: true)
+                .shellType(ShellType.note).foregroundStyle(ShellPalette.ink.opacity(0.5)).fixedSize(horizontal: false, vertical: true)
             ViewThatFits(in: .horizontal) {
                 control([options])
                 control(options.map { [$0] })
@@ -528,12 +528,12 @@ struct PadMappingCard: View {
             HStack(spacing: 12) {
                 PadGlyph(button: button).frame(width: 36)
                 Text(PadMap.place(button)).shellType(ShellType.settingLabel)
-                    .foregroundStyle(.white.opacity(changed ? 1 : 0.85)).fixedSize(horizontal: false, vertical: true)
+                    .foregroundStyle(ShellPalette.ink.opacity(changed ? 1 : 0.85)).fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 8)
                 if changed { ChangedDot() }
-                Image(systemName: "arrow.right").font(.system(size: 11, weight: .bold)).foregroundStyle(.white.opacity(changed ? 0.5 : 0.25))
+                Image(systemName: "arrow.right").font(.system(size: 11, weight: .bold)).foregroundStyle(ShellPalette.ink.opacity(changed ? 0.5 : 0.25))
                 PadGlyph(button: output, lit: changed, dim: !changed).frame(minWidth: 36)
-                Image(systemName: "chevron.right").font(.system(size: 13, weight: .bold)).foregroundStyle(.white.opacity(0.3))
+                Image(systemName: "chevron.right").font(.system(size: 13, weight: .bold)).foregroundStyle(ShellPalette.ink.opacity(0.3))
             }
             .padding(.horizontal, 14).padding(.vertical, 6).frame(minHeight: 50)
             .contentShape(Rectangle())
@@ -576,11 +576,11 @@ struct PadMappingCard: View {
         return Button { pick(row.id, option) } label: {
             PadGlyph(button: option, inverted: chosen)
                 .frame(maxWidth: .infinity, minHeight: 52)
-                .background(chosen ? ShellPalette.cream : .white.opacity(0.055), in: RoundedRectangle(cornerRadius: 12))
-                .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(.white.opacity(chosen ? 0 : 0.08)))
+                .background(chosen ? ShellPalette.cream : ShellPalette.ink.opacity(0.055), in: RoundedRectangle(cornerRadius: 12))
+                .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(ShellPalette.ink.opacity(chosen ? 0 : 0.08)))
                 .overlay(alignment: .topTrailing) {
                     // The button's own place: what it sends when nothing is changed.
-                    if isDefault { Circle().fill(chosen ? .black.opacity(0.5) : .white.opacity(0.35)).frame(width: 5, height: 5).padding(7) }
+                    if isDefault { Circle().fill(chosen ? .black.opacity(0.5) : ShellPalette.ink.opacity(0.35)).frame(width: 5, height: 5).padding(7) }
                 }
                 .contentShape(RoundedRectangle(cornerRadius: 12))
         }
@@ -603,9 +603,9 @@ struct PadMappingCard: View {
                 if chosen { Image(systemName: "checkmark").font(.system(size: 14, weight: .bold)).accessibilityHidden(true) }
             }
             .padding(.horizontal, 16).frame(minHeight: 52)
-            .foregroundStyle(chosen ? .black : .white.opacity(0.85))
-            .background(chosen ? ShellPalette.cream : .white.opacity(0.055), in: RoundedRectangle(cornerRadius: 12))
-            .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(.white.opacity(chosen ? 0 : 0.08)))
+            .foregroundStyle(chosen ? .black : ShellPalette.ink.opacity(0.85))
+            .background(chosen ? ShellPalette.cream : ShellPalette.ink.opacity(0.055), in: RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(ShellPalette.ink.opacity(chosen ? 0 : 0.08)))
             .contentShape(RoundedRectangle(cornerRadius: 12))
         }
         .buttonStyle(.plain)
@@ -632,8 +632,8 @@ struct PadGlyph: View {
     var inverted = false
     var dim = false
     var body: some View {
-        let ink: Color = inverted ? .black : lit ? ShellPalette.cream : .white.opacity(dim ? 0.45 : 0.9)
-        let line: Color = inverted ? .black.opacity(0.55) : lit ? ShellPalette.cream.opacity(0.9) : .white.opacity(dim ? 0.2 : 0.4)
+        let ink: Color = inverted ? .black : lit ? ShellPalette.cream : ShellPalette.ink.opacity(dim ? 0.45 : 0.9)
+        let line: Color = inverted ? .black.opacity(0.55) : lit ? ShellPalette.cream.opacity(0.9) : ShellPalette.ink.opacity(dim ? 0.2 : 0.4)
         Group {
             switch button {
             case "A", "B", "X", "Y":

@@ -84,7 +84,7 @@ struct ChoicePickerView: View {
         }
         .frame(maxWidth: 460)
         .background(Color(red: 0.075, green: 0.075, blue: 0.082), in: RoundedRectangle(cornerRadius: 26))
-        .overlay(RoundedRectangle(cornerRadius: 26).strokeBorder(.white.opacity(0.10)))
+        .overlay(RoundedRectangle(cornerRadius: 26).strokeBorder(ShellPalette.ink.opacity(0.10)))
         .shadow(color: .black.opacity(0.5), radius: 40)
         .accessibilityElement(children: .contain)
         .accessibilityAddTraits(.isModal)
@@ -98,14 +98,14 @@ struct ChoicePickerView: View {
                     Text(request.row.label).shellType(ShellType.flowTitle(20)).lineLimit(2)
                         .accessibilityAddTraits(.isHeader).accessibilityIdentifier("choice.title")
                     if !request.row.note.isEmpty {
-                        Text(request.row.note).shellType(ShellType.note).foregroundStyle(.white.opacity(0.5)).lineLimit(2)
+                        Text(request.row.note).shellType(ShellType.note).foregroundStyle(ShellPalette.ink.opacity(0.5)).lineLimit(2)
                     }
                 }
                 Spacer(minLength: 8)
                 if !nativeBars {
                     Button(action: close) {
                         Image(systemName: "xmark").font(.system(size: 14, weight: .semibold)).frame(width: 44, height: 44)
-                            .background(.white.opacity(0.08), in: Circle()).contentShape(Circle())
+                            .background(ShellPalette.ink.opacity(0.08), in: Circle()).contentShape(Circle())
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(ShellStrings.text("Close"))
@@ -144,8 +144,8 @@ struct ChoicePickerView: View {
                         if chosen { Image(systemName: "checkmark").font(.system(size: 14, weight: .bold)).accessibilityHidden(true) }
                     }
                     .padding(.horizontal, 14).padding(.vertical, 8).frame(minHeight: 44)
-                    .foregroundStyle(chosen ? ShellPalette.cream : .white.opacity(0.8))
-                    .background(.white.opacity(chosen ? 0.09 : 0.0), in: RoundedRectangle(cornerRadius: 10))
+                    .foregroundStyle(chosen ? ShellPalette.cream : ShellPalette.ink.opacity(0.8))
+                    .background(ShellPalette.ink.opacity(chosen ? 0.09 : 0.0), in: RoundedRectangle(cornerRadius: 10))
                     .contentShape(RoundedRectangle(cornerRadius: 10))
                 }
                 .buttonStyle(.plain)
@@ -171,19 +171,19 @@ struct ChoiceValueRow: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(row.label).shellType(ShellType.settingLabel).fixedSize(horizontal: false, vertical: true)
                     if !row.note.isEmpty {
-                        Text(row.note).shellType(ShellType.note).foregroundStyle(.white.opacity(0.5)).fixedSize(horizontal: false, vertical: true)
+                        Text(row.note).shellType(ShellType.note).foregroundStyle(ShellPalette.ink.opacity(0.5)).fixedSize(horizontal: false, vertical: true)
                     }
                     if row.fromShell { FromSettingsMark() }
                 }
                 Spacer(minLength: 8)
                 Text(valueLabel).shellText(14.5, .semibold).foregroundStyle(ShellPalette.cream)
                     .multilineTextAlignment(.trailing).fixedSize(horizontal: false, vertical: true)
-                Image(systemName: "chevron.right").font(.system(size: 13, weight: .bold)).foregroundStyle(.white.opacity(0.4))
+                Image(systemName: "chevron.right").font(.system(size: 13, weight: .bold)).foregroundStyle(ShellPalette.ink.opacity(0.4))
                     .accessibilityHidden(true)
             }
             .padding(.horizontal, 14).padding(.vertical, 8).frame(minHeight: 48)
-            .background(.white.opacity(0.055), in: RoundedRectangle(cornerRadius: 11))
-            .overlay(RoundedRectangle(cornerRadius: 11).strokeBorder(.white.opacity(0.08)))
+            .background(ShellPalette.ink.opacity(0.055), in: RoundedRectangle(cornerRadius: 11))
+            .overlay(RoundedRectangle(cornerRadius: 11).strokeBorder(ShellPalette.ink.opacity(0.08)))
             .contentShape(RoundedRectangle(cornerRadius: 11))
         }
         .buttonStyle(.plain)

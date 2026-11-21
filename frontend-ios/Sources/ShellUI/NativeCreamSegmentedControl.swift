@@ -50,7 +50,7 @@ struct NativeCreamSegmentedControl: View {
         }
         .pickerStyle(.segmented)
         .labelsHidden()
-        .tint(ShellPalette.cream)
+        .tint(ShellPalette.action)
         .accessibilityLabel(accessibilityLabel)
         .accessibilityIdentifier(accessibilityIdentifier)
         #endif
@@ -86,14 +86,14 @@ enum NativeCreamSegmentedAppearance {
     }
 
     static func configureColors(_ control: UISegmentedControl) {
-        control.overrideUserInterfaceStyle = .dark
-        control.selectedSegmentTintColor = UIColor(ShellPalette.cream)
-        control.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .normal)
-        control.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .highlighted)
-        control.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .selected)
-        control.setTitleTextAttributes([.foregroundColor: UIColor.black], for: [.selected, .highlighted])
-        control.setTitleTextAttributes([.foregroundColor: UIColor.white.withAlphaComponent(0.45)], for: .disabled)
-        control.setTitleTextAttributes([.foregroundColor: UIColor.black.withAlphaComponent(0.65)], for: [.selected, .disabled])
+        control.overrideUserInterfaceStyle = .unspecified
+        control.selectedSegmentTintColor = UIColor(ShellPalette.action)
+        control.setTitleTextAttributes([.foregroundColor: UIColor.label], for: .normal)
+        control.setTitleTextAttributes([.foregroundColor: UIColor.label], for: .highlighted)
+        control.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+        control.setTitleTextAttributes([.foregroundColor: UIColor.white], for: [.selected, .highlighted])
+        control.setTitleTextAttributes([.foregroundColor: UIColor.label.withAlphaComponent(0.45)], for: .disabled)
+        control.setTitleTextAttributes([.foregroundColor: UIColor.white.withAlphaComponent(0.65)], for: [.selected, .disabled])
     }
 
     /// Applies option titles only when they change, and updates `selectedSegmentIndex` only when it differs from

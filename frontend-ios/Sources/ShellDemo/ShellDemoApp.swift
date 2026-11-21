@@ -13,7 +13,11 @@ import ShellControllers
     }
     var body: some Scene {
         WindowGroup {
-            if hostMode { HostDemoScreen() } else { DemoScreen() }
+            Group {
+                if hostMode { HostDemoScreen() } else { DemoScreen() }
+            }
+            .preferredColorScheme(ProcessInfo.processInfo.arguments.contains("--light-appearance") ? .light :
+                ProcessInfo.processInfo.arguments.contains("--dark-appearance") ? .dark : nil)
         }
     }
 }
