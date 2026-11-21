@@ -16,13 +16,19 @@ struct PeerGameSource: Sendable {
         func tree(_ root: URL, prefix: String) throws {
             guard fm.fileExists(atPath: root.path) else { return }
             guard try root.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink != true else { throw GamePackage.Failure.invalid }
-            guard let walk = fm.enumerator(at: root, includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey]) else { throw GamePackage.Failure.incomplete }
+            let base = root.standardizedFileURL.resolvingSymlinksInPath()
+            let baseComponents = base.pathComponents
+            guard let walk = fm.enumerator(at: base, includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey]) else { throw GamePackage.Failure.incomplete }
             for case let url as URL in walk {
                 try Task.checkCancellation()
                 let v = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
                 guard v.isSymbolicLink != true else { throw GamePackage.Failure.invalid }
                 if v.isRegularFile == true {
-                    let relative = String(url.path.dropFirst(root.path.count + 1))
+                    // URL paths may already end in a separator. Component-based paths
+                    // preserve the first character of executables and shader folders.
+                    let components = url.standardizedFileURL.pathComponents
+                    guard components.starts(with: baseComponents), components.count > baseComponents.count else { throw GamePackage.Failure.invalid }
+                    let relative = components.dropFirst(baseComponents.count).joined(separator: "/")
                     urls[prefix + "/" + relative] = url
                 }
             }
@@ -69,6 +75,7 @@ struct PeerGameSource: Sendable {
             let e = GamePackage.Entry(path: name, size: UInt64(size), sha256: digest.finalize().map { String(format: "%02x", $0) }.joined())
             files.append(File(entry: e, url: url, modified: v.contentModificationDate))
         }
+        guard urls["framework/" + game.frameworkExecutable] != nil else { throw GamePackage.Failure.incomplete }
         let manifest = GamePackage.Manifest(schema: 1, titleID: game.titleID, bundleID: bundleID, teamID: teamID, files: files.map(\.entry))
         let result = Self(manifest: manifest, title: entry.title, files: files)
         try GamePackage.validate(manifest, payloadBytes: result.bytes, bundleID: bundleID, teamID: teamID)

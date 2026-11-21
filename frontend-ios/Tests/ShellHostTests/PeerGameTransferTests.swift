@@ -44,6 +44,8 @@ struct PeerGameTransferTests {
         #expect(source.files.allSatisfy { !$0.entry.path.contains("save/") })
         #expect(source.files.contains { $0.entry.path == "data/romfs.img" })
         #expect(source.files.first?.entry.path.hasPrefix("framework/") == true)
+        #expect(source.files.contains { $0.entry.path == "framework/DmGame" + id })
+        #expect(source.files.contains { $0.entry.path == "data/msl/b-3f9a2c/synthetic.metallib" })
         #expect(!source.files.contains { $0.url.pathExtension == "sppgame" })
         #expect(try FileManager.default.contentsOfDirectory(atPath: box.root.path).allSatisfy { !$0.hasSuffix("sppgame") })
     }
