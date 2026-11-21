@@ -10,7 +10,8 @@ struct GamePackageMemoryTests {
     @Test func largePackageExtractionKeepsMemoryBoundedAndPreservesSaves() throws {
         let box = try Sandbox()
         let fm = FileManager.default
-        let size = 512 * 1024 * 1024
+        let size = ProcessInfo.processInfo.environment["SPPLECHOS_IMPORT_TEST_BYTES"].flatMap(Int.init) ?? 512 * 1024 * 1024
+        #expect(size >= 256 * 1024 * 1024 && size <= 8 * 1024 * 1024 * 1024 && size % (1024 * 1024) == 0)
         let zero = Data(repeating: 0, count: 1024 * 1024)
         var hash = SHA256()
         for _ in 0..<(size / zero.count) { hash.update(data: zero) }
@@ -38,6 +39,7 @@ struct GamePackageMemoryTests {
         try Data("keep this save".utf8).write(to: save)
 
         let samples = MemorySamples()
+        #expect(samples.baseline > 0, "The process memory probe must be available")
         var rejected = false
         do {
             _ = try GamePackage.install(from: package, dataRoot: box.appData,
