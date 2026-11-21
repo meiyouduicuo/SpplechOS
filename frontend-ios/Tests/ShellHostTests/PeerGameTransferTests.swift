@@ -2,6 +2,7 @@ import Foundation
 import CryptoKit
 @preconcurrency import Network
 import Testing
+import ShellUI
 import Darwin
 @testable import ShellHost
 
@@ -131,17 +132,44 @@ struct PeerGameTransferTests {
                 teamID: old.teamID, environment: HostEnvironment(chain: "b-3f9a2c"))
             try await pair.server.send(PeerGameWire.approve)
             var failed = false
+            let interrupted = TransferInterruptionProbe()
             do {
                 _ = try await PeerGameWire.receive(sink, over: pair.server, progress: { value in
-                    if value > 0.1 { pair.server.cancel() }
+                    if value > 0.1 { interrupted.mark(); pair.server.cancel() }
                 })
             } catch { failed = true }
             #expect(failed)
+            #expect(interrupted.wasRequested, "The test must reach payload transfer before injecting disconnection")
         }
         pair.client.cancel(); pair.server.cancel()
         _ = try? await sending
         #expect(try Data(contentsOf: receiver.appData.appendingPathComponent(id + "/romfs.img")) == original)
         #expect(try FileManager.default.contentsOfDirectory(atPath: receiver.appData.path).allSatisfy { !$0.hasPrefix(".package-import-") })
+    }
+
+    @MainActor @Test func peerTransferBlocksOtherImportsLaunchAndSaveDeletion() async throws {
+        let box = try Sandbox()
+        let folder = try box.giveAppData()
+        let save = folder.appendingPathComponent("save/main.dat")
+        try FileManager.default.createDirectory(at: save.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try Data("keep this save".utf8).write(to: save)
+        var config = box.config()
+        config.hotFrameworksRoot = box.root.appendingPathComponent("hot")
+        let launcher = RecordingLauncher()
+        let defaults = UserDefaults(suiteName: box.suite + "peer-settings")!
+        let model = ShellHostModel(config: config, launcher: launcher, shellSettings: ShellSettingsStore(defaults: defaults))
+        model.beginPeerTransfer(gameID: nil)
+        #expect(model.peerTransfer != nil && !model.acceptsUSBImport)
+        defer { model.peerTransfer?.stop(); model.peerTransfer = nil }
+        model.clearGameSaves(Fixtures.orbit)
+        model.deleteGame(Fixtures.orbit, saves: true)
+        await model.playNow(Fixtures.orbit)
+        #expect(launcher.launched.isEmpty)
+        var refused = false
+        do { _ = try await model.importGamePackageNow(GamePackageTests().fixture) }
+        catch GamePackage.Failure.busy { refused = true }
+        #expect(refused)
+        #expect(try Data(contentsOf: save) == Data("keep this save".utf8))
     }
 
     @Test func sinkRejectsWrongTeamPathsAndDataBeforeFramework() throws {
@@ -217,4 +245,11 @@ private final class TransferMemoryProbe: @unchecked Sendable {
         }
         return result == KERN_SUCCESS ? UInt64(info.resident_size) : 0
     }
+}
+
+private final class TransferInterruptionProbe: @unchecked Sendable {
+    private let lock = NSLock()
+    private var requested = false
+    func mark() { lock.lock(); requested = true; lock.unlock() }
+    var wasRequested: Bool { lock.lock(); defer { lock.unlock() }; return requested }
 }

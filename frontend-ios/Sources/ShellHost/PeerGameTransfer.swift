@@ -174,6 +174,8 @@ struct NearbyGameDevice: Identifiable, Sendable {
     }
     func confirm() { let pending = decision; decision = nil; lastProgress = Date(); pending?.resume(returning: true) }
     func stop() {
+        guard hasStarted else { return }
+        hasStarted = false
         decision?.resume(returning: false); decision = nil
         work?.cancel(); work = nil; deadline?.cancel(); deadline = nil
         channel?.cancel(); channel = nil

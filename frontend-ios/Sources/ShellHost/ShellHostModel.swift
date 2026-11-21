@@ -743,7 +743,7 @@ public struct ShellHostConfig: Sendable {
     }
 
     func importGamePackageNow(_ url: URL, onProgress: @escaping @Sendable (Double) -> Void = { _ in }) async throws -> String {
-        guard !importingPackage, !launchingGame, !modifyingSaves, cloudConflict == nil,
+        guard peerTransfer == nil, !importingPackage, !launchingGame, !modifyingSaves, cloudConflict == nil,
               let hotRoot = config.hotFrameworksRoot else { throw GamePackage.Failure.busy }
         importingPackage = true
         packageProgress = 0
@@ -922,7 +922,7 @@ public struct ShellHostConfig: Sendable {
     /// and cloud saves (those folders are the player's and are not touched) and when it was played, and takes the game off the
     /// list. The game's framework inside the app stays: see `GameDeletion`.
     public func deleteGame(_ id: String, saves: Bool) {
-        guard !launchingGame, !modifyingSaves, let entry = entry(id) else { return }
+        guard peerTransfer == nil, !importingPackage, !launchingGame, !modifyingSaves, let entry = entry(id) else { return }
         joinGeneration &+= 1
         joiningProgress.removeValue(forKey: id)
         pickGeneration[id] = (pickGeneration[id] ?? 0) &+ 1
@@ -977,7 +977,7 @@ public struct ShellHostConfig: Sendable {
     /// The confirmation names a single game. Its writable save folder is always app-local.
     public func clearGameSaves(_ id: String) {
         guard let entry = entry(id) else { return }
-        guard !launchingGame, !modifyingSaves, cloudConflict == nil else {
+        guard peerTransfer == nil, !importingPackage, !launchingGame, !modifyingSaves, cloudConflict == nil else {
             notice = hostText("Close the game and finish any save operation before clearing saves.")
             return
         }
@@ -1140,7 +1140,7 @@ public struct ShellHostConfig: Sendable {
     }
 
     func restoreLatestSaveBackupNow(_ id: String) async {
-        guard !launchingGame, !modifyingSaves, cloudConflict == nil, entry(id) != nil else { return }
+        guard peerTransfer == nil, !importingPackage, !launchingGame, !modifyingSaves, cloudConflict == nil, entry(id) != nil else { return }
         modifyingSaves = true
         defer { modifyingSaves = false; scheduleUSBImport() }
         cloudCheckGeneration &+= 1
