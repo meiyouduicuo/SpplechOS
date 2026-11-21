@@ -1,4 +1,5 @@
 import SwiftUI
+import Foundation
 
 /// Console-style selection with a single horizontal shelf, in either orientation.
 /// The native toolbar retains app settings. The sliders below belong to the selected game.
@@ -94,6 +95,7 @@ struct ImmersiveConsoleLibrary: View {
             .padding(.bottom, 12)
         }
         .scrollIndicators(.hidden)
+        .scrollContentBackground(.hidden)
         .ignoresSafeArea(.container, edges: [.leading, .trailing])
         .accessibilityIdentifier("library.grid")
         .safeAreaInset(edge: .bottom, spacing: 0) {
@@ -149,7 +151,9 @@ struct ConsoleBackdrop: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Image("ConsoleMountains", bundle: .module).resizable().scaledToFill()
+                if let wallpaper = ConsoleWallpaper.artwork {
+                    Image(decorative: wallpaper.image, scale: 1).resizable().interpolation(.high).scaledToFill()
+                }
                 if let game, game.banner != nil {
                     ArtView(game: game, lettering: false)
                 }
@@ -161,4 +165,14 @@ struct ConsoleBackdrop: View {
             }
         }.ignoresSafeArea().accessibilityHidden(true)
     }
+}
+
+enum ConsoleWallpaper {
+    // SwiftPM copies the PNG as a loose resource. Decode it explicitly instead of
+    // relying on platform named-image lookup, which can return an empty image.
+    static let artwork: Artwork? = {
+        guard let url = Bundle.module.url(forResource: "ConsoleMountains", withExtension: "png"),
+              let data = try? Data(contentsOf: url) else { return nil }
+        return Artwork(id: "console.mountains", data: data)
+    }()
 }

@@ -1,4 +1,5 @@
 import XCTest
+import UIKit
 
 @MainActor final class ShellDemoUITests: XCTestCase {
     private let app = XCUIApplication()
@@ -279,6 +280,15 @@ import XCTest
         launch("library")
         XCTAssertTrue(app.buttons["tile.orbit"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["state.action"].isHittable)
+        let screenshot = try! XCTUnwrap(app.screenshot().image.cgImage)
+        let sky = try! XCTUnwrap(screenshot.cropping(to: CGRect(x: screenshot.width / 2, y: screenshot.height / 4, width: 1, height: 1)))
+        var pixel = [UInt8](repeating: 0, count: 4)
+        pixel.withUnsafeMutableBytes { bytes in
+            let context = CGContext(data: bytes.baseAddress, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4,
+                                    space: CGColorSpace(name: CGColorSpace.sRGB)!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+            context.draw(sky, in: CGRect(x: 0, y: 0, width: 1, height: 1))
+        }
+        XCTAssertGreaterThan(Int(pixel[0]) + Int(pixel[1]) + Int(pixel[2]), 30, "The scenic wallpaper must be visible behind the library")
         capture("immersive-console-portrait")
         XCUIDevice.shared.orientation = .landscapeLeft
         XCTAssertTrue(app.buttons["tile.orbit"].waitForExistence(timeout: 5))
