@@ -119,11 +119,17 @@ public enum GamePackage {
                 var digest = SHA256()
                 while remaining > 0 {
                     try Task.checkCancellation()
-                    let data = try readExactly(source, count: Int(min(UInt64(chunk), remaining)))
-                    try output.write(contentsOf: data)
-                    digest.update(data: data)
-                    remaining -= UInt64(data.count)
-                    done += UInt64(data.count)
+                    // FileHandle's Foundation bridges create autoreleased buffers.
+                    // Retire them per chunk, rather than at the end of a multi-GB import.
+                    // Only the byte count escapes this pool, never the file's Data.
+                    let copied = try autoreleasepool {
+                        let data = try readExactly(source, count: Int(min(UInt64(chunk), remaining)))
+                        try output.write(contentsOf: data)
+                        digest.update(data: data)
+                        return data.count
+                    }
+                    remaining -= UInt64(copied)
+                    done += UInt64(copied)
                     progress(Double(done) / Double(max(1, bytes)))
                 }
                 try output.synchronize()
