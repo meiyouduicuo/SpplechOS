@@ -124,7 +124,7 @@ public struct GameDetailView: View {
                 .accessibilityIdentifier("set.clearSaves")
                 .shellTarget("set.clearSaves") { askClearSaves(detail.game) }
                 Text(ShellStrings.text("Clear this game's current saves on this device and start over."))
-                    .shellText(12.5).foregroundStyle(ShellPalette.ink.opacity(0.45))
+                    .shellText(12.5).foregroundStyle(ShellPalette.secondaryInk)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -134,7 +134,7 @@ public struct GameDetailView: View {
                 .disabled(!detail.hasModifiedSettings)
                 .shellTarget("set.reset", enabled: detail.hasModifiedSettings) { actions.onResetDefaults(detail.id) }
             Text(ShellStrings.text("Brings back the settings this game was tested with."))
-                .shellText(12.5).foregroundStyle(ShellPalette.ink.opacity(0.45)).fixedSize(horizontal: false, vertical: true)
+                .shellText(12.5).foregroundStyle(ShellPalette.secondaryInk).fixedSize(horizontal: false, vertical: true)
         }
         if let askDelete {
             // Last and apart from the rest: the one action here that removes something. It only asks, the question names what goes.
@@ -143,7 +143,7 @@ public struct GameDetailView: View {
                     .accessibilityIdentifier("set.delete")
                     .shellTarget("set.delete") { askDelete(detail.game) }
                 Text(ShellStrings.text("Deletes the game’s data on this device. You choose whether its saves go too."))
-                    .shellText(12.5).foregroundStyle(ShellPalette.ink.opacity(0.45)).fixedSize(horizontal: false, vertical: true)
+                    .shellText(12.5).foregroundStyle(ShellPalette.secondaryInk).fixedSize(horizontal: false, vertical: true)
             }
         }
     }
@@ -168,14 +168,14 @@ public struct GameDetailView: View {
                     if detail.game.isSwitch2 {   // #696: the manifest's console
                         ConsoleBadge().accessibilityIdentifier("detail.switch2")
                         Text(ShellStrings.text("A Switch 2 game. It needs a lot of memory and may not start on every device."))
-                            .shellText(12.5).foregroundStyle(ShellPalette.ink.opacity(0.62)).fixedSize(horizontal: false, vertical: true)
+                            .shellText(12.5).foregroundStyle(ShellPalette.secondaryInk).fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
             }
             if showsPrimaryAction {
                 if !detail.game.state.explanation.isEmpty {
-                    Text(detail.game.state.explanation).shellText(14).foregroundStyle(ShellPalette.ink.opacity(0.72))
+                    Text(detail.game.state.explanation).shellText(14).foregroundStyle(ShellPalette.secondaryInk)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 GameStateView(game: detail.game, actions: actions, showsExplanation: false)

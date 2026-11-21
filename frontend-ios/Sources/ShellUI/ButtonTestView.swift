@@ -57,7 +57,7 @@ struct ButtonTestView: View {
                             .accessibilityAddTraits(.isHeader).accessibilityIdentifier("buttonTest.title")
                     }
                     Text(controllerName)
-                        .shellType(ShellType.note).foregroundStyle(ShellPalette.ink.opacity(0.5))
+                        .shellType(ShellType.note).foregroundStyle(ShellPalette.secondaryInk)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 8)
@@ -112,7 +112,7 @@ struct ButtonTestView: View {
                         .rotationEffect(.degrees(-90))
                     Text(verbatim: "B").font(ShellFonts.fixed(10, weight: .bold))
                 }.frame(width: 22, height: 22).accessibilityHidden(true)
-                Text(ShellStrings.text("Hold B to close")).shellText(13, .medium, relativeTo: .footnote).foregroundStyle(ShellPalette.ink.opacity(0.6))
+                Text(ShellStrings.text("Hold B to close")).shellText(13, .medium, relativeTo: .footnote).foregroundStyle(ShellPalette.secondaryInk)
             }
             .frame(maxWidth: .infinity).padding(.bottom, 18).padding(.top, 4)
         }

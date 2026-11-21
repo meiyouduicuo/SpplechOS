@@ -169,7 +169,7 @@ public struct ControllersView: View {
     private func hint(_ icon: some View, _ label: String) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 14) {
             icon.frame(width: 22).foregroundStyle(ShellPalette.ink.opacity(0.75))
-            Text(label).shellText(14.5).foregroundStyle(ShellPalette.ink.opacity(0.7))
+            Text(label).shellText(14.5).foregroundStyle(ShellPalette.secondaryInk)
                 .fixedSize(horizontal: false, vertical: true)
         }.accessibilityElement(children: .combine)
     }

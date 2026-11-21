@@ -690,7 +690,7 @@ private struct PaneBanner: View {
             if game.isSwitch2 {
                 ConsoleBadge().accessibilityIdentifier("detail.switch2")
                 Text(ShellStrings.text("A Switch 2 game. It needs a lot of memory and may not start on every device."))
-                    .shellText(12.5).foregroundStyle(ShellPalette.ink.opacity(0.62)).fixedSize(horizontal: false, vertical: true)
+                    .shellText(12.5).foregroundStyle(ShellPalette.secondaryInk).fixedSize(horizontal: false, vertical: true)
             }
         }
     }

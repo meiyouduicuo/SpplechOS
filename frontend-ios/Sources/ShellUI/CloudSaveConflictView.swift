@@ -140,7 +140,7 @@ public struct CloudSaveConflictView: View {
                 Spacer(minLength: 8)
                 Image(systemName: "chevron.right")
                     .font(.footnote.weight(.semibold))
-                    .foregroundStyle(ShellPalette.ink.opacity(0.45))
+                    .foregroundStyle(ShellPalette.secondaryInk)
                     .accessibilityHidden(true)
             }
             .padding(14)
@@ -238,7 +238,7 @@ public struct SigningWarningBanner: View {
             Button(action: onDismiss) {
                 Image(systemName: "xmark")
                     .font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(ShellPalette.ink.opacity(0.65))
+                    .foregroundStyle(ShellPalette.secondaryInk)
                     .frame(width: 28, height: 28)
                     .background(ShellPalette.ink.opacity(0.08), in: Circle())
             }

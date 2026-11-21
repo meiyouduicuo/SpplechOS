@@ -10,6 +10,7 @@ public enum ShellPalette {
     public static let background = adaptive(light: 0xF2F3F5, dark: 0x25262A)
     public static let surface = adaptive(light: 0xFFFFFF, dark: 0x33353A)
     public static let ink = adaptive(light: 0x202226, dark: 0xF3F4F6)
+    public static let secondaryInk = adaptive(light: 0x5A5F68, dark: 0xB8BDC6)
     public static let accent = adaptive(light: 0x007EA8, dark: 0x49CAE9)
     public static let action = Color(red: 0, green: 126.0 / 255, blue: 168.0 / 255)
     public static let cream = Color(red: 1, green: 0.94, blue: 0.84)
@@ -155,10 +156,10 @@ struct SectionHeading: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
             Text(title.uppercased()).shellType(ShellType.sectionCaps)
-                .foregroundStyle(ShellPalette.ink.opacity(0.65)).accessibilityAddTraits(.isHeader)
+                .foregroundStyle(ShellPalette.secondaryInk).accessibilityAddTraits(.isHeader)
             if let trailing {
                 Spacer(minLength: 8)
-                Text(trailing).shellText(12, .medium, relativeTo: .caption).monospacedDigit().foregroundStyle(ShellPalette.ink.opacity(0.4))
+                Text(trailing).shellText(12, .medium, relativeTo: .caption).monospacedDigit().foregroundStyle(ShellPalette.secondaryInk)
             }
         }
     }
@@ -516,7 +517,7 @@ struct StatusLabel: View {
                 Circle().fill(state.color).frame(width: prominent ? 7 : 6, height: prominent ? 7 : 6)
                 Text(prominent ? state.title.uppercased() : state.title)
                     .shellType(prominent ? ShellType.eyebrow : ShellType.status)
-                    .foregroundStyle(state.color)
+                    .foregroundStyle(ShellPalette.ink)
                     .lineLimit(prominent ? 2 : 1)
             }.accessibilityElement(children: .combine)
         }
