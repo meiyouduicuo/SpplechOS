@@ -101,7 +101,8 @@ struct ImmersiveConsoleLibrary: View {
         }
         .scrollIndicators(.hidden)
         .scrollContentBackground(.hidden)
-        .ignoresSafeArea(.container, edges: [.leading, .trailing])
+        // Only the backdrop is edge-to-edge. Keep interactive content inside the
+        // system's safe area, including either landscape side of a display cutout.
         .accessibilityIdentifier("library.grid")
         .safeAreaInset(edge: .bottom, spacing: 0) {
             GameLaunchActions(game: selected.game, primary: { primary(selected) }, settings: openSettings,
