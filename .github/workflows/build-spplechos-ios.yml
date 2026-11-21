@@ -53,6 +53,7 @@ jobs:
         run: |
           set -euo pipefail
           swift build --package-path frontend-ios 2>&1 | tee logs/shell-package-build.log
+          swift test --package-path frontend-ios --filter GamePackageMemoryTests 2>&1 | tee logs/shell-package-memory-tests.log
           swift test --package-path frontend-ios 2>&1 | tee logs/shell-package-tests.log
 
       - name: Select an available iPhone simulator
@@ -81,6 +82,7 @@ jobs:
             -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
             -derivedDataPath "$RUNNER_TEMP/shell-package-simulator" \
             -only-testing:ShellHostTests/USBGameImportInboxTests \
+            -only-testing:ShellHostTests/GamePackageMemoryTests \
             CODE_SIGNING_ALLOWED=NO 2>&1 | tee ../logs/shell-usb-simulator-tests.log
 
       - name: Test game package import, save reset and app settings on iOS
