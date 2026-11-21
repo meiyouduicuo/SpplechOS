@@ -627,7 +627,7 @@ public struct LibraryView: View {
                         if !controllers.isEmpty {
                             Text(controllers.count, format: .number)
                                 .font(.caption2.weight(.semibold)).monospacedDigit()
-                                .foregroundStyle(ShellPalette.ink)
+                                .foregroundStyle(.white)
                                 .padding(.horizontal, 4).frame(minWidth: 18, minHeight: 18)
                                 .background(.black, in: Capsule())
                                 .fixedSize().offset(x: 4, y: -4)

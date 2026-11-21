@@ -179,7 +179,7 @@ struct PadMappingCard: View {
                                         LinearGradient(colors: [ShellPalette.background, .clear], startPoint: .top, endPoint: .bottom)
                                     }
                                     .mask {
-                                        LinearGradient(colors: [.black, .clear], startPoint: .top, endPoint: .bottom)
+                                        LinearGradient(colors: [ShellPalette.background, .clear], startPoint: .top, endPoint: .bottom)
                                     }
                                     .frame(height: 32)
                                     .opacity(mappingsScrolled ? 1 : 0)
