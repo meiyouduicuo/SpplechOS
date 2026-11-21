@@ -96,6 +96,7 @@ jobs:
             -derivedDataPath "$RUNNER_TEMP/shell-demo-build" \
             -resultBundlePath "$RUNNER_TEMP/shell-ui-tests.xcresult" \
             -parallel-testing-enabled NO \
+            -only-testing:ShellDemoUITests/LibrarySafeAreaUITests \
             -only-testing:ShellDemoUITests/ShellHostUITests/testClearSavesRequiresConfirmationAndKeepsTheGameListed \
             -only-testing:ShellDemoUITests/ShellHostUITests/testGamePackagePickerCanBeCancelledWithoutChangingTheLibrary \
             -only-testing:ShellDemoUITests/ShellDemoUITests/testNativeLauncherBarsFollowTheActiveScreen \
