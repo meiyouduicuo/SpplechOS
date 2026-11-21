@@ -56,7 +56,7 @@ struct GamePackageMemoryTests {
 }
 
 private final class MemorySamples: @unchecked Sendable {
-    let baseline = Self.residentBytes()
+    let baseline = MemorySamples.residentBytes()
     private(set) var peak: UInt64 = 0
     private(set) var progress: Double = 0
     func record(_ value: Double) {
