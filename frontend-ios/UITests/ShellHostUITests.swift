@@ -12,6 +12,26 @@ import XCTest
         XCTAssertTrue(app.buttons["tile.\(id)"].waitForExistence(timeout: 10))
     }
 
+    func testDeviceTransferEntriesHandOffAndCloseWithoutChangingTheLibrary() {
+        let id = "0100000000010000"
+        launch(select: id)
+        app.buttons["settings.open"].tap()
+        let send = app.buttons["set.sendGame"]
+        for _ in 0..<10 where !send.isHittable { app.swipeUp() }
+        XCTAssertTrue(send.isHittable)
+        send.tap()
+        XCTAssertTrue(app.buttons["peer.close"].waitForExistence(timeout: 10))
+        app.buttons["peer.close"].tap()
+        XCTAssertTrue(app.buttons["shellSettings.open"].waitForExistence(timeout: 10))
+        app.buttons["shellSettings.open"].tap()
+        let receive = app.buttons["shellSettings.receiveGame"]
+        XCTAssertTrue(receive.waitForExistence(timeout: 5))
+        receive.tap()
+        XCTAssertTrue(app.buttons["peer.close"].waitForExistence(timeout: 10))
+        app.buttons["peer.close"].tap()
+        XCTAssertTrue(app.buttons["tile.\(id)"].waitForExistence(timeout: 10))
+    }
+
     func testPlayableFixtureSaysLaunchingIsNotAvailable() {
         launch(select: "0100000000010000")
         XCTAssertEqual(app.staticTexts["hero.title"].label, "Orbit Fixture")

@@ -65,6 +65,12 @@ public enum GamePackage {
         let length = prefix.suffix(8).enumerated().reduce(UInt64(0)) { $0 | UInt64($1.element) << ($1.offset * 8) }
         guard length > 0, length <= maxHeader, length <= fileSize, fileSize >= 16 + length else { throw Failure.invalid }
         let manifest = try JSONDecoder().decode(Manifest.self, from: readExactly(source, count: Int(length)))
+        try validate(manifest, payloadBytes: fileSize - 16 - length, bundleID: bundleID, teamID: teamID)
+        return manifest
+    }
+
+    /// Shared by file imports and direct transfers, before any output is created.
+    static func validate(_ manifest: Manifest, payloadBytes: UInt64, bundleID: String, teamID: String) throws {
         guard manifest.schema == 1, manifest.titleID.range(of: "^[0-9A-F]{16}$", options: .regularExpression) != nil,
               !manifest.files.isEmpty, manifest.files.count <= 200_000 else { throw Failure.invalid }
         guard !teamID.isEmpty, manifest.bundleID == bundleID, manifest.teamID == teamID else { throw Failure.identity }
@@ -84,9 +90,8 @@ public enum GamePackage {
                 guard !names.contains(parts.joined(separator: "/")) else { throw Failure.invalid }
             }
         }
-        guard bytes == fileSize - 16 - length,
+        guard bytes == payloadBytes,
               names.contains("framework/game.manifest.json"), names.contains("data/romfs.img") else { throw Failure.incomplete }
-        return manifest
     }
 
     /// Must run outside the main actor. An import remains invisible until all files pass checks.
@@ -137,6 +142,16 @@ public enum GamePackage {
                 guard digest.finalize().map({ String(format: "%02x", $0) }).joined() == entry.sha256 else { throw Failure.incomplete }
             } catch { try? output.close(); throw error }
         }
+        journalWritten = true
+        return try commitStage(manifest, stage: stage, dataRoot: dataRoot, frameworksRoot: frameworksRoot,
+                               teamID: teamID, environment: environment)
+    }
+
+    /// Commit only verified resources. Saves and per-game settings are never in the ownership list.
+    static func commitStage(_ manifest: Manifest, stage: URL, dataRoot: URL, frameworksRoot: URL,
+                            teamID: String, environment: HostEnvironment) throws -> String {
+        let fm = FileManager.default
+        defer { if !fm.fileExists(atPath: stage.appendingPathComponent("transaction.json").path) { try? fm.removeItem(at: stage) } }
         let framework = stage.appendingPathComponent("framework", isDirectory: true)
         guard let gameJSON = manifest.files.first(where: { $0.path == "framework/game.manifest.json" }),
               gameJSON.size <= 4 * 1024 * 1024 else { throw Failure.invalid }
@@ -167,7 +182,6 @@ public enum GamePackage {
         var journal = Journal(titleID: manifest.titleID, names: names, existing: existing, committed: false)
         try fm.createDirectory(at: stage.appendingPathComponent("previous"), withIntermediateDirectories: false)
         try JSONEncoder().encode(journal).write(to: stage.appendingPathComponent("transaction.json"), options: .atomic)
-        journalWritten = true
         do {
             for name in names {
                 let target = destination(name, titleID: manifest.titleID, dataRoot: dataRoot, frameworksRoot: frameworksRoot)

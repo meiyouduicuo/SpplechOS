@@ -83,6 +83,7 @@ public struct ShellHostConfig: Sendable {
     /// Play is preparing the game's resources or handing over to the engine.
     public private(set) var launchingGame = false
     private var modifyingSaves = false
+    var peerTransfer: PeerGameTransfer?
     public var pickingGamePackage = false
     public private(set) var importingPackage = false
     public private(set) var packageProgress = 0.0
@@ -106,7 +107,7 @@ public struct ShellHostConfig: Sendable {
     @ObservationIgnored var usbInboxMonitor: PackageInboxMonitor?
     @ObservationIgnored var usbImportTask: Task<Void, Never>?
     @ObservationIgnored nonisolated(unsafe) var usbActiveObserver: (any NSObjectProtocol)?
-    var acceptsUSBImport: Bool { !launchingGame && !modifyingSaves && !importingPackage && cloudConflict == nil }
+    var acceptsUSBImport: Bool { peerTransfer == nil && !launchingGame && !modifyingSaves && !importingPackage && cloudConflict == nil }
     @ObservationIgnored private let launcher: any GameLauncher
     @ObservationIgnored private let picker: any FolderPicker
     @ObservationIgnored private let adapter = GamepadAdapter()
@@ -675,7 +676,7 @@ public struct ShellHostConfig: Sendable {
 
     /// The closures for `LibraryView`.
     public var actions: ShellActions {
-        ShellActions(
+        var result = ShellActions(
             onImportGamePackage: { [weak self] in self?.pickingGamePackage = true },
             onPlay: { [weak self] id in self?.play(id) },
             onChange: { [weak self] id, setting, value in self?.change(id, setting: setting, value: value) },
@@ -704,6 +705,34 @@ public struct ShellHostConfig: Sendable {
             onDeleteGame: { [weak self] id, saves in self?.deleteGame(id, saves: saves) },
             onClearGameSaves: { [weak self] id in self?.clearGameSaves(id) },
             onOpenHomeButtonSettings: { [weak self] in self?.openHomeButtonSettings() })
+        result.onSendGame = { [weak self] id in self?.beginPeerTransfer(gameID: id) }
+        result.onReceiveGame = { [weak self] in self?.beginPeerTransfer(gameID: nil) }
+        return result
+    }
+
+    func beginPeerTransfer(gameID: String?) {
+        guard acceptsUSBImport, config.hotFrameworksRoot != nil else { return }
+        let mode: PeerGameTransfer.Mode
+        let bundleID = Bundle.main.bundleIdentifier ?? ""
+        let teamID = ProvisioningProfile.bundledTeamIdentifier() ?? ""
+        if let gameID {
+            mode = .send { [weak self] in
+                guard let self, let entry = self.entry(gameID), entry.problem == nil,
+                      let folder = await self.verifiedData(for: entry).url else { throw GamePackage.Failure.incomplete }
+                let resolution = await self.verifiedData(for: entry)
+                let image = resolution.romfsURL ?? folder.appendingPathComponent("romfs.img")
+                let prepare = Task.detached {
+                    try PeerGameSource.prepare(entry: entry, image: image, bundleID: bundleID, teamID: teamID)
+                }
+                return try await withTaskCancellationHandler { try await prepare.value } onCancel: { prepare.cancel() }
+            }
+        } else { mode = .receive }
+        peerTransfer = PeerGameTransfer(mode: mode, config: config, bundleID: bundleID, teamID: teamID) { [weak self] id in
+            guard let self else { return }
+            self.config.defaults(id).removeObject(forKey: GameDeletion.deletedKey)
+            self.useAppData(id)
+            self.reload()
+        }
     }
 
     public func importGamePackage(_ url: URL) async {
@@ -970,7 +999,7 @@ public struct ShellHostConfig: Sendable {
     }
 
     func playNow(_ id: String) async {
-        guard !launchingGame, !modifyingSaves, !importingPackage, cloudConflict == nil,
+        guard peerTransfer == nil, !launchingGame, !modifyingSaves, !importingPackage, cloudConflict == nil,
               let entry = entry(id), let manifest = entry.manifest, let framework = entry.frameworkURL,
               details.first(where: { $0.id == id })?.game.state == .playable else { return }
         cloudCheckGeneration &+= 1

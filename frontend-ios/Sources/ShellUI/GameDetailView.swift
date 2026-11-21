@@ -85,6 +85,15 @@ public struct GameDetailView: View {
             .frame(maxWidth: .infinity, minHeight: 32)
             .accessibilityElement(children: .combine)
         }
+        if detail.game.state == .playable {
+            group(ShellStrings.text("Device transfer")) {
+                GameSettingsGlassButton(title: ShellStrings.text("Send to another device…")) { actions.onSendGame(detail.id) }
+                    .accessibilityIdentifier("set.sendGame")
+                    .shellTarget("set.sendGame") { actions.onSendGame(detail.id) }
+                Text(ShellStrings.text("Send this game's framework and data. Saves stay on this device."))
+                    .font(.footnote).foregroundStyle(.secondary)
+            }
+        }
         group(ShellStrings.text("Cloud saves")) {
             SourceRow(symbol: detail.cloudSaves == nil ? "icloud.slash" : "icloud",
                       title: detail.cloudSaves ?? ShellStrings.text("Off"),

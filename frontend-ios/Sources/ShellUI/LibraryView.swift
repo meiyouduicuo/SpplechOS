@@ -272,6 +272,8 @@ public struct LibraryView: View {
     // Host-owned alerts and sheets must wait until the menu presentation finishes closing.
     var menuActions: ShellActions {
         var routed = guardedActions
+        routed.onSendGame = { id in handOffMenu { actions.onSendGame(id) } }
+        routed.onReceiveGame = { handOffMenu { actions.onReceiveGame() } }
         routed.onPlay = { id in handOffMenu { actions.onPlay(id) } }
         routed.onClearGameSaves = { id in handOffMenu { actions.onClearGameSaves(id) } }
         routed.onShowLog = { id in handOffMenu { actions.onShowLog(id) } }

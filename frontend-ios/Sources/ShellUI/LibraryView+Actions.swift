@@ -14,6 +14,8 @@ extension LibraryView {
         func echo() -> Bool { gate.isSystemEcho }
         var a = actions
         let o = actions
+        a.onSendGame = { if !echo() { o.onSendGame($0) } }
+        a.onReceiveGame = { if !echo() { o.onReceiveGame() } }
         a.onSelect = { if !echo() { o.onSelect($0) } }
         a.onPlay = { if !echo() { o.onPlay($0) } }
         a.onChange = { if !echo() { o.onChange($0, $1, $2) } }

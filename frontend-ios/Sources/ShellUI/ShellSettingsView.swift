@@ -78,6 +78,16 @@ struct ShellSettingsView: View {
                 }
 
                 Section {
+                    Button(action: actions.onReceiveGame) {
+                        Label(ShellStrings.text("Receive a game…"), systemImage: "arrow.down.circle")
+                    }
+                    .accessibilityIdentifier("shellSettings.receiveGame")
+                    .shellTarget("shs.receiveGame", action: actions.onReceiveGame)
+                } footer: {
+                    Text(ShellStrings.text("Keep both devices nearby with Wi-Fi on and both apps open."))
+                }
+
+                Section {
                     Button(action: actions.onPickShellData) {
                         LabeledContent {
                             Text(store.dataFolderName ?? ShellStrings.text("Choose folder…"))

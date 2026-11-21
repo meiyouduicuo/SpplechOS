@@ -1025,6 +1025,70 @@
         }
       }
     },
+    "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "校验通过后更新已有的同款游戏，保留原有存档和设置。"
+          }
+        }
+      }
+    },
     "Another device": {
       "localizations": {
         "de": {
@@ -1217,6 +1281,134 @@
         }
       }
     },
+    "Check that both devices show the same code.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check that both devices show the same code."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check that both devices show the same code."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check that both devices show the same code."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check that both devices show the same code."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check that both devices show the same code."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check that both devices show the same code."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check that both devices show the same code."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check that both devices show the same code."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check that both devices show the same code."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请核对两台设备上的连接码是否一致。"
+          }
+        }
+      }
+    },
+    "Checking connection and signing compatibility…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking connection and signing compatibility…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking connection and signing compatibility…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking connection and signing compatibility…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking connection and signing compatibility…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking connection and signing compatibility…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking connection and signing compatibility…"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking connection and signing compatibility…"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking connection and signing compatibility…"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking connection and signing compatibility…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在检查连接与签名兼容性…"
+          }
+        }
+      }
+    },
     "Choose the folder holding romfs.img (or the game's title ID folder) on this device, an external drive, or iCloud Drive.": {
       "localizations": {
         "de": {
@@ -1405,6 +1597,134 @@
           "stringUnit": {
             "state": "translated",
             "value": "请先关闭游戏并完成正在进行的存档操作，再清除存档。"
+          }
+        }
+      }
+    },
+    "Close this screen and try again. Allow local network access in Settings if needed.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请关闭此页面后重试。如有需要，请在系统设置中允许本地网络访问。"
+          }
+        }
+      }
+    },
+    "Codes match — continue": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codes match — continue"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codes match — continue"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codes match — continue"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codes match — continue"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codes match — continue"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codes match — continue"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codes match — continue"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codes match — continue"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codes match — continue"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "连接码一致，继续"
           }
         }
       }
@@ -2113,6 +2433,70 @@
         }
       }
     },
+    "Game transfer complete.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game transfer complete."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game transfer complete."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game transfer complete."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game transfer complete."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game transfer complete."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game transfer complete."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game transfer complete."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game transfer complete."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game transfer complete."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "游戏传输完成。"
+          }
+        }
+      }
+    },
     "Hold {-} and {+} to quit": {
       "localizations": {
         "de": {
@@ -2305,6 +2689,70 @@
         }
       }
     },
+    "Keep both devices nearby with Wi-Fi on and both apps open.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请让两台设备靠近，打开 Wi-Fi，并保持双方应用在前台。"
+          }
+        }
+      }
+    },
     "Keep holding to quit": {
       "localizations": {
         "de": {
@@ -2429,6 +2877,70 @@
           "stringUnit": {
             "state": "translated",
             "value": "导入完成前请保持应用在前台。"
+          }
+        }
+      }
+    },
+    "Keep this app open until the transfer finishes.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep this app open until the transfer finishes."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep this app open until the transfer finishes."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep this app open until the transfer finishes."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep this app open until the transfer finishes."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep this app open until the transfer finishes."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep this app open until the transfer finishes."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep this app open until the transfer finishes."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep this app open until the transfer finishes."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep this app open until the transfer finishes."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "传输完成前，请保持本应用在前台。"
           }
         }
       }
@@ -3137,6 +3649,134 @@
         }
       }
     },
+    "On the other device, open App settings and choose Receive a game.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the other device, open App settings and choose Receive a game."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the other device, open App settings and choose Receive a game."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the other device, open App settings and choose Receive a game."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the other device, open App settings and choose Receive a game."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the other device, open App settings and choose Receive a game."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the other device, open App settings and choose Receive a game."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the other device, open App settings and choose Receive a game."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the other device, open App settings and choose Receive a game."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the other device, open App settings and choose Receive a game."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请在另一台设备的应用设置中选择“接收游戏”。"
+          }
+        }
+      }
+    },
+    "On the sending device, open Game settings and choose Send to another device.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the sending device, open Game settings and choose Send to another device."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the sending device, open Game settings and choose Send to another device."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the sending device, open Game settings and choose Send to another device."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the sending device, open Game settings and choose Send to another device."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the sending device, open Game settings and choose Send to another device."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the sending device, open Game settings and choose Send to another device."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the sending device, open Game settings and choose Send to another device."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the sending device, open Game settings and choose Send to another device."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the sending device, open Game settings and choose Send to another device."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请在发送设备的游戏设置中选择“发送到另一台设备”。"
+          }
+        }
+      }
+    },
     "Only the end of the log is shown.": {
       "localizations": {
         "de": {
@@ -3201,6 +3841,70 @@
         }
       }
     },
+    "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仅传输游戏框架、封面和数据，不传输或清除存档。"
+          }
+        }
+      }
+    },
     "Player %@": {
       "localizations": {
         "de": {
@@ -3261,6 +3965,70 @@
           "stringUnit": {
             "state": "translated",
             "value": "玩家 %@"
+          }
+        }
+      }
+    },
+    "Preparing game files without making a copy…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing game files without making a copy…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing game files without making a copy…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing game files without making a copy…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing game files without making a copy…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing game files without making a copy…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing game files without making a copy…"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing game files without making a copy…"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing game files without making a copy…"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing game files without making a copy…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在准备游戏文件，不会生成完整副本…"
           }
         }
       }
@@ -3457,6 +4225,134 @@
         }
       }
     },
+    "Receive and import": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive and import"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive and import"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive and import"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive and import"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive and import"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive and import"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive and import"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive and import"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive and import"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "接收并导入"
+          }
+        }
+      }
+    },
+    "Receive game": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive game"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive game"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive game"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive game"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive game"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive game"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive game"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive game"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive game"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "接收游戏"
+          }
+        }
+      }
+    },
     "Restored the save backup from %@. Your previous save was backed up first.": {
       "localizations": {
         "de": {
@@ -3581,6 +4477,134 @@
           "stringUnit": {
             "state": "translated",
             "value": "右摇杆：在此拖动"
+          }
+        }
+      }
+    },
+    "Searching for receiving devices…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Searching for receiving devices…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Searching for receiving devices…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Searching for receiving devices…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Searching for receiving devices…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Searching for receiving devices…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Searching for receiving devices…"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Searching for receiving devices…"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Searching for receiving devices…"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Searching for receiving devices…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在查找接收设备…"
+          }
+        }
+      }
+    },
+    "Send game": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send game"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send game"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send game"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send game"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send game"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send game"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send game"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send game"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send game"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "发送游戏"
           }
         }
       }
@@ -4541,6 +5565,70 @@
           "stringUnit": {
             "state": "translated",
             "value": "在此设备上无法访问云存档文件夹。"
+          }
+        }
+      }
+    },
+    "The connection timed out. Keep both apps open and try again.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The connection timed out. Keep both apps open and try again."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The connection timed out. Keep both apps open and try again."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The connection timed out. Keep both apps open and try again."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The connection timed out. Keep both apps open and try again."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The connection timed out. Keep both apps open and try again."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The connection timed out. Keep both apps open and try again."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The connection timed out. Keep both apps open and try again."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The connection timed out. Keep both apps open and try again."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The connection timed out. Keep both apps open and try again."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "连接超时，请保持双方应用在前台后重试。"
           }
         }
       }
@@ -6593,6 +7681,134 @@
         }
       }
     },
+    "Transfer cancelled.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已取消传输。"
+          }
+        }
+      }
+    },
+    "Transfer cancelled. Keep both apps open while transferring.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled. Keep both apps open while transferring."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled. Keep both apps open while transferring."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled. Keep both apps open while transferring."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled. Keep both apps open while transferring."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled. Keep both apps open while transferring."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled. Keep both apps open while transferring."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled. Keep both apps open while transferring."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled. Keep both apps open while transferring."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transfer cancelled. Keep both apps open while transferring."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已取消传输，传输时请保持双方应用在前台。"
+          }
+        }
+      }
+    },
     "Unknown game": {
       "localizations": {
         "de": {
@@ -6717,6 +7933,70 @@
           "stringUnit": {
             "state": "translated",
             "value": "未保存的进度将会丢失。你将返回游戏库。"
+          }
+        }
+      }
+    },
+    "Waiting for another device…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for another device…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for another device…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for another device…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for another device…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for another device…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for another device…"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for another device…"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for another device…"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for another device…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "等待另一台设备连接…"
           }
         }
       }

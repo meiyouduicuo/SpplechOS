@@ -272,6 +272,10 @@ public struct PadSnapshot: Equatable, Sendable {
 
 /// All effects leave the package through these closures. The game ID is always explicit.
 public struct ShellActions {
+    public var onSendGame: (String) -> Void = { _ in }
+    public var onReceiveGame: () -> Void = {}
+    public var onSendGame: (String) -> Void = { _ in }
+    public var onReceiveGame: () -> Void = {}
     public var onImportGamePackage: () -> Void
     public var onSelect: (String) -> Void
     public var onPlay: (String) -> Void

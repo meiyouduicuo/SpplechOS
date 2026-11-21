@@ -53,6 +53,9 @@ public struct ShellHostView: View {
                 .presentationDetents([.medium, .large])
                 .presentationBackground(ShellPalette.background)
             }
+            .sheet(item: $model.peerTransfer, onDismiss: { model.peerTransfer?.stop(); model.peerTransfer = nil; model.reload() }) { transfer in
+                PeerGameTransferView(transfer: transfer)
+            }
             .sheet(item: $model.log) { LogView(log: $0) }
             .alert(Text(verbatim: hostText("NX2Apple")), isPresented: Binding(get: { model.notice != nil }, set: { if !$0 { model.notice = nil } })) {
                 Button(hostText("OK")) { model.notice = nil }

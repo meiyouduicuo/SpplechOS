@@ -1,0 +1,155 @@
+import Foundation
+import CryptoKit
+@preconcurrency import Network
+import Testing
+import Darwin
+@testable import ShellHost
+
+struct PeerGameTransferTests {
+    @Test func pairingEncryptionDetectsModificationReplayAndReflection() throws {
+        let a = Curve25519.KeyAgreement.PrivateKey(), b = Curve25519.KeyAgreement.PrivateKey()
+        var sender = try PeerGameCipher(privateKey: a, remote: b.publicKey.rawRepresentation)
+        var receiver = try PeerGameCipher(privateKey: b, remote: a.publicKey.rawRepresentation)
+        #expect(sender.code == receiver.code && sender.code.count == 6)
+        let original = Data("a game chunk".utf8)
+        let sealed = try sender.seal(original)
+        #expect(sealed.range(of: original) == nil)
+        var damaged = sealed; damaged[damaged.count - 1] ^= 1
+        #expect(throws: (any Error).self) { try receiver.open(damaged) }
+        #expect(try receiver.open(sealed) == original)
+        #expect(throws: (any Error).self) { try receiver.open(sealed) }
+        #expect(throws: (any Error).self) { try sender.open(sealed) }
+        #expect(try sender.open(receiver.seal(original)) == original)
+    }
+
+    @Test func directSourceNeverCopiesASaveOrCreatesAnArchive() throws {
+        let box = try Sandbox()
+        let old = GamePackageTests()
+        let id = try old.install(old.fixture, box: box)
+        let root = box.appData.appendingPathComponent(id)
+        try FileManager.default.createDirectory(at: root.appendingPathComponent("save"), withIntermediateDirectories: true)
+        try Data("private save".utf8).write(to: root.appendingPathComponent("save/main.dat"))
+        let entry = GameCatalogue.readFramework(at: box.root.appendingPathComponent("hot/DmGame\(id).framework"))
+        let source = try PeerGameSource.prepare(entry: entry, image: root.appendingPathComponent("romfs.img"), bundleID: old.bundleID, teamID: old.teamID)
+        #expect(source.files.allSatisfy { !$0.entry.path.contains("save/") })
+        #expect(source.files.contains { $0.entry.path == "data/romfs.img" })
+        #expect(source.files.first?.entry.path.hasPrefix("framework/") == true)
+        #expect(!source.files.contains { $0.url.pathExtension == "sppgame" })
+        #expect(try FileManager.default.contentsOfDirectory(atPath: box.root.path).allSatisfy { !$0.hasSuffix("sppgame") })
+    }
+
+    @Test(.timeLimit(.minutes(3))) func encryptedLoopbackTransfersAndPreservesExistingSaves() async throws {
+        let sourceBox = try Sandbox(), destination = try Sandbox()
+        let old = GamePackageTests()
+        let id = try old.install(old.fixture, box: sourceBox)
+        let root = sourceBox.appData.appendingPathComponent(id)
+        let payloadSize = ProcessInfo.processInfo.environment["SPPLECHOS_PEER_TEST_BYTES"].flatMap(Int.init) ?? 32 * 1024 * 1024
+        let extra = root.appendingPathComponent("aoc/transfer-test.img")
+        try FileManager.default.createDirectory(at: extra.deletingLastPathComponent(), withIntermediateDirectories: true)
+        #expect(FileManager.default.createFile(atPath: extra.path, contents: nil))
+        let sparse = try FileHandle(forWritingTo: extra)
+        try sparse.truncate(atOffset: UInt64(payloadSize)); try sparse.close()
+        let entry = GameCatalogue.readFramework(at: sourceBox.root.appendingPathComponent("hot/DmGame\(id).framework"))
+        let source = try PeerGameSource.prepare(entry: entry, image: root.appendingPathComponent("romfs.img"), bundleID: old.bundleID, teamID: old.teamID)
+        let save = destination.appData.appendingPathComponent(id + "/save/main.dat")
+        try FileManager.default.createDirectory(at: save.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try Data("keep my save".utf8).write(to: save)
+        let pair = try await LocalPeerPair.make()
+        defer { pair.client.cancel(); pair.server.cancel(); pair.listener.cancel() }
+        async let a = pair.client.handshake(bundleID: old.bundleID, teamID: old.teamID)
+        async let b = pair.server.handshake(bundleID: old.bundleID, teamID: old.teamID)
+        let codes = try await (a, b)
+        #expect(codes.0 == codes.1)
+        let memory = TransferMemoryProbe()
+        async let send: Void = PeerGameWire.send(source, over: pair.client, progress: { _ in memory.sample() })
+        let received = try await pair.server.read()
+        let offer = try JSONDecoder().decode(PeerGameWire.Offer.self, from: received)
+        let sink = try PeerGameSink(manifest: offer.manifest, dataRoot: destination.appData,
+            frameworksRoot: destination.root.appendingPathComponent("hot"), bundleID: old.bundleID,
+            teamID: old.teamID, environment: HostEnvironment(chain: "b-3f9a2c"))
+        try await pair.server.send(PeerGameWire.approve)
+        let imported = try await PeerGameWire.receive(sink, over: pair.server, progress: { _ in memory.sample() })
+        try await send
+        #expect(imported == id)
+        print("[peer-memory] bytes=\(payloadSize) baseline=\(memory.baseline) peak=\(memory.peak) growth=\(memory.growth)")
+        #expect(memory.baseline > 0 && memory.growth < 192 * 1024 * 1024)
+        #expect(try destination.appData.appendingPathComponent(id + "/aoc/transfer-test.img").resourceValues(forKeys: [.fileSizeKey]).fileSize == payloadSize)
+        #expect(try Data(contentsOf: save) == Data("keep my save".utf8))
+        #expect(GameCatalogue.scan(root: destination.root.appendingPathComponent("hot")).count == 1)
+        #expect(try FileManager.default.contentsOfDirectory(atPath: destination.appData.path).allSatisfy { !$0.hasPrefix(".package-import-") })
+    }
+
+    @Test func sinkRejectsWrongTeamPathsAndDataBeforeFramework() throws {
+        let box = try Sandbox(), old = GamePackageTests()
+        let id = try old.install(old.fixture, box: box)
+        let entry = GameCatalogue.readFramework(at: box.root.appendingPathComponent("hot/DmGame\(id).framework"))
+        let source = try PeerGameSource.prepare(entry: entry, image: box.appData.appendingPathComponent(id + "/romfs.img"), bundleID: old.bundleID, teamID: old.teamID)
+        for change in 0..<3 {
+            var manifest = source.manifest
+            if change == 0 { manifest.teamID = "OTHERTEAM" }
+            if change == 1 { manifest.files[0].path = "data/save/main.dat" }
+            if change == 2 { manifest.files.reverse() }
+            #expect(throws: GamePackage.Failure.self) {
+                try PeerGameSink(manifest: manifest, dataRoot: box.appData, frameworksRoot: box.root.appendingPathComponent("other"),
+                    bundleID: old.bundleID, teamID: old.teamID, environment: HostEnvironment())
+            }
+        }
+        #expect(try FileManager.default.contentsOfDirectory(atPath: box.appData.path).allSatisfy { !$0.hasPrefix(".package-import-") })
+    }
+}
+
+private struct LocalPeerPair: @unchecked Sendable {
+    let listener: NWListener
+    let client: PeerGameChannel
+    let server: PeerGameChannel
+    static func make() async throws -> Self {
+        let listener = try NWListener(using: .tcp, on: .any)
+        let queue = DispatchQueue(label: "peer-transfer-test")
+        let (incoming, accept) = AsyncStream<NWConnection>.makeStream(bufferingPolicy: .bufferingNewest(1))
+        listener.newConnectionHandler = { accept.yield($0) }
+        try await withCheckedThrowingContinuation { (c: CheckedContinuation<Void, Error>) in
+            let ready = TestListenerReady(c)
+            listener.stateUpdateHandler = { state in
+                if case .ready = state { ready.complete(nil) }
+                if case .failed(let error) = state { ready.complete(error) }
+            }
+            listener.start(queue: queue)
+        }
+        let port = try #require(listener.port)
+        let client = PeerGameChannel(NWConnection(host: "127.0.0.1", port: port, using: .tcp))
+        try await client.start()
+        var iterator = incoming.makeAsyncIterator()
+        let connection = try #require(await iterator.next())
+        let accepted = PeerGameChannel(connection)
+        try await accepted.start()
+        return Self(listener: listener, client: client, server: accepted)
+    }
+}
+
+private final class TestListenerReady: @unchecked Sendable {
+    let lock = NSLock()
+    var continuation: CheckedContinuation<Void, Error>?
+    init(_ value: CheckedContinuation<Void, Error>) { continuation = value }
+    func complete(_ error: Error?) {
+        lock.lock(); let c = continuation; continuation = nil; lock.unlock()
+        if let error { c?.resume(throwing: error) } else { c?.resume() }
+    }
+}
+
+private final class TransferMemoryProbe: @unchecked Sendable {
+    let baseline = TransferMemoryProbe.resident()
+    private let lock = NSLock()
+    private(set) var peak: UInt64 = 0
+    var growth: UInt64 { peak - min(peak, baseline) }
+    func sample() { let current = Self.resident(); lock.lock(); peak = max(peak, current); lock.unlock() }
+    static func resident() -> UInt64 {
+        var info = mach_task_basic_info()
+        var count = mach_msg_type_number_t(MemoryLayout<mach_task_basic_info>.size / MemoryLayout<integer_t>.size)
+        let result = withUnsafeMutablePointer(to: &info) { pointer in
+            pointer.withMemoryRebound(to: integer_t.self, capacity: Int(count)) {
+                task_info(mach_task_self_, task_flavor_t(MACH_TASK_BASIC_INFO), $0, &count)
+            }
+        }
+        return result == KERN_SUCCESS ? UInt64(info.resident_size) : 0
+    }
+}
