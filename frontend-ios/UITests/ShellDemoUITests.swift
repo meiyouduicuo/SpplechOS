@@ -283,7 +283,7 @@ import UIKit
             XCTAssertTrue(app.buttons["tile.orbit"].waitForExistence(timeout: 5))
             XCTAssertTrue(app.buttons["state.action"].isHittable)
             let screenshot = try XCTUnwrap(app.screenshot().image.cgImage)
-            let surface = try XCTUnwrap(screenshot.cropping(to: CGRect(x: screenshot.width / 2, y: screenshot.height / 4, width: 1, height: 1)))
+            let surface = try XCTUnwrap(screenshot.cropping(to: CGRect(x: 8, y: screenshot.height / 4, width: 1, height: 1)))
             var pixel = [UInt8](repeating: 0, count: 4)
             pixel.withUnsafeMutableBytes { bytes in
                 let context = CGContext(data: bytes.baseAddress, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4,
