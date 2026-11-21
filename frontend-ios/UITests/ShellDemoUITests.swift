@@ -301,6 +301,8 @@ import UIKit
             XCUIDevice.shared.orientation = .landscapeLeft
             XCTAssertTrue(app.buttons["settings.open"].waitForExistence(timeout: 5))
             XCTAssertTrue(app.buttons["settings.open"].isHittable)
+            XCTAssertLessThan(app.buttons["tile.orbit"].frame.maxY, app.buttons["state.action"].frame.minY - 12,
+                              "The cover shelf must stay clear of the bottom action bar")
             capture(dark ? "classic-dark-landscape" : "classic-light-landscape")
             app.terminate()
         }

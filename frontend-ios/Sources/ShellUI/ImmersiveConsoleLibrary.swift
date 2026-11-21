@@ -127,9 +127,11 @@ struct ImmersiveConsoleLibrary: View {
                     }
                     .shadow(color: .black.opacity(0.3), radius: 8, y: 4)
                     .shellTarget("lib.tile.\(detail.id)", showsRing: false) { primary(detail) }
-                Text(detail.game.title).font(.subheadline.weight(chosen ? .semibold : .regular))
-                    .lineLimit(typeSize.isAccessibilitySize ? 3 : 2)
-                    .foregroundStyle(ShellPalette.ink.opacity(chosen ? 1 : 0.7))
+                if !compactLandscape {
+                    Text(detail.game.title).font(.subheadline.weight(chosen ? .semibold : .regular))
+                        .lineLimit(typeSize.isAccessibilitySize ? 3 : 2)
+                        .foregroundStyle(ShellPalette.ink.opacity(chosen ? 1 : 0.7))
+                }
             }.frame(width: cardWidth).contentShape(Rectangle())
         }
         .buttonStyle(.plain)
