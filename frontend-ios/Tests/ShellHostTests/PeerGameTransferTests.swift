@@ -79,6 +79,54 @@ struct PeerGameTransferTests {
         #expect(try FileManager.default.contentsOfDirectory(atPath: destination.appData.path).allSatisfy { !$0.hasPrefix(".package-import-") })
     }
 
+    @Test(.timeLimit(.minutes(1))) func signingTeamMismatchIsRejectedBeforeAnOffer() async throws {
+        let pair = try await LocalPeerPair.make()
+        defer { pair.client.cancel(); pair.server.cancel(); pair.listener.cancel() }
+        var refused = false
+        do {
+            async let a = pair.client.handshake(bundleID: "org.spplechos.shell", teamID: "TEAM_A")
+            async let b = pair.server.handshake(bundleID: "org.spplechos.shell", teamID: "TEAM_B")
+            _ = try await (a, b)
+        } catch { refused = true }
+        #expect(refused)
+    }
+
+    @Test(.timeLimit(.minutes(1))) func interruptedTransferCleansStageAndPreservesInstalledGame() async throws {
+        let sender = try Sandbox(), receiver = try Sandbox(), old = GamePackageTests()
+        let id = try old.install(old.fixture, box: sender)
+        _ = try old.install(old.fixture, box: receiver)
+        let root = sender.appData.appendingPathComponent(id)
+        try FileManager.default.createDirectory(at: root.appendingPathComponent("aoc"), withIntermediateDirectories: true)
+        try Data(repeating: 7, count: PeerGameWire.chunkSize * 3).write(to: root.appendingPathComponent("aoc/extra.img"))
+        let entry = GameCatalogue.readFramework(at: sender.root.appendingPathComponent("hot/DmGame\(id).framework"))
+        let source = try PeerGameSource.prepare(entry: entry, image: root.appendingPathComponent("romfs.img"), bundleID: old.bundleID, teamID: old.teamID)
+        let original = try Data(contentsOf: receiver.appData.appendingPathComponent(id + "/romfs.img"))
+        let pair = try await LocalPeerPair.make()
+        defer { pair.client.cancel(); pair.server.cancel(); pair.listener.cancel() }
+        async let a = pair.client.handshake(bundleID: old.bundleID, teamID: old.teamID)
+        async let b = pair.server.handshake(bundleID: old.bundleID, teamID: old.teamID)
+        _ = try await (a, b)
+        async let sending: Void = PeerGameWire.send(source, over: pair.client, progress: { _ in })
+        let offer = try JSONDecoder().decode(PeerGameWire.Offer.self, from: await pair.server.read())
+        do {
+            let sink = try PeerGameSink(manifest: offer.manifest, dataRoot: receiver.appData,
+                frameworksRoot: receiver.root.appendingPathComponent("hot"), bundleID: old.bundleID,
+                teamID: old.teamID, environment: HostEnvironment(chain: "b-3f9a2c"))
+            try await pair.server.send(PeerGameWire.approve)
+            var failed = false
+            do {
+                _ = try await PeerGameWire.receive(sink, over: pair.server, progress: { value in
+                    if value > 0.1 { pair.server.cancel() }
+                })
+            } catch { failed = true }
+            #expect(failed)
+        }
+        pair.client.cancel(); pair.server.cancel()
+        _ = try? await sending
+        #expect(try Data(contentsOf: receiver.appData.appendingPathComponent(id + "/romfs.img")) == original)
+        #expect(try FileManager.default.contentsOfDirectory(atPath: receiver.appData.path).allSatisfy { !$0.hasPrefix(".package-import-") })
+    }
+
     @Test func sinkRejectsWrongTeamPathsAndDataBeforeFramework() throws {
         let box = try Sandbox(), old = GamePackageTests()
         let id = try old.install(old.fixture, box: box)

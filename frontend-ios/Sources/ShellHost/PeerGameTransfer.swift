@@ -75,6 +75,7 @@ struct NearbyGameDevice: Identifiable, Sendable {
     @ObservationIgnored private var lastProgress = Date()
 
     @ObservationIgnored private var idleTimerWasDisabled = false
+    @ObservationIgnored private var hasStarted = false
 
     var sending: Bool { if case .send = mode { return true }; return false }
 
@@ -92,7 +93,8 @@ struct NearbyGameDevice: Identifiable, Sendable {
 
     func start() {
 
-        guard browser == nil, listener == nil, work == nil else { return }
+        guard phase == .searching, !hasStarted, browser == nil, listener == nil, work == nil else { return }
+        hasStarted = true
 
         #if canImport(UIKit)
 
