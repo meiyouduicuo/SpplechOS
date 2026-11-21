@@ -274,8 +274,6 @@ public struct PadSnapshot: Equatable, Sendable {
 public struct ShellActions {
     public var onSendGame: (String) -> Void = { _ in }
     public var onReceiveGame: () -> Void = {}
-    public var onSendGame: (String) -> Void = { _ in }
-    public var onReceiveGame: () -> Void = {}
     public var onImportGamePackage: () -> Void
     public var onSelect: (String) -> Void
     public var onPlay: (String) -> Void
