@@ -1,6 +1,6 @@
 # Device-to-device game transfer
 
-Implementation status: source is saved, but the final revision has **not** passed iOS validation and no release IPA has been produced for this feature.
+Implementation status: the empty 1.11.0 test IPA and matching Windows installer have been generated. Cloud and simulator checks passed. A real transfer and game launch between two signed iPhones are still awaiting user testing.
 
 ## User flow
 
@@ -33,14 +33,23 @@ Run the manual GitHub workflow `build-spplechos-ios.yml` on `spplechos/cloud-bui
 - UI tests for both transfer entry points and the existing import, settings, save confirmation and landscape safety behavior.
 - An empty app template build, followed by local packaging and identity/content checks.
 
-The independent source-path check reproduced a missing-executable failure. It was fixed using canonical URL components instead of dropping characters from directory strings. After the repository was made public, run 44997650836 passed all seven peer-transfer tests, a 5 GiB encrypted loopback transfer with 8,011,776 bytes resident-memory growth, and the host package tests. The full UI package gate identified untranslated text and a missing Close entry. These have been corrected across all supported catalogs and await the next complete run.
+Initial regression tests caught a source-path error and incomplete localization. Both were fixed. The complete gate passed in [run 44998726254](https://github.com/meiyouduicuo/SpplechOS/actions/runs/44998726254), testing cloud commit `f47f9649671c0af9184b5e2f10b4056e7127ddb3` with Xcode 27.2 and an iPhone 18 Pro simulator:
 
-After cloud checks pass, build version 1.11.0 with original bundle ID `org.spplechos.shell`, no embedded games, and retain the import-memory and landscape fixes. Install through the user's existing signing tool and account, covering the original app without uninstalling it. A real transfer between two signed iPhones, game launch, and preservation of both phones' saves remain required physical checks.
+- 269 build-tool tests (30 environment skips) and 177 automation tests passed.
+- Full Swift package build and tests passed, including all seven peer-transfer tests.
+- The isolated 5 GiB encrypted loopback completed with 6,324,224 bytes of additional resident memory.
+- The isolated 5 GiB file-import check passed with 9,011,200 bytes of additional resident memory.
+- Eleven package tests on the iPhone simulator passed.
+- Seven simulator UI tests passed, including transfer entry/close actions, package import cancellation, save confirmation, appearance and landscape safe margins.
 
-### Local checks while macOS builds are unavailable
+The app-settings receive row and light landscape library screenshots were reviewed. Windows startup and final IPA bundle identity, empty-game content, Bonjour declaration and binary consistency checks passed.
+
+Version 1.11.0 uses original bundle ID `org.spplechos.shell`, includes no embedded games, and retains the import-memory and landscape fixes. Install through the user's existing signing tool and account, covering the original app without uninstalling it. A real transfer between two signed iPhones, game launch, and preservation of both phones' saves remain required physical checks.
+
+### Earlier local checks and remaining physical checks
 
 The Windows front-end suite completed: 591 tests, 57 skipped, no failures. `python tools/l10n_shell_catalogs.py --check` and `git diff --check` passed. No Qt executable behavior or engine patch changed.
 
-The general build-tool and automation suites were also attempted on Windows, but did not pass there: 269 tests (48 failures, 20 errors, 35 skips) and 177 tests (5 failures, 15 errors). Their logs include missing Unix utilities, shell/shebang and symbolic-link assumptions, and platform-specific extracted-file expectations. These results are not a replacement for the required macOS gates. Local diagnostic logs are in the workspace's `Work/peer-local-*-tests.log`; the Windows front-end result is in `Work/peer-final-windows-tests.log`.
+The general build-tool and automation suites were also attempted on Windows, but did not pass there: 269 tests (48 failures, 20 errors, 35 skips) and 177 tests (5 failures, 15 errors). Their logs include missing Unix utilities, shell/shebang and symbolic-link assumptions, and platform-specific extracted-file expectations. Both suites subsequently passed on macOS in run 44998726254. Local diagnostic logs are in the workspace's `Work/peer-local-*-tests.log`; the Windows front-end result is in `Work/peer-final-windows-tests.log`.
 
-The final source also blocks concurrent package imports, game launch, game deletion, save clearing and save restoration while a peer-transfer sheet is active. The host mutual-exclusion test passed on macOS. The final text changes and transfer-close lifecycle still require the complete macOS/iOS run. Closing the sheet also resumes queued USB imports. The disconnection test asserts it reached payload transfer, preventing an earlier signature failure from counting as successful interruption coverage.
+The final source also blocks concurrent package imports, game launch, game deletion, save clearing and save restoration while a peer-transfer sheet is active. The host mutual-exclusion test passed on macOS and the simulator. The final text changes and transfer-close lifecycle passed the complete gate. Closing the sheet also resumes queued USB imports. The disconnection test asserts it reached payload transfer, preventing an earlier signature failure from counting as successful interruption coverage.
