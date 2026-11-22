@@ -5254,7 +5254,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Device transfer"
+            "value": "Geräteübertragung"
           }
         },
         "en": {
@@ -5266,43 +5266,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Device transfer"
+            "value": "Transferencia entre dispositivos"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Device transfer"
+            "value": "Transfert entre appareils"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Device transfer"
+            "value": "Trasferimento tra dispositivi"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Device transfer"
+            "value": "デバイス間転送"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Device transfer"
+            "value": "기기 간 전송"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Device transfer"
+            "value": "Transferência entre dispositivos"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Device transfer"
+            "value": "Enhetsöverföring"
           }
         },
         "zh-Hans": {
@@ -9542,7 +9542,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+            "value": "Beide Geräte müssen in der Nähe sein, WLAN eingeschaltet haben und die Apps geöffnet lassen."
           }
         },
         "en": {
@@ -9554,43 +9554,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+            "value": "Mantén los dispositivos cerca, con el Wi-Fi activado y ambas apps abiertas."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+            "value": "Gardez les appareils à proximité, avec le Wi-Fi activé et les deux apps ouvertes."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+            "value": "Tieni vicini i dispositivi con il Wi-Fi attivo ed entrambe le app aperte."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+            "value": "両方のデバイスを近づけ、Wi-Fiをオンにして、両方のアプリを開いたままにしてください。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+            "value": "두 기기를 가까이 두고 Wi-Fi를 켠 상태에서 두 앱을 모두 열어 두세요."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+            "value": "Mantenha os dispositivos próximos, com o Wi-Fi ativado e os dois apps abertos."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+            "value": "Håll enheterna nära varandra med Wi-Fi på och båda apparna öppna."
           }
         },
         "zh-Hans": {
@@ -14918,7 +14918,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive a game…"
+            "value": "Ein Spiel empfangen…"
           }
         },
         "en": {
@@ -14930,43 +14930,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive a game…"
+            "value": "Recibir un juego…"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive a game…"
+            "value": "Recevoir un jeu…"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive a game…"
+            "value": "Ricevi un gioco…"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive a game…"
+            "value": "ゲームを受信…"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive a game…"
+            "value": "게임 받기…"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive a game…"
+            "value": "Receber um jogo…"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive a game…"
+            "value": "Ta emot ett spel…"
           }
         },
         "zh-Hans": {
@@ -16966,7 +16966,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send this game's framework and data. Saves stay on this device."
+            "value": "Überträgt das Framework und die Daten dieses Spiels. Spielstände bleiben auf diesem Gerät."
           }
         },
         "en": {
@@ -16978,43 +16978,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send this game's framework and data. Saves stay on this device."
+            "value": "Envía el framework y los datos del juego. Las partidas guardadas permanecen en este dispositivo."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send this game's framework and data. Saves stay on this device."
+            "value": "Envoie le framework et les données du jeu. Les sauvegardes restent sur cet appareil."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send this game's framework and data. Saves stay on this device."
+            "value": "Invia il framework e i dati del gioco. I salvataggi restano su questo dispositivo."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send this game's framework and data. Saves stay on this device."
+            "value": "ゲームのフレームワークとデータを送信します。セーブデータはこのデバイスに残ります。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send this game's framework and data. Saves stay on this device."
+            "value": "게임의 프레임워크와 데이터를 보냅니다. 저장 데이터는 이 기기에 남습니다."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send this game's framework and data. Saves stay on this device."
+            "value": "Envia o framework e os dados do jogo. Os jogos salvos permanecem neste dispositivo."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send this game's framework and data. Saves stay on this device."
+            "value": "Skickar spelets ramverk och data. Sparfiler stannar på den här enheten."
           }
         },
         "zh-Hans": {
@@ -17030,7 +17030,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send to another device…"
+            "value": "An ein anderes Gerät senden…"
           }
         },
         "en": {
@@ -17042,43 +17042,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send to another device…"
+            "value": "Enviar a otro dispositivo…"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send to another device…"
+            "value": "Envoyer à un autre appareil…"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send to another device…"
+            "value": "Invia a un altro dispositivo…"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send to another device…"
+            "value": "別のデバイスに送信…"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send to another device…"
+            "value": "다른 기기로 보내기…"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send to another device…"
+            "value": "Enviar para outro dispositivo…"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send to another device…"
+            "value": "Skicka till en annan enhet…"
           }
         },
         "zh-Hans": {

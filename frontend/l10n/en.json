@@ -1134,6 +1134,7 @@
   "ios.host.peerBackground": "Transfer cancelled. Keep both apps open while transferring.",
   "ios.host.peerCancelled": "Transfer cancelled.",
   "ios.host.peerChecking": "Checking connection and signing compatibility…",
+  "ios.host.peerClose": "Close",
   "ios.host.peerCodeConfirm": "Codes match — continue",
   "ios.host.peerCodeNote": "Check that both devices show the same code.",
   "ios.host.peerComplete": "Game transfer complete.",

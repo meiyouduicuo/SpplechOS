@@ -24,7 +24,7 @@ Bonjour discovery uses `_spp-game._tcp` with Network framework peer-to-peer disc
 
 ## Validation and resumption
 
-Run the manual private GitHub workflow `build-spplechos-ios.yml` on `spplechos/cloud-build`. The workflow includes:
+Run the manual GitHub workflow `build-spplechos-ios.yml` on `spplechos/cloud-build`. The workflow includes:
 
 - Swift package build and the peer-transfer suite (encryption, compatible loopback, incompatible teams, interruption and staging cleanup, no archive or save export).
 - Isolated 5 GiB file-import and encrypted loopback memory checks.
@@ -33,7 +33,7 @@ Run the manual private GitHub workflow `build-spplechos-ios.yml` on `spplechos/c
 - UI tests for both transfer entry points and the existing import, settings, save confirmation and landscape safety behavior.
 - An empty app template build, followed by local packaging and identity/content checks.
 
-Earlier cloud runs compiled the feature and reproduced a missing-executable failure in the independent source-path check. The latest path fix uses canonical URL components instead of dropping characters from directory strings, and is still awaiting a successful rerun. Run 44902675036 started no build steps: GitHub reported failed account payments or a spending limit that needs attention. The user cannot address billing at present. Do not claim the feature validated, or label an older template as a new build.
+The independent source-path check reproduced a missing-executable failure. It was fixed using canonical URL components instead of dropping characters from directory strings. After the repository was made public, run 44997650836 passed all seven peer-transfer tests, a 5 GiB encrypted loopback transfer with 8,011,776 bytes resident-memory growth, and the host package tests. The full UI package gate identified untranslated text and a missing Close entry. These have been corrected across all supported catalogs and await the next complete run.
 
 After cloud checks pass, build version 1.11.0 with original bundle ID `org.spplechos.shell`, no embedded games, and retain the import-memory and landscape fixes. Install through the user's existing signing tool and account, covering the original app without uninstalling it. A real transfer between two signed iPhones, game launch, and preservation of both phones' saves remain required physical checks.
 
@@ -43,4 +43,4 @@ The Windows front-end suite completed: 591 tests, 57 skipped, no failures. `pyth
 
 The general build-tool and automation suites were also attempted on Windows, but did not pass there: 269 tests (48 failures, 20 errors, 35 skips) and 177 tests (5 failures, 15 errors). Their logs include missing Unix utilities, shell/shebang and symbolic-link assumptions, and platform-specific extracted-file expectations. These results are not a replacement for the required macOS gates. Local diagnostic logs are in the workspace's `Work/peer-local-*-tests.log`; the Windows front-end result is in `Work/peer-final-windows-tests.log`.
 
-The final source also blocks concurrent package imports, game launch, game deletion, save clearing and save restoration while a peer-transfer sheet is active. The corresponding host test and the final source-path changes still require execution on macOS/iOS. The disconnection test asserts it reached payload transfer, preventing an earlier signature failure from counting as successful interruption coverage.
+The final source also blocks concurrent package imports, game launch, game deletion, save clearing and save restoration while a peer-transfer sheet is active. The host mutual-exclusion test passed on macOS. The final text changes and transfer-close lifecycle still require the complete macOS/iOS run. Closing the sheet also resumes queued USB imports. The disconnection test asserts it reached payload transfer, preventing an earlier signature failure from counting as successful interruption coverage.

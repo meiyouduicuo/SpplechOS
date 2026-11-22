@@ -170,6 +170,8 @@ struct PeerGameTransferTests {
         catch GamePackage.Failure.busy { refused = true }
         #expect(refused)
         #expect(try Data(contentsOf: save) == Data("keep this save".utf8))
+        model.endPeerTransfer()
+        #expect(model.peerTransfer == nil && model.acceptsUSBImport)
     }
 
     @Test func sinkRejectsWrongTeamPathsAndDataBeforeFramework() throws {

@@ -1030,7 +1030,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+            "value": "Eine vorhandene Kopie dieses Spiels wird nach der Prüfung aktualisiert. Spielstände und Einstellungen bleiben erhalten."
           }
         },
         "en": {
@@ -1042,43 +1042,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+            "value": "Una copia existente del juego se actualizará tras la verificación. Se conservarán sus partidas guardadas y ajustes."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+            "value": "Une copie existante du jeu sera mise à jour après vérification. Ses sauvegardes et réglages seront conservés."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+            "value": "Una copia esistente del gioco verrà aggiornata dopo la verifica. Salvataggi e impostazioni verranno conservati."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+            "value": "確認後、既存の同じゲームを更新します。セーブデータと設定は保持されます。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+            "value": "확인 후 기존 게임을 업데이트합니다. 저장 데이터와 설정은 유지됩니다."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+            "value": "Uma cópia existente do jogo será atualizada após a verificação. Os jogos salvos e os ajustes serão mantidos."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "An existing copy of this game will be updated after verification. Its saves and settings stay unchanged."
+            "value": "En befintlig kopia av spelet uppdateras efter kontrollen. Sparfiler och inställningar behålls."
           }
         },
         "zh-Hans": {
@@ -1286,7 +1286,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Check that both devices show the same code."
+            "value": "Prüfe, ob auf beiden Geräten derselbe Code angezeigt wird."
           }
         },
         "en": {
@@ -1298,43 +1298,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Check that both devices show the same code."
+            "value": "Comprueba que ambos dispositivos muestren el mismo código."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Check that both devices show the same code."
+            "value": "Vérifiez que les deux appareils affichent le même code."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Check that both devices show the same code."
+            "value": "Verifica che entrambi i dispositivi mostrino lo stesso codice."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Check that both devices show the same code."
+            "value": "両方のデバイスに同じコードが表示されていることを確認してください。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Check that both devices show the same code."
+            "value": "두 기기에 동일한 코드가 표시되는지 확인하세요."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Check that both devices show the same code."
+            "value": "Confira se os dois dispositivos mostram o mesmo código."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Check that both devices show the same code."
+            "value": "Kontrollera att båda enheterna visar samma kod."
           }
         },
         "zh-Hans": {
@@ -1350,7 +1350,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Checking connection and signing compatibility…"
+            "value": "Verbindung und Signaturkompatibilität werden geprüft…"
           }
         },
         "en": {
@@ -1362,43 +1362,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Checking connection and signing compatibility…"
+            "value": "Comprobando la conexión y la compatibilidad de las firmas…"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Checking connection and signing compatibility…"
+            "value": "Vérification de la connexion et de la compatibilité des signatures…"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Checking connection and signing compatibility…"
+            "value": "Verifica della connessione e della compatibilità delle firme…"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Checking connection and signing compatibility…"
+            "value": "接続と署名の互換性を確認中…"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Checking connection and signing compatibility…"
+            "value": "연결 및 서명 호환성 확인 중…"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Checking connection and signing compatibility…"
+            "value": "Verificando a conexão e a compatibilidade das assinaturas…"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Checking connection and signing compatibility…"
+            "value": "Kontrollerar anslutning och signaturkompatibilitet…"
           }
         },
         "zh-Hans": {
@@ -1537,6 +1537,70 @@
         }
       }
     },
+    "Close": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schließen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerrar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fermer"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chiudi"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "閉じる"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "닫기"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fechar"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stäng"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "关闭"
+          }
+        }
+      }
+    },
     "Close the game and finish any save operation before clearing saves.": {
       "localizations": {
         "de": {
@@ -1606,7 +1670,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+            "value": "Schließe diese Ansicht und versuche es erneut. Erlaube bei Bedarf den lokalen Netzwerkzugriff in den Systemeinstellungen."
           }
         },
         "en": {
@@ -1618,43 +1682,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+            "value": "Cierra esta pantalla e inténtalo de nuevo. Si es necesario, permite el acceso a la red local en los ajustes del sistema."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+            "value": "Fermez cet écran et réessayez. Si nécessaire, autorisez l’accès au réseau local dans les réglages système."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+            "value": "Chiudi questa schermata e riprova. Se necessario, consenti l’accesso alla rete locale nelle impostazioni di sistema."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+            "value": "この画面を閉じて再試行してください。必要に応じて、システム設定でローカルネットワークへのアクセスを許可してください。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+            "value": "이 화면을 닫고 다시 시도하세요. 필요한 경우 시스템 설정에서 로컬 네트워크 접근을 허용하세요."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+            "value": "Feche esta tela e tente novamente. Se necessário, permita o acesso à rede local nos ajustes do sistema."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Close this screen and try again. Allow local network access in Settings if needed."
+            "value": "Stäng den här vyn och försök igen. Tillåt vid behov åtkomst till det lokala nätverket i systeminställningarna."
           }
         },
         "zh-Hans": {
@@ -1670,7 +1734,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Codes match — continue"
+            "value": "Codes stimmen überein – weiter"
           }
         },
         "en": {
@@ -1682,43 +1746,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Codes match — continue"
+            "value": "Los códigos coinciden — continuar"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Codes match — continue"
+            "value": "Les codes correspondent – continuer"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Codes match — continue"
+            "value": "I codici corrispondono – continua"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Codes match — continue"
+            "value": "コードが一致しています — 続ける"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Codes match — continue"
+            "value": "코드가 일치함 — 계속"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Codes match — continue"
+            "value": "Os códigos são iguais — continuar"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Codes match — continue"
+            "value": "Koderna stämmer – fortsätt"
           }
         },
         "zh-Hans": {
@@ -2438,7 +2502,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Game transfer complete."
+            "value": "Spielübertragung abgeschlossen."
           }
         },
         "en": {
@@ -2450,43 +2514,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Game transfer complete."
+            "value": "Transferencia del juego completada."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Game transfer complete."
+            "value": "Transfert du jeu terminé."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Game transfer complete."
+            "value": "Trasferimento del gioco completato."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Game transfer complete."
+            "value": "ゲームの転送が完了しました。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Game transfer complete."
+            "value": "게임 전송이 완료되었습니다."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Game transfer complete."
+            "value": "Transferência do jogo concluída."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Game transfer complete."
+            "value": "Spelöverföringen är klar."
           }
         },
         "zh-Hans": {
@@ -2694,7 +2758,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+            "value": "Beide Geräte müssen in der Nähe sein, WLAN eingeschaltet haben und die Apps geöffnet lassen."
           }
         },
         "en": {
@@ -2706,43 +2770,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+            "value": "Mantén los dispositivos cerca, con el Wi-Fi activado y ambas apps abiertas."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+            "value": "Gardez les appareils à proximité, avec le Wi-Fi activé et les deux apps ouvertes."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+            "value": "Tieni vicini i dispositivi con il Wi-Fi attivo ed entrambe le app aperte."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+            "value": "両方のデバイスを近づけ、Wi-Fiをオンにして、両方のアプリを開いたままにしてください。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+            "value": "두 기기를 가까이 두고 Wi-Fi를 켠 상태에서 두 앱을 모두 열어 두세요."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+            "value": "Mantenha os dispositivos próximos, com o Wi-Fi ativado e os dois apps abertos."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep both devices nearby with Wi-Fi on and both apps open."
+            "value": "Håll enheterna nära varandra med Wi-Fi på och båda apparna öppna."
           }
         },
         "zh-Hans": {
@@ -2886,7 +2950,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep this app open until the transfer finishes."
+            "value": "Lass diese App geöffnet, bis die Übertragung abgeschlossen ist."
           }
         },
         "en": {
@@ -2898,43 +2962,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep this app open until the transfer finishes."
+            "value": "Mantén esta app abierta hasta que termine la transferencia."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep this app open until the transfer finishes."
+            "value": "Gardez cette app ouverte jusqu’à la fin du transfert."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep this app open until the transfer finishes."
+            "value": "Tieni aperta questa app fino al termine del trasferimento."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep this app open until the transfer finishes."
+            "value": "転送が完了するまで、このアプリを開いたままにしてください。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep this app open until the transfer finishes."
+            "value": "전송이 끝날 때까지 이 앱을 열어 두세요."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep this app open until the transfer finishes."
+            "value": "Mantenha este app aberto até a transferência terminar."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep this app open until the transfer finishes."
+            "value": "Håll appen öppen tills överföringen är klar."
           }
         },
         "zh-Hans": {
@@ -3654,7 +3718,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the other device, open App settings and choose Receive a game."
+            "value": "Öffne auf dem anderen Gerät die App-Einstellungen und wähle „Ein Spiel empfangen“."
           }
         },
         "en": {
@@ -3666,43 +3730,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the other device, open App settings and choose Receive a game."
+            "value": "En el otro dispositivo, abre los ajustes de la app y elige Recibir un juego."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the other device, open App settings and choose Receive a game."
+            "value": "Sur l’autre appareil, ouvrez les réglages de l’app et choisissez Recevoir un jeu."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the other device, open App settings and choose Receive a game."
+            "value": "Sull’altro dispositivo, apri le impostazioni dell’app e scegli Ricevi un gioco."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the other device, open App settings and choose Receive a game."
+            "value": "もう一方のデバイスでアプリ設定を開き、「ゲームを受信」を選んでください。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the other device, open App settings and choose Receive a game."
+            "value": "다른 기기에서 앱 설정을 열고 게임 받기를 선택하세요."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the other device, open App settings and choose Receive a game."
+            "value": "No outro dispositivo, abra os ajustes do app e escolha Receber um jogo."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the other device, open App settings and choose Receive a game."
+            "value": "Öppna appinställningarna på den andra enheten och välj Ta emot ett spel."
           }
         },
         "zh-Hans": {
@@ -3718,7 +3782,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the sending device, open Game settings and choose Send to another device."
+            "value": "Öffne auf dem sendenden Gerät die Spieleinstellungen und wähle „An ein anderes Gerät senden“."
           }
         },
         "en": {
@@ -3730,43 +3794,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the sending device, open Game settings and choose Send to another device."
+            "value": "En el dispositivo emisor, abre los ajustes del juego y elige Enviar a otro dispositivo."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the sending device, open Game settings and choose Send to another device."
+            "value": "Sur l’appareil émetteur, ouvrez les réglages du jeu et choisissez Envoyer à un autre appareil."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the sending device, open Game settings and choose Send to another device."
+            "value": "Sul dispositivo che invia, apri le impostazioni del gioco e scegli Invia a un altro dispositivo."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the sending device, open Game settings and choose Send to another device."
+            "value": "送信するデバイスでゲーム設定を開き、「別のデバイスに送信」を選んでください。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the sending device, open Game settings and choose Send to another device."
+            "value": "보내는 기기에서 게임 설정을 열고 다른 기기로 보내기를 선택하세요."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the sending device, open Game settings and choose Send to another device."
+            "value": "No dispositivo que envia, abra os ajustes do jogo e escolha Enviar para outro dispositivo."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "On the sending device, open Game settings and choose Send to another device."
+            "value": "Öppna spelinställningarna på den sändande enheten och välj Skicka till en annan enhet."
           }
         },
         "zh-Hans": {
@@ -3846,7 +3910,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+            "value": "Nur das Framework, die Bilder und die Daten des Spiels werden übertragen. Spielstände werden weder gesendet noch gelöscht."
           }
         },
         "en": {
@@ -3858,43 +3922,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+            "value": "Solo se transfieren el framework, las imágenes y los datos del juego. Las partidas guardadas nunca se envían ni se borran."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+            "value": "Seuls le framework, les illustrations et les données du jeu sont transférés. Les sauvegardes ne sont jamais envoyées ni effacées."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+            "value": "Vengono trasferiti solo il framework, le immagini e i dati del gioco. I salvataggi non vengono mai inviati o cancellati."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+            "value": "ゲームのフレームワーク、画像、データのみを転送します。セーブデータを送信または削除することはありません。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+            "value": "게임의 프레임워크, 이미지 및 데이터만 전송합니다. 저장 데이터는 보내거나 삭제하지 않습니다."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+            "value": "Somente o framework, as imagens e os dados do jogo são transferidos. Os jogos salvos nunca são enviados nem apagados."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Only the game's framework, artwork and data are transferred. Saves are never sent or cleared."
+            "value": "Endast spelets ramverk, bilder och data överförs. Sparfiler skickas eller raderas aldrig."
           }
         },
         "zh-Hans": {
@@ -3974,7 +4038,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Preparing game files without making a copy…"
+            "value": "Spieldateien werden ohne zusätzliche Kopie vorbereitet…"
           }
         },
         "en": {
@@ -3986,43 +4050,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Preparing game files without making a copy…"
+            "value": "Preparando los archivos del juego sin crear una copia…"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Preparing game files without making a copy…"
+            "value": "Préparation des fichiers du jeu sans créer de copie…"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Preparing game files without making a copy…"
+            "value": "Preparazione dei file del gioco senza creare una copia…"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Preparing game files without making a copy…"
+            "value": "コピーを作成せずにゲームファイルを準備中…"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Preparing game files without making a copy…"
+            "value": "복사본을 만들지 않고 게임 파일 준비 중…"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Preparing game files without making a copy…"
+            "value": "Preparando os arquivos do jogo sem criar uma cópia…"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Preparing game files without making a copy…"
+            "value": "Förbereder spelfiler utan att skapa en kopia…"
           }
         },
         "zh-Hans": {
@@ -4230,7 +4294,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive and import"
+            "value": "Empfangen und importieren"
           }
         },
         "en": {
@@ -4242,43 +4306,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive and import"
+            "value": "Recibir e importar"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive and import"
+            "value": "Recevoir et importer"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive and import"
+            "value": "Ricevi e importa"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive and import"
+            "value": "受信してインポート"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive and import"
+            "value": "받아서 가져오기"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive and import"
+            "value": "Receber e importar"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive and import"
+            "value": "Ta emot och importera"
           }
         },
         "zh-Hans": {
@@ -4294,7 +4358,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive game"
+            "value": "Spiel empfangen"
           }
         },
         "en": {
@@ -4306,43 +4370,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive game"
+            "value": "Recibir juego"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive game"
+            "value": "Recevoir un jeu"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive game"
+            "value": "Ricevi gioco"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive game"
+            "value": "ゲームを受信"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive game"
+            "value": "게임 받기"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive game"
+            "value": "Receber jogo"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receive game"
+            "value": "Ta emot spel"
           }
         },
         "zh-Hans": {
@@ -4486,7 +4550,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Searching for receiving devices…"
+            "value": "Suche nach Empfangsgeräten…"
           }
         },
         "en": {
@@ -4498,43 +4562,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Searching for receiving devices…"
+            "value": "Buscando dispositivos receptores…"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Searching for receiving devices…"
+            "value": "Recherche d’appareils récepteurs…"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Searching for receiving devices…"
+            "value": "Ricerca dei dispositivi riceventi…"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Searching for receiving devices…"
+            "value": "受信デバイスを検索中…"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Searching for receiving devices…"
+            "value": "수신 기기 검색 중…"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Searching for receiving devices…"
+            "value": "Buscando dispositivos para receber…"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Searching for receiving devices…"
+            "value": "Söker efter mottagande enheter…"
           }
         },
         "zh-Hans": {
@@ -4550,7 +4614,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send game"
+            "value": "Spiel senden"
           }
         },
         "en": {
@@ -4562,43 +4626,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send game"
+            "value": "Enviar juego"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send game"
+            "value": "Envoyer un jeu"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send game"
+            "value": "Invia gioco"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send game"
+            "value": "ゲームを送信"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send game"
+            "value": "게임 보내기"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send game"
+            "value": "Enviar jogo"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Send game"
+            "value": "Skicka spel"
           }
         },
         "zh-Hans": {
@@ -5574,7 +5638,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "The connection timed out. Keep both apps open and try again."
+            "value": "Zeitüberschreitung der Verbindung. Lass beide Apps geöffnet und versuche es erneut."
           }
         },
         "en": {
@@ -5586,43 +5650,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "The connection timed out. Keep both apps open and try again."
+            "value": "La conexión ha caducado. Mantén ambas apps abiertas e inténtalo de nuevo."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "The connection timed out. Keep both apps open and try again."
+            "value": "La connexion a expiré. Gardez les deux apps ouvertes et réessayez."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "The connection timed out. Keep both apps open and try again."
+            "value": "Connessione scaduta. Tieni aperte entrambe le app e riprova."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "The connection timed out. Keep both apps open and try again."
+            "value": "接続がタイムアウトしました。両方のアプリを開いたまま再試行してください。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "The connection timed out. Keep both apps open and try again."
+            "value": "연결 시간이 초과되었습니다. 두 앱을 모두 열어 두고 다시 시도하세요."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "The connection timed out. Keep both apps open and try again."
+            "value": "A conexão expirou. Mantenha os dois apps abertos e tente novamente."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "The connection timed out. Keep both apps open and try again."
+            "value": "Anslutningen tog för lång tid. Håll båda apparna öppna och försök igen."
           }
         },
         "zh-Hans": {
@@ -7686,7 +7750,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer cancelled."
+            "value": "Übertragung abgebrochen."
           }
         },
         "en": {
@@ -7698,43 +7762,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer cancelled."
+            "value": "Transferencia cancelada."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer cancelled."
+            "value": "Transfert annulé."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer cancelled."
+            "value": "Trasferimento annullato."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer cancelled."
+            "value": "転送をキャンセルしました。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer cancelled."
+            "value": "전송이 취소되었습니다."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer cancelled."
+            "value": "Transferência cancelada."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer cancelled."
+            "value": "Överföringen avbröts."
           }
         },
         "zh-Hans": {
@@ -7750,7 +7814,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer cancelled. Keep both apps open while transferring."
+            "value": "Übertragung abgebrochen. Lass während der Übertragung beide Apps geöffnet."
           }
         },
         "en": {
@@ -7762,43 +7826,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer cancelled. Keep both apps open while transferring."
+            "value": "Transferencia cancelada. Mantén ambas apps abiertas durante la transferencia."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer cancelled. Keep both apps open while transferring."
+            "value": "Transfert annulé. Gardez les deux apps ouvertes pendant le transfert."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer cancelled. Keep both apps open while transferring."
+            "value": "Trasferimento annullato. Tieni aperte entrambe le app durante il trasferimento."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer cancelled. Keep both apps open while transferring."
+            "value": "転送をキャンセルしました。転送中は両方のアプリを開いたままにしてください。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer cancelled. Keep both apps open while transferring."
+            "value": "전송이 취소되었습니다. 전송 중에는 두 앱을 모두 열어 두세요."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer cancelled. Keep both apps open while transferring."
+            "value": "Transferência cancelada. Mantenha os dois apps abertos durante a transferência."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Transfer cancelled. Keep both apps open while transferring."
+            "value": "Överföringen avbröts. Håll båda apparna öppna under överföringen."
           }
         },
         "zh-Hans": {
@@ -7942,7 +8006,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waiting for another device…"
+            "value": "Warte auf ein anderes Gerät…"
           }
         },
         "en": {
@@ -7954,43 +8018,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waiting for another device…"
+            "value": "Esperando a otro dispositivo…"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waiting for another device…"
+            "value": "En attente d’un autre appareil…"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waiting for another device…"
+            "value": "In attesa di un altro dispositivo…"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waiting for another device…"
+            "value": "別のデバイスを待っています…"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waiting for another device…"
+            "value": "다른 기기를 기다리는 중…"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waiting for another device…"
+            "value": "Aguardando outro dispositivo…"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waiting for another device…"
+            "value": "Väntar på en annan enhet…"
           }
         },
         "zh-Hans": {
@@ -8006,7 +8070,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waiting for the other device to accept…"
+            "value": "Warte auf die Bestätigung des anderen Geräts…"
           }
         },
         "en": {
@@ -8018,43 +8082,43 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waiting for the other device to accept…"
+            "value": "Esperando a que el otro dispositivo acepte…"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waiting for the other device to accept…"
+            "value": "En attente de l’acceptation de l’autre appareil…"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waiting for the other device to accept…"
+            "value": "In attesa della conferma dell’altro dispositivo…"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waiting for the other device to accept…"
+            "value": "相手のデバイスの承認を待っています…"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waiting for the other device to accept…"
+            "value": "다른 기기의 수락을 기다리는 중…"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waiting for the other device to accept…"
+            "value": "Aguardando o outro dispositivo aceitar…"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waiting for the other device to accept…"
+            "value": "Väntar på att den andra enheten godkänner…"
           }
         },
         "zh-Hans": {

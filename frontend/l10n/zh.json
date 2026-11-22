@@ -1135,6 +1135,7 @@
   "ios.host.peerBackground": "已取消传输，传输时请保持双方应用在前台。",
   "ios.host.peerCancelled": "已取消传输。",
   "ios.host.peerChecking": "正在检查连接与签名兼容性…",
+  "ios.host.peerClose": "关闭",
   "ios.host.peerCodeConfirm": "连接码一致，继续",
   "ios.host.peerCodeNote": "请核对两台设备上的连接码是否一致。",
   "ios.host.peerComplete": "游戏传输完成。",

@@ -53,7 +53,7 @@ public struct ShellHostView: View {
                 .presentationDetents([.medium, .large])
                 .presentationBackground(ShellPalette.background)
             }
-            .sheet(item: $model.peerTransfer, onDismiss: { model.peerTransfer?.stop(); model.peerTransfer = nil; model.reload() }) { transfer in
+            .sheet(item: $model.peerTransfer, onDismiss: { model.endPeerTransfer() }) { transfer in
                 PeerGameTransferView(transfer: transfer)
             }
             .sheet(item: $model.log) { LogView(log: $0) }

@@ -735,6 +735,13 @@ public struct ShellHostConfig: Sendable {
         }
     }
 
+    func endPeerTransfer() {
+        peerTransfer?.stop()
+        peerTransfer = nil
+        reload()
+        scheduleUSBImport()
+    }
+
     public func importGamePackage(_ url: URL) async {
         do {
             _ = try await importGamePackageNow(url)
