@@ -19,6 +19,20 @@ import Testing
     private func names(_ dir: URL) -> [String] { ((try? FileManager.default.contentsOfDirectory(atPath: dir.path)) ?? []).sorted() }
     private func listed(_ model: ShellHostModel) -> Bool { model.details.contains { $0.id == Fixtures.orbit } }
 
+    @Test func gameDataDeletionDoesNotRunOnMainThread() throws {
+        let box = try Sandbox()
+        _ = try fill(box)
+        var config = box.config()
+        let observed = DeletionThreadObservation()
+        config.deleteGameData = { folder, saves in
+            observed.record(Thread.isMainThread)
+            return GameDeletion.delete(in: folder, saves: saves)
+        }
+        let model = ShellHostModel(config: config)
+        model.deleteGame(Fixtures.orbit, saves: false)
+        #expect(observed.wasMain == false, "deleting files must not block the main thread")
+    }
+
     @Test func deletingKeepsTheSavesAndTakesTheGameOffTheList() throws {
         let box = try Sandbox()
         let dir = try fill(box)
@@ -94,4 +108,11 @@ import Testing
         #expect(GameDeletion.removals(in: dir, saves: true).count == 8)
         #expect(GameDeletion.removals(in: dir.appendingPathComponent("missing"), saves: true).isEmpty)
     }
+}
+
+private final class DeletionThreadObservation: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value: Bool?
+    func record(_ main: Bool) { lock.lock(); defer { lock.unlock() }; value = main }
+    var wasMain: Bool? { lock.lock(); defer { lock.unlock() }; return value }
 }
