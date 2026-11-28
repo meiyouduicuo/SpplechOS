@@ -46,7 +46,7 @@ import Testing
         let model = ShellHostModel(config: config)
         let task = Task { await model.deleteGameNow(Fixtures.orbit, saves: false) }
         defer { gate.resume.signal() }
-        let entered = await Task.detached { gate.entered.wait(timeout: .now() + 5) == .success }.value
+        let entered = await Task.detached { gate.waitForEntry() }.value
         #expect(entered, "deletion reached the background worker")
         #expect(!model.acceptsUSBImport, "imports are blocked while deletion is active")
         model.reload()
@@ -156,4 +156,5 @@ private final class DeletionThreadObservation: @unchecked Sendable {
 private final class DeletionGate: @unchecked Sendable {
     let entered = DispatchSemaphore(value: 0)
     let resume = DispatchSemaphore(value: 0)
+    func waitForEntry() -> Bool { entered.wait(timeout: .now() + 5) == .success }
 }
