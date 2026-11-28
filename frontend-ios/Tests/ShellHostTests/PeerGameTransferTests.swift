@@ -162,7 +162,7 @@ struct PeerGameTransferTests {
         #expect(model.peerTransfer != nil && !model.acceptsUSBImport)
         defer { model.peerTransfer?.stop(); model.peerTransfer = nil }
         model.clearGameSaves(Fixtures.orbit)
-        model.deleteGame(Fixtures.orbit, saves: true)
+        await model.deleteGameNow(Fixtures.orbit, saves: true)
         await model.playNow(Fixtures.orbit)
         #expect(launcher.launched.isEmpty)
         var refused = false

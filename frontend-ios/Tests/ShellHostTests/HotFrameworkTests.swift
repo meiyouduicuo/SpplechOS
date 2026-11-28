@@ -122,7 +122,7 @@ import Testing
         #expect(!fm.fileExists(atPath: hotOrbit.path), "redundant hot framework is reclaimed once the app bundle carries the build")
     }
 
-    @Test func deletingHotOverriddenGameRemovesHotFrameworkAndSuppressesOlderBundledCopy() throws {
+    @Test func deletingHotOverriddenGameRemovesHotFrameworkAndSuppressesOlderBundledCopy() async throws {
         let box = try Sandbox()
         let hotRoot = box.root.appendingPathComponent("Documents/Frameworks", isDirectory: true)
         _ = try box.giveAppData()
@@ -134,7 +134,7 @@ import Testing
         let model = ShellHostModel(config: cfg)
         #expect(model.details.first { $0.id == Fixtures.orbit }?.game.title == "Orbit Hot Build")
 
-        model.deleteGame(Fixtures.orbit, saves: true)
+        await model.deleteGameNow(Fixtures.orbit, saves: true)
         #expect(!FileManager.default.fileExists(atPath: hotFW.path), "writable hot framework is physically deleted")
         #expect(!model.details.contains { $0.id == Fixtures.orbit }, "older bundled copy does not reappear right after delete")
         #expect(!ShellHostModel(config: cfg).details.contains { $0.id == Fixtures.orbit }, "stays deleted across relaunch")

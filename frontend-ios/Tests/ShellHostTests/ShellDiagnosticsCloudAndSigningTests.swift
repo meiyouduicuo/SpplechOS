@@ -387,10 +387,11 @@ private final class JoinGate: @unchecked Sendable {
         #expect(reachedDeleteMidway)
 
         // Delete the game while the background join is still in flight, incrementing joinGeneration.
-        model.deleteGame(Fixtures.orbit, saves: true)
-        #expect(!model.details.contains { $0.id == Fixtures.orbit })
-
+        let deletion = Task { await model.deleteGameNow(Fixtures.orbit, saves: true) }
+        await Task.yield()
         gate.release()
+        await deletion.value
+        #expect(!model.details.contains { $0.id == Fixtures.orbit })
         await model.waitForStartupTasks()
 
         // Stale progress callbacks from the old generation must never put stale joining notes back.
