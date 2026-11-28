@@ -29,6 +29,7 @@ public struct ShellHostConfig: Sendable {
     /// Split-part byte size used by startup `DataParts.joinAll` (defaults to 512 MiB).
     public var joinPartSize: Int64
     var onJoinProgress: (@Sendable (DataParts.Progress) -> Void)?
+    var deleteGameData: @Sendable (URL, Bool) -> [URL] = { GameDeletion.delete(in: $0, saves: $1) }
 
     public init(gamesRoot: URL, appDataRoot: URL, hotFrameworksRoot: URL? = nil,
                 environment: HostEnvironment = HostEnvironment(), updateURL: URL? = nil,
@@ -939,7 +940,7 @@ public struct ShellHostConfig: Sendable {
         if pendingCloudLaunch?.game.titleID == id {
             cancelCloudConflict()
         }
-        var failed = GameDeletion.delete(in: appFolder(for: id), saves: saves)
+        var failed = config.deleteGameData(appFolder(for: id), saves)
         if let hotRoot = config.hotFrameworksRoot {
             let entryParent = entry.directory.deletingLastPathComponent().standardizedFileURL
             if entryParent == hotRoot.standardizedFileURL {
