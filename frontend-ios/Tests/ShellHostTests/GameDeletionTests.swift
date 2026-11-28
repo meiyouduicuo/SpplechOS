@@ -19,7 +19,7 @@ import Testing
     private func names(_ dir: URL) -> [String] { ((try? FileManager.default.contentsOfDirectory(atPath: dir.path)) ?? []).sorted() }
     private func listed(_ model: ShellHostModel) -> Bool { model.details.contains { $0.id == Fixtures.orbit } }
 
-    @Test func gameDataDeletionDoesNotRunOnMainThread() throws {
+    @Test func gameDataDeletionDoesNotRunOnMainThread() async throws {
         let box = try Sandbox()
         _ = try fill(box)
         var config = box.config()
@@ -29,36 +29,72 @@ import Testing
             return GameDeletion.delete(in: folder, saves: saves)
         }
         let model = ShellHostModel(config: config)
-        model.deleteGame(Fixtures.orbit, saves: false)
+        await model.deleteGameNow(Fixtures.orbit, saves: false)
         #expect(observed.wasMain == false, "deleting files must not block the main thread")
     }
 
-    @Test func deletingKeepsTheSavesAndTakesTheGameOffTheList() throws {
+    @Test func deletionLeavesMainActorResponsiveAndBlocksConflictingOperations() async throws {
+        let box = try Sandbox()
+        let dir = try fill(box)
+        var config = box.config()
+        let gate = DeletionGate()
+        config.deleteGameData = { folder, saves in
+            gate.entered.signal()
+            _ = gate.resume.wait(timeout: .now() + 10)
+            return GameDeletion.delete(in: folder, saves: saves)
+        }
+        let model = ShellHostModel(config: config)
+        let task = Task { await model.deleteGameNow(Fixtures.orbit, saves: false) }
+        defer { gate.resume.signal() }
+        let entered = await Task.detached { gate.entered.wait(timeout: .now() + 5) == .success }.value
+        #expect(entered, "deletion reached the background worker")
+        #expect(!model.acceptsUSBImport, "imports are blocked while deletion is active")
+        model.reload()
+        #expect(listed(model), "the library is not reloaded from partially deleted files")
+        gate.resume.signal()
+        await task.value
+        #expect(model.acceptsUSBImport)
+        #expect(names(dir) == ["save", "save.work", "save_device"])
+        #expect(!listed(model))
+    }
+
+    @Test func failedDeletionReportsAnError() async throws {
+        let box = try Sandbox()
+        _ = try fill(box)
+        var config = box.config()
+        config.deleteGameData = { folder, _ in [folder] }
+        let model = ShellHostModel(config: config)
+        await model.deleteGameNow(Fixtures.orbit, saves: false)
+        #expect(model.notice != nil)
+        #expect(model.acceptsUSBImport)
+    }
+
+    @Test func deletingKeepsTheSavesAndTakesTheGameOffTheList() async throws {
         let box = try Sandbox()
         let dir = try fill(box)
         let model = ShellHostModel(config: box.config())
         let before = model.details.count
         #expect(listed(model))
-        model.deleteGame(Fixtures.orbit, saves: false)
+        await model.deleteGameNow(Fixtures.orbit, saves: false)
         #expect(names(dir) == ["save", "save.work", "save_device"], "game data, shader caches, add-on content, temp and log are gone, the saves stay")
         #expect(!listed(model) && model.details.count == before - 1)
         #expect(model.notice == nil)
         #expect(!listed(ShellHostModel(config: box.config())), "still off the list when the app opens again")
     }
 
-    @Test func deletingWithSavesRemovesTheWholeFolder() throws {
+    @Test func deletingWithSavesRemovesTheWholeFolder() async throws {
         let box = try Sandbox()
         let dir = try fill(box)
         let model = ShellHostModel(config: box.config())
-        model.deleteGame(Fixtures.orbit, saves: true)
+        await model.deleteGameNow(Fixtures.orbit, saves: true)
         #expect(!FileManager.default.fileExists(atPath: dir.path))
         #expect(!listed(model))
     }
 
-    @Test func gameDataSentAgainBringsTheGameBack() throws {
+    @Test func gameDataSentAgainBringsTheGameBack() async throws {
         let box = try Sandbox()
         _ = try fill(box)
-        ShellHostModel(config: box.config()).deleteGame(Fixtures.orbit, saves: false)
+        await ShellHostModel(config: box.config()).deleteGameNow(Fixtures.orbit, saves: false)
         try box.giveAppData()
         let model = ShellHostModel(config: box.config())
         #expect(listed(model))
@@ -66,10 +102,10 @@ import Testing
         #expect(box.defaults(Fixtures.orbit).string(forKey: GameDeletion.deletedKey) == nil, "the mark is dropped once the game is back")
     }
 
-    @Test func aNewBuildOfTheGameBringsItBack() throws {
+    @Test func aNewBuildOfTheGameBringsItBack() async throws {
         let box = try Sandbox()
         _ = try fill(box)
-        ShellHostModel(config: box.config()).deleteGame(Fixtures.orbit, saves: false)
+        await ShellHostModel(config: box.config()).deleteGameNow(Fixtures.orbit, saves: false)
         #expect(!listed(ShellHostModel(config: box.config())), "the same build stays deleted")
         let manifest = box.games.appendingPathComponent(Fixtures.orbit).appendingPathComponent("game.manifest.json")
         let text = try String(contentsOf: manifest, encoding: .utf8)
@@ -93,7 +129,7 @@ import Testing
         #expect(try #require(model.details.first { $0.id == Fixtures.orbit }).game.state == .playable)
         #expect(box.defaults(Fixtures.orbit).data(forKey: BookmarkStore.gameDataKey) != nil)
         #expect(box.defaults(Fixtures.orbit).data(forKey: BookmarkStore.cloudSavesKey) != nil)
-        model.deleteGame(Fixtures.orbit, saves: true)
+        await model.deleteGameNow(Fixtures.orbit, saves: true)
         #expect(FileManager.default.fileExists(atPath: picked.appendingPathComponent("romfs/fixture.marker").path))
         #expect(FileManager.default.fileExists(atPath: cloud.appendingPathComponent("slot0.bin").path))
         #expect(box.defaults(Fixtures.orbit).data(forKey: BookmarkStore.gameDataKey) == nil, "the data pick is forgotten")
@@ -115,4 +151,9 @@ private final class DeletionThreadObservation: @unchecked Sendable {
     private var value: Bool?
     func record(_ main: Bool) { lock.lock(); defer { lock.unlock() }; value = main }
     var wasMain: Bool? { lock.lock(); defer { lock.unlock() }; return value }
+}
+
+private final class DeletionGate: @unchecked Sendable {
+    let entered = DispatchSemaphore(value: 0)
+    let resume = DispatchSemaphore(value: 0)
 }
