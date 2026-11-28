@@ -44,6 +44,7 @@ import Testing
             return GameDeletion.delete(in: folder, saves: saves)
         }
         let model = ShellHostModel(config: config)
+        await model.waitForStartupTasks()
         let task = Task { await model.deleteGameNow(Fixtures.orbit, saves: false) }
         defer { gate.resume.signal() }
         let entered = await Task.detached { gate.waitForEntry() }.value
