@@ -84,6 +84,7 @@ public struct ShellHostConfig: Sendable {
     /// Play is preparing the game's resources or handing over to the engine.
     public private(set) var launchingGame = false
     private var modifyingSaves = false
+    private var deletingGame = false
     var peerTransfer: PeerGameTransfer?
     public var pickingGamePackage = false
     public private(set) var importingPackage = false
@@ -351,7 +352,7 @@ public struct ShellHostConfig: Sendable {
     }
 
     private func reload(afterClaim: Bool) {
-        guard !importingPackage else { return }
+        guard !importingPackage, !deletingGame else { return }
         forgetCheckedRomfsImages()
         resolvedProfiles.removeAll()
         if let hotRoot = config.hotFrameworksRoot {
@@ -930,7 +931,13 @@ public struct ShellHostConfig: Sendable {
     /// and cloud saves (those folders are the player's and are not touched) and when it was played, and takes the game off the
     /// list. The game's framework inside the app stays: see `GameDeletion`.
     public func deleteGame(_ id: String, saves: Bool) {
+        Task { await deleteGameNow(id, saves: saves) }
+    }
+
+    func deleteGameNow(_ id: String, saves: Bool) async {
         guard peerTransfer == nil, !importingPackage, !launchingGame, !modifyingSaves, let entry = entry(id) else { return }
+        modifyingSaves = true
+        deletingGame = true
         joinGeneration &+= 1
         joiningProgress.removeValue(forKey: id)
         pickGeneration[id] = (pickGeneration[id] ?? 0) &+ 1
@@ -940,20 +947,30 @@ public struct ShellHostConfig: Sendable {
         if pendingCloudLaunch?.game.titleID == id {
             cancelCloudConflict()
         }
-        var failed = config.deleteGameData(appFolder(for: id), saves)
-        if let hotRoot = config.hotFrameworksRoot {
-            let entryParent = entry.directory.deletingLastPathComponent().standardizedFileURL
-            if entryParent == hotRoot.standardizedFileURL {
-                if !GameCatalogue.discardFolder(entry.directory, in: hotRoot) {
-                    failed.append(entry.directory)
+        // Startup joins and loose-image claims can still be writing the same game folder.
+        // Let them finish before deleting, while the main actor remains responsive.
+        await startupJoinTask?.value
+        await looseClaimTask?.value
+        let folder = appFolder(for: id)
+        let gameDirectory = entry.directory
+        let hotRoot = config.hotFrameworksRoot
+        let deleteData = config.deleteGameData
+        let failed = await Task.detached(priority: .userInitiated) { () -> [URL] in
+            var failed = deleteData(folder, saves)
+            if let hotRoot {
+                let entryParent = gameDirectory.deletingLastPathComponent().standardizedFileURL
+                if entryParent == hotRoot.standardizedFileURL,
+                   !GameCatalogue.discardFolder(gameDirectory, in: hotRoot) {
+                    failed.append(gameDirectory)
+                }
+                let canonicalHot = hotRoot.appendingPathComponent("DmGame\(id.uppercased()).framework", isDirectory: true)
+                if FileManager.default.fileExists(atPath: canonicalHot.path),
+                   !GameCatalogue.discardFolder(canonicalHot, in: hotRoot) {
+                    failed.append(canonicalHot)
                 }
             }
-            let canonicalHot = hotRoot.appendingPathComponent("DmGame\(id.uppercased()).framework", isDirectory: true)
-            if FileManager.default.fileExists(atPath: canonicalHot.path),
-               !GameCatalogue.discardFolder(canonicalHot, in: hotRoot) {
-                failed.append(canonicalHot)
-            }
-        }
+            return failed
+        }.value
         dataStore(id).clear()
         cloudStore(id).clear()
         dataStores.removeValue(forKey: id)
@@ -962,7 +979,10 @@ public struct ShellHostConfig: Sendable {
         defaults.removeObject(forKey: LastPlayedStore.key)
         let bundledAfterHotRemoval = GameCatalogue.scan(root: config.gamesRoot).first { $0.id.caseInsensitiveCompare(id) == .orderedSame }
         defaults.set(GameDeletion.stamp(bundledAfterHotRemoval ?? entry), forKey: GameDeletion.deletedKey)
+        deletingGame = false
+        modifyingSaves = false
         reload()
+        scheduleUSBImport()
         if !failed.isEmpty { notice = hostText("Some files of \(entry.title) could not be deleted.") }
     }
 
