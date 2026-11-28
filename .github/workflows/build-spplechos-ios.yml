@@ -1,15 +1,19 @@
-name: Focused iOS deletion checks
+name: iOS deletion simulator checks
 on: workflow_dispatch
 permissions:
   contents: read
 jobs:
   regression:
     runs-on: xcode-27
-    timeout-minutes: 15
+    timeout-minutes: 20
     env:
       DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - run: python3 tools/engine.py sync
-      - run: swift build --package-path frontend-ios
-      - run: swift test --package-path frontend-ios
+      - name: Test deletion on an iPhone simulator
+        working-directory: frontend-ios
+        run: |
+          set -euo pipefail
+          UDID=$(xcrun simctl list devices available --json | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(x["udid"] for k,v in d["devices"].items() if ".iOS-" in k for x in v if x.get("isAvailable") and x["name"].startswith("iPhone")))')
+          xcodebuild test -scheme ShellUI-Package -destination "platform=iOS Simulator,id=$UDID" -derivedDataPath "$RUNNER_TEMP/shell-delete-simulator" -only-testing:ShellHostTests/GameDeletionTests -only-testing:ShellHostTests/HotFrameworkTests -only-testing:ShellHostTests/PeerGameTransferTests CODE_SIGNING_ALLOWED=NO
